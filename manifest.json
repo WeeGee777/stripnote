@@ -1,0 +1,20 @@
+{
+  "id": "./",
+  "name": "StripNote — Photo Inspection Reports",
+  "short_name": "StripNote",
+  "description": "Equipment strip-down photos, dictated notes, and offline Word/PDF reports.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0c191e",
+  "theme_color": "#102328",
+  "lang": "en-GB",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
