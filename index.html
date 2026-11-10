@@ -99,15 +99,15 @@ details.card[open]>summary{margin-bottom:8px}
  header,.dock,.toolbar,button,.status,#editor,#home,dialog{display:none!important}
  .card{border:0;background:#fff;color:#000}
 }
-.logo-preview{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}.logo-preview img{max-height:72px;max-width:min(240px,100%);width:auto;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px}</style></head><body>
+.logo-preview{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}.logo-preview img{max-height:72px;max-width:min(240px,100%);width:auto;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px}.field-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 6px}.field-head label{margin:0;flex:1}button.redo{min-height:52px;min-width:52px;padding:10px 14px;font-size:16px;font-weight:700;white-space:nowrap}.photo-actions{flex-wrap:wrap}.photo-actions .redo{flex:1 1 100%}</style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><button id="theme" class="small" type="button" aria-label="Switch dark or light theme">Theme</button></div></header>
 <main>
 <section id="home">
 <div class="card hero"><div class="tag">Field record</div><h1>Record the strip-down while the part is in your hands.</h1><p class="lead muted">Photograph a part, dictate the name and the damage, then add more photos of that same part. Word and PDF reports are built on this phone.</p><button id="newReport" class="primary" type="button">New report</button></div>
 <div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
-<details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing, the keyboard microphone and voice notes remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>Completed voice notes are kept on the phone and in backup ZIPs. They are not embedded in Word or PDF. Review dictated text before sharing.</p></details>
-<p class="ver">StripNote v4</p>
+<details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
+<p class="ver">StripNote v5</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -121,7 +121,7 @@ details.card[open]>summary{margin-bottom:8px}
 <div><label for="equipment">Equipment</label><input id="equipment" data-job="equipment" placeholder="Asset, make, model, serial"></div>
 <div><label for="investigator">Investigator</label><input id="investigator" data-job="investigator" autocomplete="name" placeholder="Name"></div>
 </div></details>
-<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="backupExport" type="button">Backup + audio</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Word and PDF use reduced copies. Save originals packs the full-size photos into a ZIP in Downloads. Photos taken before this update have no full-size copy, so the report image is saved instead and you are told.</p><button id="deleteReport" class="small danger" type="button">Delete this report</button></div>
+<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Word and PDF use reduced copies. Save originals packs the full-size photos into a ZIP in Downloads. Photos taken before this update have no full-size copy, so the report image is saved instead and you are told.</p><button id="deleteReport" class="small danger" type="button">Delete this report</button></div>
 <section id="editor" class="card" hidden>
 <div class="row between"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
 <div class="toolbar"><button id="camera" type="button">Take photo</button><button id="gallery" type="button">Gallery</button></div>
@@ -130,13 +130,12 @@ details.card[open]>summary{margin-bottom:8px}
 <p id="noPhotos" class="muted">No photos yet.</p>
 <button id="speakBtn" class="mic primary" type="button" aria-pressed="false">🎙 Speak: part, then damage</button>
 <div id="heard" class="heard" hidden aria-live="polite"></div>
-<div id="micStatus" class="status" role="status">Tap 🎙 and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. For another view of this part, use + Photo of same part and say a short caption.</div>
-<label for="part">Part name</label><input id="part" placeholder="e.g. Drive-end bearing">
+<div id="micStatus" class="status" role="status">Tap 🎙 and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use + Photo of same part and say a short caption.</div>
+<div class="field-head"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing">
 <label for="condition">Condition</label><select id="condition"><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select>
-<label for="description">Description</label><textarea id="description" placeholder="What you see, the damage, and any measurements."></textarea>
+<div class="field-head"><label for="description">Description</label><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see, the damage, and any measurements."></textarea>
 <p class="note">Voice not working? Tap a box above and press the 🎙 on your phone keyboard to type by voice.</p>
 <label class="row" style="font-weight:500;font-size:15px"><input id="autoListen" type="checkbox" checked style="width:22px;min-height:22px"> Start listening automatically after each photo</label>
-<div class="toolbar"><button id="voiceNote" class="small" type="button">● Voice note only (no text)</button></div>
 <div id="audioList"></div>
 <p class="muted">Autosaved on this phone. Use the buttons along the bottom for another photo of this part, or the next part.</p>
 </section>
@@ -552,6 +551,7 @@ const conditionOf=v=>CONDITIONS.includes(v)?v:'OK';
 let captureReady=Promise.resolve();
 let listenCaptionForNextPhoto=false;
 let db, current=null, editing=null, session=null, startingMic=false, busy=false, io, toastTimer, saveQueue=Promise.resolve(), hasSaveError=false, fullURL=null, logoPreviewURL=null;
+const lastDictation=new Map();
 const thumbById=new Map();
 const audioURLs=new Set();
 
@@ -736,12 +736,12 @@ function renderEditorMedia(){
   const n=Math.max(1,current.parts.indexOf(editing)+1);
   const others=current.parts.filter(p=>p!==editing);
   const opts=others.map(p=>`<option value="${esc(p.id)}">${esc(p.name||'Untitled part')}</option>`).join('');
-  return `<div class="photo"><div class="fig" data-fig="${i}">Fig ${n}.${i+1}</div><img data-media="${esc(ph.id)}" alt="Photo ${i+1}"><input class="compact" data-caption-for="${esc(ph.id)}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${i+1}"><div class="photo-actions"><button type="button" class="small" data-caption-mic="${esc(ph.id)}" aria-label="Dictate caption for photo ${i+1}">🎙</button><button type="button" class="small" data-photo-up="${esc(ph.id)}" aria-label="Move photo ${i+1} up" ${i===0?'disabled':''}>↑</button><button type="button" class="small" data-photo-down="${esc(ph.id)}" aria-label="Move photo ${i+1} down" ${i===editing.photos.length-1?'disabled':''}>↓</button></div><select class="compact" data-photo-move="${esc(ph.id)}" aria-label="Move photo ${i+1} to another part" ${opts?'':'disabled'}><option value="">Move to…</option>${opts}</select><button type="button" class="small danger" data-remove-photo="${esc(ph.id)}">Remove</button></div>`;
+  return `<div class="photo"><div class="fig" data-fig="${i}">Fig ${n}.${i+1}</div><img data-media="${esc(ph.id)}" alt="Photo ${i+1}"><input class="compact" data-caption-for="${esc(ph.id)}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${i+1}"><div class="photo-actions"><button type="button" class="small" data-caption-mic="${esc(ph.id)}" aria-label="Dictate caption for photo ${i+1}">🎙</button><button type="button" class="redo" data-caption-redo="${esc(ph.id)}" aria-label="Re-record caption for photo ${i+1}">↻ Re-record</button><button type="button" class="small" data-photo-up="${esc(ph.id)}" aria-label="Move photo ${i+1} up" ${i===0?'disabled':''}>↑</button><button type="button" class="small" data-photo-down="${esc(ph.id)}" aria-label="Move photo ${i+1} down" ${i===editing.photos.length-1?'disabled':''}>↓</button></div><select class="compact" data-photo-move="${esc(ph.id)}" aria-label="Move photo ${i+1} to another part" ${opts?'':'disabled'}><option value="">Move to…</option>${opts}</select><button type="button" class="small danger" data-remove-photo="${esc(ph.id)}">Remove</button></div>`;
  }).join('');
  $('noPhotos').hidden=editing.photos.length>0;
  for(const img of $('editorPhotos').querySelectorAll('img'))loadThumb(img);
  audioURLs.forEach(url=>URL.revokeObjectURL(url));audioURLs.clear();
- $('audioList').innerHTML=editing.audio.map((id,i)=>`<div class="row" style="margin:8px 0"><button type="button" data-play-audio="${esc(id)}">▶ Voice note ${i+1}</button><button type="button" class="small danger" data-remove-audio="${esc(id)}">Delete clip</button></div>`).join('');
+ $('audioList').innerHTML=editing.audio.length?`<p class="note">Old voice notes from an earlier version. They stay on this phone until you delete them, and are not put in new backups or reports.</p>`+editing.audio.map((id,i)=>`<div class="row" style="margin:8px 0"><button type="button" data-play-audio="${esc(id)}">▶ Voice note ${i+1}</button><button type="button" class="small danger" data-remove-audio="${esc(id)}">Delete clip</button></div>`).join(''):'';
 }
 async function finishEntry(){
  if(startingMic){toast('Wait for the microphone to start, then stop it.');return;}
@@ -974,7 +974,65 @@ function parsePlain(segs){segs=segs.map(clean).filter(Boolean);if(!segs.length)r
 function guessSeverity(t){t=String(t||'').toLowerCase();if(/\b(replace|replaced|replacement|replacing|scrap|scrapped|renew|beyond repair)\b/.test(t)&&!/\bno need to replace\b/.test(t))return 'Replace';if(/\bno (?:visible |obvious |signs? of )?(?:damage|wear|defects?)\b/.test(t))return null;if(/\b(crack|cracked|cracking|broken|scor(e|ed|ing)|pitt(ed|ing)|corro(ded|sion)|seized|bent|fractur\w*|spall\w*|burnt|burned|damage[d]?|chipped|gall(ed|ing)|fretting|brinell\w*|deformed|snapped|melted|rust\w*)\b/.test(t))return 'Damaged';if(/\b(wear|worn|wearing)\b/.test(t))return 'Wear';return null;}
 function dedupeFinals(list){const out=[];for(const t of list){const prev=out[out.length-1];if(prev&&t.toLowerCase().startsWith(prev.toLowerCase())){out[out.length-1]=t;continue;}if(prev&&t.length>12&&prev.toLowerCase().includes(t.toLowerCase()))continue;out.push(t);}return out;}
 function setMicStatus(text,cls=''){const el=$('micStatus');el.textContent=text;el.className='status'+(cls?' '+cls:'');}
-function syncMicUI(active,kind='speech'){const b=$('speakBtn'),n=$('voiceNote');const on=active&&kind==='speech',rec=active&&kind==='note';b.classList.toggle('recording',on);b.setAttribute('aria-pressed',String(on));b.textContent=on?'■ Listening… tap to stop':'🎙 Speak: part, then damage';n.classList.toggle('recording',rec);n.textContent=rec?'■ Stop voice note':'● Voice note only (no text)';if(!active)$('heard').hidden=true;}
+function dictationKey(entry,field,photoId){return field==='caption'?`${entry.id}:caption:${photoId}`:`${entry.id}:${field}`;}
+function getFieldText(entry,field,photoId){
+ if(field==='name')return String(entry.name||'');
+ if(field==='description')return String(entry.description||'');
+ const photo=(entry.photos||[]).find(p=>p&&p.id===photoId);
+ return photo?String(photo.caption||''):'';
+}
+function setFieldText(entry,field,photoId,value){
+ if(field==='name')entry.name=value;
+ else if(field==='description')entry.description=value;
+ else{
+  const photo=(entry.photos||[]).find(p=>p&&p.id===photoId);
+  if(photo)photo.caption=value;
+ }
+}
+function syncFieldUI(entry,field,photoId){
+ if(editing!==entry)return;
+ if(field==='name')$('part').value=entry.name;
+ else if(field==='description')$('description').value=entry.description;
+ else{
+  const input=[...document.querySelectorAll('[data-caption-for]')].find(el=>el.dataset.captionFor===photoId);
+  const photo=(entry.photos||[]).find(p=>p&&p.id===photoId);
+  if(input&&photo)input.value=photo.caption;
+ }
+}
+function attachSpoken(prefix,spoken,suffix){
+ const add=String(spoken||'').trim();
+ const head=String(prefix??'');
+ const tail=String(suffix??'');
+ if(!add)return {value:head+tail,prefix:head,inserted:''};
+ const needSpace=head&&!/\s$/.test(head)&&!/^[\s.,;:!?]/.test(add);
+ const inserted=(needSpace?' ':'')+add;
+ return {value:head+inserted+tail,prefix:head,inserted};
+}
+function removeLastInsertion(current,rec){
+ if(!rec)return {found:false,value:current,prefix:String(current??''),suffix:''};
+ const cur=String(current??'');
+ const inserted=String(rec.inserted??'');
+ const prefix=String(rec.prefix??'');
+ if(!inserted)return {found:false,value:current,prefix:cur,suffix:''};
+ if(prefix&&cur.startsWith(prefix+inserted)){
+  const suffix=cur.slice(prefix.length+inserted.length);
+  return {found:true,value:prefix+suffix,prefix,suffix};
+ }
+ if(!prefix&&cur.startsWith(inserted)){
+  const suffix=cur.slice(inserted.length);
+  const restore=String(rec.replacedText??'');
+  return {found:true,value:restore+suffix,prefix:restore,suffix};
+ }
+ const idx=cur.lastIndexOf(inserted);
+ if(idx>=0&&cur.slice(0,idx)===prefix){
+  const suffix=cur.slice(idx+inserted.length);
+  return {found:true,value:prefix+suffix,prefix,suffix};
+ }
+ return {found:false,value:current,prefix:cur,suffix:''};
+}
+function showHeard(spoken){$('heard').hidden=false;$('heard').textContent='Hearing now: “'+spoken+'”';}
+
+function syncMicUI(active,kind='speech'){const b=$('speakBtn');const on=!!active;b.classList.toggle('recording',on);b.setAttribute('aria-pressed',String(on));b.textContent=on?'■ Listening… tap to stop':'🎙 Speak: part, then damage';if(!active)$('heard').hidden=true;}
 const SPEECH_ERRORS={'not-allowed':'Microphone is blocked for StripNote. In Chrome: ⋮ → Settings → Site settings → Microphone → allow weegee777.github.io, then tap 🎙 again.','service-not-allowed':'Chrome speech service is turned off on this phone. Use the 🎙 on your keyboard instead (tap the text box).','network':'Speech-to-text needs internet (Chrome uses Google’s speech service). No signal? Tap the text box and use your keyboard 🎙 — Gboard can work offline.','audio-capture':'Could not get the microphone — another app (call, recorder, camera) may be using it. Close it and tap 🎙 again.','language-not-supported':'English (UK) speech is not available in this browser. Use your keyboard 🎙 instead.','bad-grammar':'Speech service error. Tap 🎙 to try again.'};
 async function ensureMicPermission(){try{const st=await navigator.permissions?.query({name:'microphone'});if(st?.state==='granted')return;if(st?.state==='denied')throw Object.assign(Error('denied'),{name:'NotAllowedError'});}catch(e){if(e.name==='NotAllowedError')throw e;}if(!navigator.mediaDevices?.getUserMedia)return;const stream=await navigator.mediaDevices.getUserMedia({audio:true});stream.getTracks().forEach(t=>t.stop());await new Promise(r=>setTimeout(r,300));}
 
@@ -987,13 +1045,16 @@ async function startRecording(kind='speech',auto=false,opts=null){
   const requestedPhoto=opts?.photoId||null;
   if(!opts||(prev.kind===kind&&(prev.mode||'part')===requestedMode&&(prev.photoId||null)===requestedPhoto))return;
  }
- if(kind==='note'||!SpeechAPI)return startVoiceNote();
+ if(kind==='note')return;
+ if(!SpeechAPI){const msg='Speech-to-text is not available in this browser. Tap a box and use your keyboard 🎙.';setMicStatus(msg,'warn');if(!auto)toast(msg);return;}
  startingMic=true;const entry=editing;
  try{
   await ensureMicPermission();
   if(editing!==entry)return;
   const mode=opts?.mode||'part';
-  const s={kind:'speech',mode,photoId:opts?.photoId||null,entry,basePart:clean(entry.name),baseDesc:clean(entry.description),segs:[],runFinal:[],interim:'',active:true,noSpeech:0,restarts:0,heard:false,auto};
+  const field=mode==='name'?'name':mode==='description'?'description':mode==='caption'?'caption':null;
+  const s={kind:'speech',mode,photoId:opts?.photoId||null,entry,basePart:clean(entry.name),baseDesc:clean(entry.description),fieldPrefix:opts?.fieldPrefix,fieldSuffix:opts?.fieldSuffix||'',replacedText:opts?.replacedText||'',segs:[],runFinal:[],interim:'',active:true,noSpeech:0,restarts:0,heard:false,auto};
+  if(field&&s.fieldPrefix==null)s.fieldPrefix=getFieldText(entry,field,s.photoId);
   session=s;syncMicUI(true);setMicStatus('Starting microphone…','listening');runRecognition(s);
   $('speakBtn').scrollIntoView({block:'center',behavior:'smooth'});
  }catch(e){
@@ -1007,6 +1068,8 @@ function runRecognition(s){
  r.onstart=()=>{
   if(session!==s||!s.active)return;
   if(s.mode==='caption'){setMicStatus(s.heard?'Still listening… add to the caption, or tap ■ to finish.':'Listening… say a short caption for this photo. Tap ■ when done.','listening');return;}
+  if(s.mode==='name'){setMicStatus(s.heard?'Still listening… say the part name, or tap ■ to finish.':'Listening… say the part name. Tap ■ when done.','listening');return;}
+  if(s.mode==='description'){setMicStatus(s.heard?'Still listening… keep describing the damage, or tap ■ to finish.':'Listening… say the damage or description. Tap ■ when done.','listening');return;}
   setMicStatus(s.heard?'Still listening… keep talking, or tap ■ to finish.':'Listening… say the part name, pause, then the damage. Tap ■ when done.','listening');
  };
  r.onresult=e=>{if(s.done)return;const finals=[];let interim='';for(let i=0;i<e.results.length;i++){const t=clean(e.results[i][0]?.transcript);if(!t)continue;if(e.results[i].isFinal)finals.push(t);else interim+=' '+t;}s.runFinal=dedupeFinals(finals);s.interim=clean(interim);if(s.runFinal.length||s.interim){s.heard=true;s.noSpeech=0;}applyDictation(s,false);};
@@ -1018,30 +1081,41 @@ function commitRun(s){if(s.runFinal.length)s.segs.push(...s.runFinal);else if(s.
 function captionFromSpeech(spoken){return capFirst(spoken);}
 function applyDictation(s,final){
  const segs=[...s.segs,...s.runFinal];if(s.interim)segs.push(s.interim);
- const spoken=segs.join(' ');if(!spoken)return;
- if(s.mode==='caption'){
-  const photo=(s.entry.photos||[]).find(p=>p&&p.id===s.photoId);
-  if(photo){
-   photo.caption=captionFromSpeech(spoken);
-   if(editing===s.entry){const input=[...document.querySelectorAll('[data-caption-for]')].find(el=>el.dataset.captionFor===photo.id);if(input)input.value=photo.caption;}
-  }
-  if(!final){$('heard').hidden=false;$('heard').textContent='Heard: “'+spoken+'”';}
+ const spoken=clean(segs.join(' '));
+ const show=()=>{if(!final&&spoken)showHeard(spoken);else if(final)$('heard').hidden=true;};
+ if(s.mode==='name'||s.mode==='description'||s.mode==='caption'){
+  if(!spoken&&!s.fieldSuffix)return;
+  const formatted=s.mode==='name'?asPart(spoken):s.mode==='caption'?captionFromSpeech(spoken):segs.map(asSentence).filter(Boolean).join(' ');
+  const built=attachSpoken(s.fieldPrefix??'',formatted,s.fieldSuffix||'');
+  const field=s.mode==='name'?'name':s.mode;
+  setFieldText(s.entry,field,s.photoId,built.value);
+  lastDictation.set(dictationKey(s.entry,field,s.photoId),{prefix:built.prefix,inserted:built.inserted,replacedText:s.replacedText||''});
+  if(editing===s.entry)syncFieldUI(s.entry,field,s.photoId);
+  show();
   persistReport().catch(()=>{});
   return;
  }
+ if(!spoken)return;
  const parsed=parseDictation(segs);
  let name=s.basePart, desc=s.baseDesc;
  if(!s.basePart||parsed.explicitPart){if(parsed.part)name=parsed.part;desc=joinText(s.baseDesc,parsed.description);}
  else desc=joinText(s.baseDesc,segs.map(asSentence).join(' '));
  s.entry.name=name;s.entry.description=desc;
  if(final&&s.entry.condition==='OK'&&!s.entry.severityManual){const g=guessSeverity(spoken);if(g){s.entry.condition=g;s.guessed=g;}}
+ if(name!==s.basePart){
+  lastDictation.set(dictationKey(s.entry,'name'),{prefix:'',inserted:name,replacedText:s.basePart||''});
+ }
+ if(desc!==s.baseDesc){
+  const added=(!s.basePart||parsed.explicitPart)?parsed.description:segs.map(asSentence).join(' ');
+  const built=attachSpoken(s.baseDesc,added,'');
+  lastDictation.set(dictationKey(s.entry,'description'),{prefix:built.prefix,inserted:built.inserted,replacedText:''});
+ }
  if(editing===s.entry){$('part').value=name;$('description').value=desc;$('condition').value=s.entry.condition;paintEditorBadge();}
- if(!final){$('heard').hidden=false;$('heard').textContent='Heard: “'+spoken+'”';}
+ show();
  persistReport().catch(()=>{});
 }
 async function stopRecording(){
  const s=session;if(!s)return;
- if(s.kind==='note')return stopVoiceNote(s);
  if(s.stopping)return s.stopping;
  s.active=false;syncMicUI(false);
  s.stopping=(async()=>{
@@ -1051,6 +1125,8 @@ async function stopRecording(){
   await saveQueue;
   if(s.segs.length){
    if(s.mode==='caption'){const photo=(s.entry.photos||[]).find(p=>p&&p.id===s.photoId);setMicStatus(`Filled in ✓ Caption: “${photo?.caption||'—'}”.`,'ok');}
+   else if(s.mode==='name')setMicStatus(`Filled in ✓ Part: “${s.entry.name||'—'}”.`,'ok');
+   else if(s.mode==='description')setMicStatus(`Filled in ✓ Description updated. Check it, or Re-record if it is wrong.`,'ok');
    else setMicStatus(`Filled in ✓ Part: “${s.entry.name||'—'}”.${s.guessed?` Condition set to ${s.guessed}.`:''} Check it, then add another photo or the next part.`,'ok');
    if(current&&current.parts.includes(s.entry))renderEntries();
   }else if(!s.fatal&&!$('micStatus').classList.contains('warn'))setMicStatus('Nothing was heard. Tap 🎙 and try again, or tap a box and use your keyboard 🎙.','warn');
@@ -1058,15 +1134,39 @@ async function stopRecording(){
  return s.stopping;
 }
 
-async function startVoiceNote(){if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){toast('Voice recording is unavailable here. Type, or use the keyboard microphone.');return;}startingMic=true;const entry=editing;try{const stream=await navigator.mediaDevices.getUserMedia({audio:true});if(editing!==entry){stream.getTracks().forEach(t=>t.stop());return;}const types=['audio/webm;codecs=opus','audio/mp4','audio/webm'];const type=types.find(t=>MediaRecorder.isTypeSupported(t));const recorder=new MediaRecorder(stream,type?{mimeType:type}:{});const s={kind:'note',entry,stream,recorder,chunks:[],stopping:null,start:Date.now()};session=s;recorder.ondataavailable=e=>{if(e.data.size)s.chunks.push(e.data);};recorder.onerror=e=>{fail(e.error||Error('Audio recorder error'));stopRecording().catch(fail);};recorder.onstop=async()=>{try{if(s.chunks.length){const id=uid();await put('media',{id,kind:'audio',blob:new Blob(s.chunks,{type:recorder.mimeType||s.chunks[0].type}),duration:Date.now()-s.start});s.entry.audio.push(id);await persistReport();if(editing===s.entry)renderEditorMedia();}s.resolve?.();}catch(e){s.reject?.(e);fail(e);}finally{if(session===s)session=null;}};recorder.start(1000);syncMicUI(true,'note');setMicStatus((SpeechAPI?'':'Speech-to-text is not supported in this browser — tap a box and use your keyboard 🎙 for text. ')+'Recording a voice note (audio only, no text). Tap ■ to stop.','listening');}catch(e){toast(e.name==='NotAllowedError'?'Microphone permission denied. Allow it in Chrome site settings, or type instead.':e.message);if(session?.kind==='note'){session.stream.getTracks().forEach(t=>t.stop());session=null;}syncMicUI(false);}finally{startingMic=false;}}
-async function stopVoiceNote(s){if(s.stopping)return s.stopping;syncMicUI(false);s.stopping=new Promise((resolve,reject)=>{s.resolve=resolve;s.reject=reject;});if(s.recorder.state!=='inactive')s.recorder.stop();else s.resolve();s.stream.getTracks().forEach(t=>t.stop());setMicStatus('Voice note saved. It is kept in backups, not in Word/PDF.','ok');await s.stopping;await saveQueue;}
-on('speakBtn','click',()=>startRecording('speech'));on('voiceNote','click',()=>startRecording('note'));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
+on('speakBtn','click',()=>startRecording('speech'));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
+on('redoPart','click',()=>redoDictation('name'));
+on('redoDescription','click',()=>redoDictation('description'));
 $('autoListen').checked=localStorage.getItem('stripnote-autolisten')!=='off';$('autoListen').addEventListener('change',()=>localStorage.setItem('stripnote-autolisten',$('autoListen').checked?'on':'off'));
 
 async function maybeAutoListen(){
  if(!$('autoListen').checked||!editing||session||!SpeechAPI||document.hidden)return;
  if(!editing.photos.length||clean(editing.name)||clean(editing.description))return;
  await startRecording('speech',true);
+}
+async function redoDictation(field,photoId){
+ if(!editing||busy||startingMic)return;
+ if(session)await stopRecording();
+ const entry=editing;
+ const key=dictationKey(entry,field,photoId);
+ const rec=lastDictation.get(key);
+ const current=getFieldText(entry,field,photoId);
+ const removed=removeLastInsertion(current,rec);
+ let prefix,suffix,replacedText='';
+ if(removed.found){
+  setFieldText(entry,field,photoId,removed.value);
+  syncFieldUI(entry,field,photoId);
+  lastDictation.delete(key);
+  await persistReport();
+  prefix=removed.prefix;suffix=removed.suffix;replacedText=rec?.replacedText||'';
+  setMicStatus('Last dictation cleared. Listening again…','listening');
+ }else{
+  prefix=current;suffix='';
+  if(rec)setMicStatus('The last dictated words were edited, so nothing was removed. Listening again.','listening');
+  else setMicStatus('Listening… this will fill or add to this field. Tap ■ when done.','listening');
+ }
+ const mode=field==='name'?'name':field;
+ await startRecording('speech',false,{mode,photoId,fieldPrefix:prefix,fieldSuffix:suffix,replacedText});
 }
 async function dictateCaption(photoId){
  if(!editing||busy||startingMic)return;
@@ -1213,9 +1313,8 @@ async function buildDocx(raw,notify=()=>{}){
    }
    if(part.photos.length%2===1){row+=docxCell('<w:p/>',half);flush();}
   }
-  if(part.audio.length)body+=docxPara(docxRun(`${part.audio.length} voice note${part.audio.length===1?'':'s'} kept in the backup ZIP, not in this document.`,{size:16,italic:true,color:'5C6B70'}),'<w:spacing w:before="40" w:after="80"/>');
  }
- body+=docxPara(docxRun('Photographs in this document are reduced copies. Originals and any voice notes remain in the StripNote backup.',{size:16,italic:true,color:'8AA0A6'}),'<w:spacing w:before="240" w:after="0"/>');
+ body+=docxPara(docxRun('Photographs in this document are reduced copies. Full-size originals remain in the StripNote backup.',{size:16,italic:true,color:'8AA0A6'}),'<w:spacing w:before="240" w:after="0"/>');
  const headerTitle=clipText(title,90);
  const footLeft=r.reference||r.equipment||'';
  const hdrNs='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
@@ -1380,11 +1479,10 @@ async function buildPDF(raw,notify=()=>{}){
    }
    y+=rowH;
   }
-  if(part.audio.length){if(y+6>bottom)newPage();drawText(`${part.audio.length} voice note${part.audio.length===1?'':'s'} kept in the backup ZIP, not in this document.`,ML,y,{size:8,color:[90,100,104]});y+=6;}
   y+=4;
  }
  if(y+8>bottom)newPage();
- const note=textLines('Photographs in this document are reduced copies. Originals and any voice notes remain in the StripNote backup.',8,CW);
+ const note=textLines('Photographs in this document are reduced copies. Full-size originals remain in the StripNote backup.',8,CW);
  note.forEach(line=>{if(y+4>bottom)newPage();drawText(line,ML,y,{size:8,color:[120,128,132]});y+=3.6;});
  const pages=doc.getNumberOfPages();
  for(let i=1;i<=pages;i++){
@@ -1463,8 +1561,10 @@ async function saveOriginals(){
 async function buildBackup(raw,notify=()=>{}){
  const r=migrateReport(raw);
  const zip=new JSZip();
- zip.file('report.json',JSON.stringify({format:'stripnote',version:4,report:r},null,2));
- const ids=r.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...p.audio]);
+ const exported=structuredClone(r);
+ for(const part of exported.parts)part.audio=[];
+ zip.file('report.json',JSON.stringify({format:'stripnote',version:5,report:exported},null,2));
+ const ids=exported.parts.flatMap(p=>p.photos.map(ph=>ph.id));
  for(let i=0;i<ids.length;i++){
   const m=await get('media',ids[i]);
   if(!m?.blob)throw Error('Missing attachment; backup stopped.');
@@ -1481,7 +1581,7 @@ async function buildBackup(raw,notify=()=>{}){
   zip.file('logo/logo',await logoRec.blob.arrayBuffer());
   zip.file('logo/logo.json',JSON.stringify({mime:logoRec.mime||logoRec.blob.type,width:logoRec.width,height:logoRec.height,name:logoRec.name||''}));
  }
- zip.file('README.txt','StripNote v4 backup. Import this ZIP from the app home screen. Older v3 backups still import. report.json is the job. media holds reduced JPEG photos used in reports, originals holds full-size photos when available, thumbs are previews, and logo is the company logo if one was set. Voice notes are not embedded in Word or PDF. Keep this file secure.');
+ zip.file('README.txt','StripNote v5 backup. Import this ZIP from the app home screen. Older v3 and v4 backups still import, including any voice notes they contain. report.json is the job. media holds reduced JPEG photos used in reports, originals holds full-size photos when available, thumbs are previews, and logo is the company logo if one was set. New backups do not include voice notes. Keep this file secure.');
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging backup… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function deliver(blob,name){
@@ -1506,7 +1606,7 @@ async function exportReport(kind){
   $('progressDialog').close();
   await deliver(blob,`${name}.${kind==='word'?'docx':kind==='pdf'?'pdf':'zip'}`);
   if(kind==='backup'&&blob.size>80*1048576)toast(`Backup is ${(blob.size/1048576).toFixed(1)} MB because it includes full-size originals. Keep it somewhere with enough space.`);
-  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':'Report ready. Keep a backup ZIP if you need the voice notes or originals.');
+  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':'Report ready. Keep a backup ZIP if you need the originals.');
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
 }
 async function importBackup(file){
@@ -1519,7 +1619,7 @@ async function importBackup(file){
   const rawText=await z.file('report.json')?.async('string');
   if(!rawText)throw Error('Not a StripNote backup');
   const data=JSON.parse(rawText);
-  if(data?.format!=='stripnote'||![1,2,3,4].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
+  if(data?.format!=='stripnote'||![1,2,3,4,5].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
   const shaped=migrateReport(data.report);
   if(shaped.parts.length>5000)throw Error('Too many parts in backup');
   const total=shaped.parts.reduce((n,p)=>n+p.photos.length+p.audio.length,0);
@@ -1657,6 +1757,7 @@ $('editorPhotos').addEventListener('pointerdown',e=>{if(e.target.closest('[data-
 on('editorPhotos','click',async e=>{
  let b=e.target.closest('[data-remove-photo]');if(b)return removePhoto(b.dataset.removePhoto);
  b=e.target.closest('[data-caption-mic]');if(b)return dictateCaption(b.dataset.captionMic);
+ b=e.target.closest('[data-caption-redo]');if(b)return redoDictation('caption',b.dataset.captionRedo);
  b=e.target.closest('[data-photo-up],[data-photo-down]');if(b&&editing){
   const id=b.dataset.photoUp||b.dataset.photoDown;
   const index=editing.photos.findIndex(p=>p.id===id);
@@ -1701,9 +1802,11 @@ window.addEventListener('beforeunload',e=>{if(session||busy||startingMic||hasSav
 window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
  get db(){return db;},get session(){return session;},
+ get lastDictation(){return lastDictation;},
  newReport,addEntry:addPart,addPart,addPhotos,finishEntry,buildDocx,buildPDF,buildBackup,exportReport,saveOriginals,
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
- migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt
+ migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,
+ redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
 
