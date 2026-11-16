@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10161a"><meta name="color-scheme" content="dark light"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><title>StripNote · Photo inspection reports</title>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><meta name="theme-color" content="#10161a"><meta name="color-scheme" content="dark light"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><title>StripNote · Photo inspection reports</title>
 <style>
 :root{color-scheme:dark;--bg:#10161a;--panel:#182226;--ink:#e7eef0;--muted:#93a3a8;--line:#314249;--mark:#c6e07a;--button:#24343a;--primary:#e7eef0;--primary-ink:#142024;--danger:#ffb4aa;--radius:14px;font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
 body.light{color-scheme:light;--bg:#f3f6f6;--panel:#fff;--ink:#1a272c;--muted:#5c6f75;--line:#d3e0e3;--mark:#3d6810;--button:#e7eeee;--primary:#1a272c;--primary-ink:#f4f8f8;--danger:#9d261c}
@@ -113,9 +113,32 @@ details.more .more-row>*{flex:1 1 30%}
 .cond-row button[aria-pressed="true"]{outline:3px solid var(--mark);outline-offset:-3px;background:var(--primary);color:var(--primary-ink)}
 .badge.Notrated{background:#2b3438;color:#e7eef0;border-color:#93a3a8}
 body.light .badge.Notrated{background:#eef2f3;color:#36454a;border-color:#8a9ba0}
-.measure{display:grid;grid-template-columns:1fr 1fr 1fr 56px;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:12px}
-.measure .m-item{grid-column:1/4}
-.measure button{grid-row:1/3;grid-column:4;min-width:56px}
+.measure{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px 6px;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:12px}
+.measure [hidden]{display:none!important}
+.measure .m-f{display:flex;flex-direction:column;gap:2px;margin:0;min-width:0}
+.measure .m-f>span{font-size:13px;font-weight:700;color:var(--muted)}
+.measure .m-f input,.measure .m-f select{width:100%;min-width:0;min-height:56px}
+.measure .m-f{grid-column:span 2}
+.measure .m-type{grid-column:1/4}
+.measure .m-item{grid-column:4/9}
+.measure .m-foot{grid-column:1/9;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.measure .m-foot button{min-height:56px;min-width:56px}
+.measure .m-result{flex:1 1 auto;font-weight:800;font-size:15px}
+.measure .m-result.in{color:var(--ok,#3fae5a)}
+.measure .m-result.out{color:var(--danger)}
+.measure .m-note{flex:1 1 100%;font-size:13px;color:var(--muted)}
+body.outdoor .measure .m-result.in{color:#0a5c00}
+.measure-tools{display:flex;gap:8px;flex-wrap:wrap}
+.measure-tools button{flex:1 1 40%;min-height:56px}
+.thumbwrap{position:relative;flex:0 0 auto;display:block}
+.thumbwrap .thumbno{position:absolute;left:3px;top:3px;background:#000c;color:#fff;font-size:12px;font-weight:800;padding:1px 5px;border-radius:5px;pointer-events:none}
+.dock{bottom:var(--kb,0px)}
+#kbDone{display:none}
+body.kb #kbDone{display:block;flex:1 1 0;min-height:60px}
+body.kb #dockEdit>.dock-row+.dock-row,body.kb #stepShot,body.kb #samePart{display:none!important}
+body.kb #dockEdit .dock-heard{max-height:3.2em;overflow:hidden}
+#descMic{min-height:56px;min-width:56px}
+#descMic.recording{background:var(--danger);color:#fff}
 .warnbox{border:2px solid var(--danger);border-radius:12px;padding:12px 14px;margin:12px 0;color:var(--ink);font-weight:600}
 .backup-state{display:block;font-weight:700;margin-top:3px}
 .backup-state.bad{color:var(--danger)}
@@ -182,7 +205,7 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,text/plain" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v7</p>
+<p class="ver">StripNote v8</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -223,8 +246,8 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div id="micStatus" class="status" role="status">Tap 🎙 Speak at the bottom and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use + Photo of same part and say a short caption.</div>
 <div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing">
 <label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p>
-<div class="field-head" id="descHead"><label for="description">Description</label><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
-<label>Measurements (optional)</label><div id="measureList"></div><button id="addMeasure" type="button">+ Add measurement</button>
+<div class="field-head" id="descHead"><label for="description">Description</label><button id="descMic" class="redo" type="button" aria-label="Speak the description">🎙 Speak</button><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
+<label>Measurements (optional)</label><p class="note" style="margin:2px 0 6px">Size or Quantity, then what you measured with its Min and Max. Outside Min–Max is flagged OUT.</p><div id="measureList"></div><div class="measure-tools"><button id="sayMeasure" type="button">🎙 Say measurement</button><button id="addMeasure" type="button">+ Type measurement</button></div><p class="note" style="margin:4px 0 0">Say it like: “pin OD 101.2 min 101 max 101.5” or “quantity bolts 7 min 8 max 8”.</p>
 <p class="note">Voice not working? Tap a box above and press the 🎙 on your phone keyboard to type by voice.</p>
 <label class="row" style="font-weight:500;font-size:15px"><input id="autoListen" type="checkbox" checked style="width:22px;min-height:22px"> Start listening automatically after each photo</label>
 <div id="audioList"></div>
@@ -233,7 +256,7 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div id="entries"></div>
 <div id="dock" class="dock">
 <div id="dockIdle" class="dock-row"><button id="resume" class="primary" type="button" hidden>▶ Continue steps</button><button id="rapid" class="primary" type="button">Photo → new part</button><button id="addPart" type="button">Add part</button></div>
-<div id="dockEdit" hidden><div id="heard" class="heard dock-heard" hidden aria-live="polite"></div><div class="dock-row"><button id="stepShot" class="primary step-only" type="button">📷 Photo</button><button id="speakBtn" class="mic primary" type="button" aria-pressed="false">🎙 Speak</button><button id="samePart" type="button">📷 Same part</button></div><div class="dock-row"><button id="stepBack" class="step-only" type="button">← Back</button><button id="stepSkip" class="step-only" type="button">Skip</button><button id="stepNext" class="step-only" type="button">Next →</button><button id="nextPart" type="button">Next part</button><button id="doneEntry" type="button">Done</button></div></div>
+<div id="dockEdit" hidden><div id="heard" class="heard dock-heard" hidden aria-live="polite"></div><div class="dock-row"><button id="stepShot" class="primary step-only" type="button">📷 Photo</button><button id="speakBtn" class="mic primary" type="button" aria-pressed="false">🎙 Speak</button><button id="kbDone" type="button">⌨ Done typing</button><button id="samePart" type="button">📷 Same part</button></div><div class="dock-row"><button id="stepBack" class="step-only" type="button">← Back</button><button id="stepSkip" class="step-only" type="button">Skip</button><button id="stepNext" class="step-only" type="button">Next →</button><button id="nextPart" type="button">Next part</button><button id="doneEntry" type="button">Done</button></div></div>
 </div>
 </section>
 <section id="tplEditor" hidden>
@@ -679,9 +702,81 @@ function asPhoto(p){
  if(p&&typeof p==='object'&&typeof p.id==='string'&&p.id)return {id:p.id,caption:typeof p.caption==='string'?p.caption:'',prompt:typeof p.prompt==='string'?p.prompt:''};
  return null;
 }
+const MEAS_TYPES=['Size','Quantity'];
+function numText(x){const m=String(x??'').replace(/(\d),(\d)/g,'$1.$2').replace(/\u2212/g,'-').match(/-?\d+(?:\.\d+)?/);return m?m[0]:'';}
+function numDecs(x){const m=String(x).match(/\.(\d+)/);return m?m[1].length:0;}
+// Read min and max out of an old free-text spec ("101-101.5", "101 to 101.5", "100 ± 0.5", "max 0.4", "min 8").
+function specToMinMax(spec){
+ const t=String(spec||'').toLowerCase().replace(/(\d),(\d)/g,'$1.$2').replace(/\u2212/g,'-');
+ const N='(-?\\d+(?:\\.\\d+)?)';
+ let m=t.match(new RegExp(N+'\\s*[a-z"°µ]*\\s*(?:\\+/-|±|\\+-|plus or minus)\\s*'+N));
+ if(m){const d=Math.max(numDecs(m[1]),numDecs(m[2]));const a=+m[1],b=Math.abs(+m[2]);return {min:(a-b).toFixed(d),max:(a+b).toFixed(d)};}
+ m=t.match(new RegExp(N+'\\s*[a-z"°µ]*\\s*(?:–|—|to|-|/)\\s*'+N));
+ if(m){const a=m[1],b=m[2];return +a<=+b?{min:a,max:b}:{min:b,max:a};}
+ const mx=t.match(new RegExp('(?:max(?:imum)?|<=|≤|up to|not more than)\\s*'+N)),mn=t.match(new RegExp('(?:min(?:imum)?|>=|≥|at least|not less than)\\s*'+N));
+ const mx2=!mx&&t.match(new RegExp(N+'\\s*[a-z"°µ]*\\s*(?:max(?:imum)?)\\b')),mn2=!mn&&t.match(new RegExp(N+'\\s*[a-z"°µ]*\\s*(?:min(?:imum)?)\\b'));
+ if(mx||mn||mx2||mn2)return {min:mn?mn[1]:mn2?mn2[1]:'',max:mx?mx[1]:mx2?mx2[1]:''};
+ return null;
+}
 function asMeasure(m){
  if(!m||typeof m!=='object')return null;
- return {id:String(m.id||uid()),item:String(m.item??''),measured:String(m.measured??''),spec:String(m.spec??''),unit:String(m.unit??'')};
+ const out={id:String(m.id||uid()),type:MEAS_TYPES.includes(m.type)?m.type:'Size',item:String(m.item??''),measured:String(m.measured??''),min:String(m.min??''),max:String(m.max??''),unit:String(m.unit??''),spec:String(m.spec??'')};
+ if(m.min==null&&m.max==null&&clean(out.spec)){const p=specToMinMax(out.spec);if(p){out.min=p.min;out.max=p.max;}}
+ return out;
+}
+function measureResult(m){
+ const v=numText(m.measured),lo=numText(m.min),hi=numText(m.max);
+ if(v===''||(lo===''&&hi===''))return '';
+ const x=Number(v);
+ if(lo!==''&&x<Number(lo))return 'OUT – low';
+ if(hi!==''&&x>Number(hi))return 'OUT – high';
+ return 'In spec';
+}
+function withUnit(v,u){v=clean(v);u=clean(u);return v&&u&&!v.toLowerCase().endsWith(u.toLowerCase())?`${v} ${u}`:v;}
+function measureReportRow(m){const res=measureResult(m);const old=clean(m.spec)&&!clean(m.min)&&!clean(m.max)?`Spec: ${clean(m.spec)}`:'';return [m.item,m.type||'Size',withUnit(m.measured,m.unit),withUnit(m.min,m.unit),withUnit(m.max,m.unit),res||old];}
+const NUM_WORDS={zero:'0',nought:'0',one:'1',two:'2',three:'3',four:'4',five:'5',six:'6',seven:'7',eight:'8',nine:'9',ten:'10',eleven:'11',twelve:'12',thirteen:'13',fourteen:'14',fifteen:'15',sixteen:'16',seventeen:'17',eighteen:'18',nineteen:'19',twenty:'20',thirty:'30',forty:'40',fifty:'50',hundred:'100'};
+const MEAS_UNITS=[[/^(mm|millimet(?:er|re)s?|mils?)$/,'mm'],[/^(thou|thous)$/,'thou'],[/^(inch|inches|in|")$/,'in'],[/^(microns?|µm|um)$/,'µm'],[/^(cm|centimet(?:er|re)s?)$/,'cm'],[/^(degrees?|°)$/,'°'],[/^bar$/,'bar'],[/^psi$/,'psi'],[/^(nm|newton|newtons)$/,'Nm']];
+// "pin OD 101.2 min 101 max 101.5", "liner ID 50.1 spec 50 to 50.2", "quantity bolts 7 min 8 max 8", "clearance 0.3 max 0.5 mm".
+function parseMeasureSpeech(raw){
+ let t=String(raw||'').toLowerCase().replace(/(\d),(\d)/g,'$1.$2').replace(/\u2212/g,'-').replace(/[,;:!?]/g,' ');
+ t=t.replace(/(\d)(mm|thou|in|cm|um|µm|bar|psi|nm)\b/g,'$1 $2').replace(/±/g,' plus or minus ').replace(/\bnumber of\b/g,' quantity ');
+ let toks=t.split(/\s+/).filter(Boolean);
+ const out={type:'',item:'',measured:'',min:'',max:'',unit:''};
+ toks=toks.filter(w=>{if(/^(quantity|qty|count)$/.test(w)){out.type='Quantity';return false;}if(/^size$/.test(w)&&!out.type){out.type='Size';return false;}return true;});
+ const isDigit=w=>/^-?\d+(?:\.\d+)?\.?$/.test(w);
+ const KEY=/^(min|minimum|max|maximum|spec|specification|limit|limits|tolerance|measured|reading|reads)$/;
+ const hasDigits=toks.some(isDigit);
+ let k=toks.findIndex(w=>isDigit(w)||KEY.test(w)||(!hasDigits&&NUM_WORDS[w]!=null));
+ if(k<0)k=toks.length;
+ const itemToks=toks.slice(0,k).filter(w=>!/^(is|was|at|reads?)$/.test(w));
+ let rest=toks.slice(k).map(w=>NUM_WORDS[w]!=null?NUM_WORDS[w]:w.replace(/\.$/,''));
+ // join "101 point 2" and "point 5"
+ const nums=[];for(let i=0;i<rest.length;i++){const w=rest[i];if(w==='point'&&i+1<rest.length&&/^\d+$/.test(rest[i+1])){const prev=nums.length&&/^-?\d+$/.test(nums[nums.length-1])?nums.pop():'0';nums.push(prev+'.'+rest[i+1]);i++;continue;}nums.push(w);}
+ rest=nums;
+ let state='measured',specA='',pm=false;
+ for(let i=0;i<rest.length;i++){
+  const w=rest[i];
+  const u=MEAS_UNITS.find(([re])=>re.test(w));if(u&&i>0){out.unit=u[1];continue;}
+  if(/^(min|minimum|least)$/.test(w)){state='min';continue;}
+  if(/^(max|maximum|most)$/.test(w)||(w==='up'&&rest[i+1]==='to')){state='max';if(w==='up')i++;continue;}
+  if(/^(spec|specification|limit|limits|tolerance|should)$/.test(w)){state='spec';continue;}
+  if(/^(measured|reading|reads)$/.test(w)){state='measured';continue;}
+  if(w==='plus'&&rest[i+1]==='or'&&rest[i+2]==='minus'){pm=true;i+=2;continue;}
+  if(w==='to'||w==='and'||w==='-'){if(state==='spec'&&specA)state='specB';continue;}
+  if(w==='minus'&&i+1<rest.length&&isDigit(rest[i+1])){rest[i+1]='-'+rest[i+1];continue;}
+  if(!isDigit(w))continue;
+  if(pm){const base=state==='specB'||state==='spec'?specA:(specA||out.measured);if(base){const d=Math.max(numDecs(base),numDecs(w));out.min=(Number(base)-Math.abs(Number(w))).toFixed(d);out.max=(Number(base)+Math.abs(Number(w))).toFixed(d);if(base===out.measured&&!specA){/* "101 plus or minus 0.2" with no measured */out.measured='';}}pm=false;state='done';continue;}
+  if(state==='min'){out.min=w;state='after';continue;}
+  if(state==='max'){out.max=w;state='after';continue;}
+  if(state==='spec'){specA=w;continue;}
+  if(state==='specB'){const a=Number(specA),b=Number(w);out.min=a<=b?specA:w;out.max=a<=b?w:specA;specA='';state='after';continue;}
+  if(state==='measured'&&!out.measured){out.measured=w;continue;}
+  if(!out.min)out.min=w;else if(!out.max)out.max=w;
+ }
+ if(specA&&!out.min&&!out.max){out.min=specA;out.max=specA;}
+ let item=itemToks.join(' ').replace(/\b([oi])\s?\.?\s?d\b\.?/g,(x,a)=>a.toUpperCase()+'D').replace(/\bo[\s-]?rings?\b/g,x=>x.endsWith('s')?'O-rings':'O-ring');
+ out.item=capFirst(clean(item));
+ return out;
 }
 function migratePart(e){
  const src=e&&typeof e==='object'?e:{};
@@ -698,15 +793,15 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:5,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString()};
+ return {id:String(src.id||uid()),schema:6,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString()};
 }
 function isCurrentReport(r){
- if(!r||r.schema!==5||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
+ if(!r||r.schema!==6||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
  if(!r.parts.every(p=>Array.isArray(p?.prompts)&&typeof p.drawingId==='string'&&typeof p.fromTemplate==='boolean'&&typeof p.skipped==='boolean'&&typeof p.skipReason==='string'&&Array.isArray(p.photos)&&p.photos.every(ph=>typeof ph?.prompt==='string')))return false;
  if(typeof r.client!=='string'||typeof r.site!=='string'||typeof r.investigator!=='string')return false;
  if(!JOB_TEXT.every(k=>typeof r[k]==='string')||typeof r.backedUpAt!=='string')return false;
- if(!r.parts.every(p=>Array.isArray(p?.measurements)&&typeof p.severityAuto==='boolean'))return false;
+ if(!r.parts.every(p=>Array.isArray(p?.measurements)&&p.measurements.every(m=>m&&typeof m.type==='string'&&typeof m.min==='string'&&typeof m.max==='string'&&typeof m.spec==='string')&&typeof p.severityAuto==='boolean'))return false;
  return r.parts.every(p=>p&&typeof p.id==='string'&&typeof p.name==='string'&&typeof p.description==='string'&&CONDITIONS.includes(p.condition)&&Array.isArray(p.audio)&&p.audio.every(a=>typeof a==='string')&&Array.isArray(p.photos)&&p.photos.every(ph=>ph&&typeof ph.id==='string'&&typeof ph.caption==='string'));
 }
 async function migrateStoredReports(){
@@ -862,7 +957,7 @@ function renderEntries(){
  const tj=isTemplateJob(current);
  $('entries').innerHTML=parts.length?parts.map((p,i)=>{
   const cond=conditionOf(p.condition);
-  const thumbs=p.photos.slice(0,6).map((ph,j)=>`<img data-media="${esc(ph.id)}" alt="Photo ${j+1} of part ${i+1}" tabindex="0" role="button">`).join('');
+  const thumbs=p.photos.slice(0,6).map((ph,j)=>`<span class="thumbwrap"><img data-media="${esc(ph.id)}" alt="Photo ${i+1}.${j+1}${ph.prompt?' '+esc(promptLabel(ph.prompt)):''}" tabindex="0" role="button"><b class="thumbno">${i+1}.${j+1}</b></span>`).join('');
   const more=p.photos.length>6?`<span class="muted">+${p.photos.length-6}</span>`:'';
   const st=tj?stepState(p):null;
   const stLine=tj?`<span class="step-state ${st.done?'':'bad'}">${st.skipped?`⤼ Skipped – not inspected${p.skipReason?': '+esc(p.skipReason):''}`:st.done?'✓ Complete':st.started?'⚠ '+esc(capFirst(stepProblems(p).join(' · '))):'○ Not started'}</span>`:'';
@@ -879,15 +974,31 @@ function updateEditorChrome(){
  const badge=$('conditionBadge');
  const cond=conditionOf(editing.condition);
  badge.className='badge '+condClass(cond);badge.textContent=cond;
- $('editorPhotos').querySelectorAll('[data-fig]').forEach(el=>{const ph=editing.photos[Number(el.dataset.fig)];el.textContent=`Fig ${Math.max(1,n+1)}.${Number(el.dataset.fig)+1}${ph?.prompt?' · '+promptLabel(ph.prompt):''}`;});
+ $('editorPhotos').querySelectorAll('[data-fig]').forEach(el=>{const ph=editing.photos[Number(el.dataset.fig)];el.textContent=`Photo ${Math.max(1,n+1)}.${Number(el.dataset.fig)+1}${ph?.prompt?' · '+promptLabel(ph.prompt):''}`;});
 }
 function paintEditorBadge(){if(!editing)return;const cond=conditionOf(editing.condition);const badge=$('conditionBadge');badge.className='badge '+condClass(cond);badge.textContent=cond;$('condition').value=cond;
  document.querySelectorAll('#condButtons [data-cond]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cond===cond)));
  $('condHint').textContent=editing.severityManual?'Set by you.':editing.severityAuto?`Suggested from your words: ${cond}. Tap another to change it.`:cond==='Not rated'?'Not rated yet. It is suggested from the damage words, or tap one.':'';}
 async function setCondition(c){if(!editing||!CONDITIONS.includes(c))return;editing.condition=c;editing.severityManual=true;editing.severityAuto=false;paintEditorBadge();renderEntries();paintStep();await persistReport();}
+function measureRowHTML(m,i){
+ const q=m.type==='Quantity',id=esc(m.id),res=measureResult(m);
+ const live=session&&session.mode==='measure'&&session.photoId===m.id;
+ const inp=(f,label,ph,mode)=>`<label class="m-f${f==='item'?' m-item':''}${f==='unit'?' m-unit':''}" ${f==='unit'&&q?'hidden':''}><span>${label}</span><input class="compact" data-mfield="${f}" value="${esc(m[f]||'')}" placeholder="${ph}" ${mode?`inputmode="${mode}"`:''} aria-label="Measurement ${i+1}: ${label}"></label>`;
+ return `<div class="measure" data-measure="${id}"><label class="m-f m-type"><span>Type</span><select class="compact" data-mfield="type" aria-label="Measurement ${i+1}: type">${MEAS_TYPES.map(t=>`<option value="${t}" ${t===(m.type||'Size')?'selected':''}>${t}</option>`).join('')}</select></label>${inp('item','Item',q?'Bolts fitted':'Pin OD')}${inp('measured','Measured',q?'8':'101.2','decimal')}${inp('min','Min',q?'8':'101.0','decimal')}${inp('max','Max',q?'8':'101.5','decimal')}${inp('unit','Unit','mm')}<div class="m-foot"><span class="m-result ${res==='In spec'?'in':res?'out':''}" data-mresult aria-live="polite">${res?(res==='In spec'?'✓ In spec':'⚠ '+esc(res)):'<span class="muted">Fill Measured and Min/Max to check</span>'}</span><button type="button" class="small${live?' recording':''}" data-mmic="${id}" aria-label="Say measurement ${i+1}">${live?'■ Stop':'🎙 Say'}</button><button type="button" class="small danger" data-mremove="${id}" aria-label="Remove measurement ${i+1}">✕</button>${clean(m.spec)?`<span class="m-note">Old spec text: “${esc(m.spec)}”${clean(m.min)||clean(m.max)?' – read into Min/Max, please check.':''}</span>`:''}</div></div>`;
+}
 function renderMeasures(){
  if(!editing)return;
- $('measureList').innerHTML=editing.measurements.map((m,i)=>`<div class="measure" data-measure="${esc(m.id)}"><input class="compact m-item" data-mfield="item" value="${esc(m.item)}" placeholder="What was measured, e.g. Wear ring clearance" aria-label="Measurement ${i+1}: item"><input class="compact" data-mfield="measured" value="${esc(m.measured)}" placeholder="Measured" inputmode="decimal" aria-label="Measurement ${i+1}: measured"><input class="compact" data-mfield="spec" value="${esc(m.spec)}" placeholder="Spec" aria-label="Measurement ${i+1}: specification"><input class="compact" data-mfield="unit" value="${esc(m.unit)}" placeholder="Unit" aria-label="Measurement ${i+1}: unit"><button type="button" class="small danger" data-mremove="${esc(m.id)}" aria-label="Remove measurement ${i+1}">✕</button></div>`).join('');
+ $('measureList').innerHTML=editing.measurements.map(measureRowHTML).join('');
+}
+function paintMeasureResult(row,m){const el=row?.querySelector('[data-mresult]');if(!el)return;const res=measureResult(m);el.className='m-result '+(res==='In spec'?'in':res?'out':'');el.innerHTML=res?(res==='In spec'?'✓ In spec':'⚠ '+esc(res)):'<span class="muted">Fill Measured and Min/Max to check</span>';}
+function newMeasure(){return {id:uid(),type:'Size',item:'',measured:'',min:'',max:'',unit:'',spec:''};}
+async function sayMeasurement(id){
+ if(!editing||busy||startingMic)return;
+ let m=id&&editing.measurements.find(x=>x.id===id);
+ if(!m){if(session)await stopRecording();m=newMeasure();editing.measurements.push(m);renderMeasures();await persistReport();}
+ await startRecording('speech',false,{mode:'measure',photoId:m.id});
+ renderMeasures();
+ $('measureList').querySelector(`[data-measure="${CSS.escape(m.id)}"]`)?.scrollIntoView({block:'nearest'});
 }
 async function addPart(){
  if(busy||startingMic)return;
@@ -917,7 +1028,7 @@ function renderEditorMedia(){
   const others=current.parts.filter(p=>p!==editing);
   const opts=others.map(p=>`<option value="${esc(p.id)}">${esc(p.name||'Untitled part')}</option>`).join('');
   const labelSel=editing.prompts.length?`<select class="compact" data-photo-prompt="${esc(ph.id)}" aria-label="Label for photo ${i+1}"><option value="">No label</option>${editing.prompts.map(pr=>`<option value="${esc(pr)}" ${pr===ph.prompt?'selected':''}>${esc(promptLabel(pr))}</option>`).join('')}</select>`:'';
-  return `<div class="photo"><div class="fig" data-fig="${i}">Fig ${n}.${i+1}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><img data-media="${esc(ph.id)}" alt="Photo ${i+1}"><input class="compact" data-caption-for="${esc(ph.id)}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${i+1}"><details class="more" data-photo-more="${esc(ph.id)}"><summary aria-label="Options for photo ${i+1}">⋯ Photo options</summary><div class="photo-actions"><button type="button" class="small" data-caption-mic="${esc(ph.id)}" aria-label="Dictate caption for photo ${i+1}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${esc(ph.id)}" aria-label="Re-record caption for photo ${i+1}">↻ Re-record</button><button type="button" class="small" data-photo-up="${esc(ph.id)}" aria-label="Move photo ${i+1} up" ${i===0?'disabled':''}>↑</button><button type="button" class="small" data-photo-down="${esc(ph.id)}" aria-label="Move photo ${i+1} down" ${i===editing.photos.length-1?'disabled':''}>↓</button></div><select class="compact" data-photo-move="${esc(ph.id)}" aria-label="Move photo ${i+1} to another part" ${opts?'':'disabled'}><option value="">Move to…</option>${opts}</select>${labelSel}<button type="button" class="small danger" data-remove-photo="${esc(ph.id)}">Remove photo</button></details></div>`;
+  return `<div class="photo"><div class="fig" data-fig="${i}">Photo ${n}.${i+1}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><img data-media="${esc(ph.id)}" alt="Photo ${i+1}"><input class="compact" data-caption-for="${esc(ph.id)}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${i+1}"><details class="more" data-photo-more="${esc(ph.id)}"><summary aria-label="Options for photo ${i+1}">⋯ Photo options</summary><div class="photo-actions"><button type="button" class="small" data-caption-mic="${esc(ph.id)}" aria-label="Dictate caption for photo ${i+1}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${esc(ph.id)}" aria-label="Re-record caption for photo ${i+1}">↻ Re-record</button><button type="button" class="small" data-photo-up="${esc(ph.id)}" aria-label="Move photo ${i+1} up" ${i===0?'disabled':''}>↑</button><button type="button" class="small" data-photo-down="${esc(ph.id)}" aria-label="Move photo ${i+1} down" ${i===editing.photos.length-1?'disabled':''}>↓</button></div><select class="compact" data-photo-move="${esc(ph.id)}" aria-label="Move photo ${i+1} to another part" ${opts?'':'disabled'}><option value="">Move to…</option>${opts}</select>${labelSel}<button type="button" class="small danger" data-remove-photo="${esc(ph.id)}">Remove photo</button></details></div>`;
  }).join('');
  $('noPhotos').hidden=editing.photos.length>0;
  for(const img of $('editorPhotos').querySelectorAll('img'))loadThumb(img);
@@ -1006,6 +1117,7 @@ function safeFileName(s,fallback='file'){
  if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(t))t+='-file';
  return t;
 }
+function photoStem(partIdx,photoIdx,partCount,name,prompt){const w=Math.max(2,String(partCount).length);const no=`${String(partIdx+1).padStart(w,'0')}.${String(photoIdx+1).padStart(2,'0')}`;const nm=safeFileName(name||'Untitled part','Part').replace(/\s+/g,'-');const pr=prompt?'_'+safeFileName(promptLabel(prompt),'photo').replace(/\s+/g,'-'):'';return `${no}_${nm}${pr}`;}
 function uniqueBase(name,used){
  let base=safeFileName(name,'Untitled-part'), candidate=base, n=2;
  while(used.has(candidate.toLowerCase()))candidate=base+'-'+(n++);
@@ -1253,7 +1365,7 @@ function removeLastInsertion(current,rec){
 }
 function showHeard(spoken){$('heard').hidden=false;$('heard').textContent='Hearing now: “'+spoken+'”';}
 
-function syncMicUI(active,kind='speech'){const b=$('speakBtn');const on=!!active;b.classList.toggle('recording',on);b.setAttribute('aria-pressed',String(on));b.textContent=on?'■ Stop listening':(isStepMode()&&editing?.fromTemplate?'🎙 Say damage':'🎙 Speak');if(!active)$('heard').hidden=true;}
+function syncMicUI(active,kind='speech'){const b=$('speakBtn');const on=!!active;b.classList.toggle('recording',on);b.setAttribute('aria-pressed',String(on));b.textContent=on?'■ Stop listening':(isStepMode()&&editing?.fromTemplate?'🎙 Say damage':'🎙 Speak');if(!active)$('heard').hidden=true;const dm=$('descMic');if(dm){const d=on&&session?.mode==='description';dm.textContent=d?'■ Stop':'🎙 Speak';dm.classList.toggle('recording',d);dm.setAttribute('aria-pressed',String(d));}document.querySelectorAll('[data-mmic]').forEach(b=>{const l=on&&session?.mode==='measure'&&session.photoId===b.dataset.mmic;b.textContent=l?'■ Stop':'🎙 Say';b.classList.toggle('recording',l);});}
 const SPEECH_ERRORS={'not-allowed':'Microphone is blocked for StripNote. In Chrome: ⋮ → Settings → Site settings → Microphone → allow weegee777.github.io, then tap 🎙 again.','service-not-allowed':'Chrome speech service is turned off on this phone. Use the 🎙 on your keyboard instead (tap the text box).','network':'Speech-to-text needs internet (Chrome uses Google’s speech service). No signal? Tap the text box and use your keyboard 🎙 — Gboard can work offline.','audio-capture':'Could not get the microphone — another app (call, recorder, camera) may be using it. Close it and tap 🎙 again.','language-not-supported':'English (UK) speech is not available in this browser. Use your keyboard 🎙 instead.','bad-grammar':'Speech service error. Tap 🎙 to try again.'};
 async function ensureMicPermission(){try{const st=await navigator.permissions?.query({name:'microphone'});if(st?.state==='granted')return;if(st?.state==='denied')throw Object.assign(Error('denied'),{name:'NotAllowedError'});}catch(e){if(e.name==='NotAllowedError')throw e;}if(!navigator.mediaDevices?.getUserMedia)return;const stream=await navigator.mediaDevices.getUserMedia({audio:true});stream.getTracks().forEach(t=>t.stop());await new Promise(r=>setTimeout(r,300));}
 
@@ -1289,6 +1401,7 @@ function runRecognition(s){
   if(session!==s||!s.active)return;
   if(s.mode==='caption'){setMicStatus(s.heard?'Still listening… add to the caption, or tap ■ to finish.':'Listening… say a short caption for this photo. Tap ■ when done.','listening');return;}
   if(s.mode==='name'){setMicStatus(s.heard?'Still listening… say the part name, or tap ■ to finish.':'Listening… say the part name. Tap ■ when done.','listening');return;}
+  if(s.mode==='measure'){setMicStatus(s.heard?'Still listening… tap ■ when the measurement is done.':'Listening… say e.g. “pin OD 101.2 min 101 max 101.5”. Tap ■ when done.','listening');return;}
   if(s.mode==='description'){setMicStatus(s.heard?'Still listening… keep describing the damage, or tap ■ to finish.':'Listening… say the damage or description. Tap ■ when done.','listening');return;}
   setMicStatus(s.heard?'Still listening… keep talking, or tap ■ to finish.':'Listening… say the part name, pause, then the damage. Tap ■ when done.','listening');
  };
@@ -1303,6 +1416,17 @@ function applyDictation(s,final){
  const segs=[...s.segs,...s.runFinal];if(s.interim)segs.push(s.interim);
  const spoken=clean(segs.join(' '));
  const show=()=>{if(!final&&spoken)showHeard(spoken);else if(final)$('heard').hidden=true;};
+ if(s.mode==='measure'){
+  const m=(s.entry.measurements||[]).find(x=>x.id===s.photoId);if(!m||!spoken)return;
+  if(!s.measureBase)s.measureBase={...m};
+  const p=parseMeasureSpeech(spoken),b=s.measureBase;
+  m.item=p.item||b.item;m.measured=p.measured||b.measured;m.min=p.min||b.min;m.max=p.max||b.max;m.unit=p.unit||b.unit;m.type=p.type||b.type||'Size';
+  if(final&&!p.item&&!p.measured&&!p.min&&!p.max&&!b.item)m.item=capFirst(spoken);
+  s.measureText=[m.item,m.type==='Quantity'?'quantity':'',m.measured&&('measured '+withUnit(m.measured,m.unit)),m.min&&('min '+m.min),m.max&&('max '+m.max)].filter(Boolean).join(' · ');
+  if(editing===s.entry){const row=$('measureList').querySelector(`[data-measure="${CSS.escape(m.id)}"]`);if(row&&!row.contains(document.activeElement))renderMeasures();else if(row){for(const f of ['item','measured','min','max','unit']){const el=row.querySelector(`[data-mfield="${f}"]`);if(el&&el!==document.activeElement)el.value=m[f];}paintMeasureResult(row,m);}}
+  show();persistReport().catch(()=>{});
+  return;
+ }
  if(s.mode==='name'||s.mode==='description'||s.mode==='caption'){
   if(!spoken&&!s.fieldSuffix)return;
   const formatted=s.mode==='name'?asPart(spoken):s.mode==='caption'?capSentences(captionFromSpeech(spoken)):segs.map(asSentence).filter(Boolean).join(' ');
@@ -1348,6 +1472,7 @@ async function stopRecording(){
    if(s.mode==='caption'){const photo=(s.entry.photos||[]).find(p=>p&&p.id===s.photoId);setMicStatus(`Filled in ✓ Caption: “${photo?.caption||'—'}”.`,'ok');}
    else if(s.mode==='name')setMicStatus(`Filled in ✓ Part: “${s.entry.name||'—'}”.`,'ok');
    else if(s.mode==='description')setMicStatus(`Filled in ✓ Description updated. Check it, or Re-record if it is wrong.`,'ok');
+   else if(s.mode==='measure'){const m=(s.entry.measurements||[]).find(x=>x.id===s.photoId);const r=m?measureResult(m):'';setMicStatus(`Filled in ✓ Measurement: ${s.measureText||'—'}${r?` → ${r}`:''}. Check the boxes.`,r.startsWith('OUT')?'warn':'ok');if(editing===s.entry)renderMeasures();}
    else setMicStatus(`Filled in ✓ Part: “${s.entry.name||'—'}”.${s.guessed?` Condition set to ${s.guessed}.`:''} Check it, then add another photo or the next part.`,'ok');
    if(current&&current.parts.includes(s.entry))renderEntries();
   }else if(!s.fatal&&!$('micStatus').classList.contains('warn'))setMicStatus('Nothing was heard. Tap 🎙 and try again, or tap a box and use your keyboard 🎙.','warn');
@@ -1355,7 +1480,40 @@ async function stopRecording(){
  return s.stopping;
 }
 
-on('speakBtn','click',()=>(!session&&isStepMode()&&editing?.fromTemplate)?startRecording('speech',false,{mode:'description'}):startRecording('speech'));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
+function typingTarget(){const el=document.activeElement;if(!el||!editing||$('editor').hidden||!$('editor').contains(el))return null;if(el.id==='description')return {mode:'description',el};if(el.id==='part')return {mode:'name',el};if(el.dataset.captionFor)return {mode:'caption',photoId:el.dataset.captionFor,el};const row=el.closest('[data-measure]');if(row)return {mode:'measure',photoId:row.dataset.measure,el};return null;}
+function dictateDescription(){
+ if(!editing)return;
+ const t=$('description');
+ if(!session&&document.activeElement===t){const v=t.value,a=t.selectionStart??v.length,b=t.selectionEnd??v.length;return startRecording('speech',false,{mode:'description',fieldPrefix:v.slice(0,a),fieldSuffix:v.slice(b)});}
+ return startRecording('speech',false,{mode:'description'});
+}
+on('speakBtn','click',()=>{
+ if(!session){const tt=typingTarget();
+  if(tt){if(tt.mode==='description')return dictateDescription();if(tt.mode==='measure')return sayMeasurement(tt.photoId);if(tt.mode==='caption')return startRecording('speech',false,{mode:'caption',photoId:tt.photoId});return startRecording('speech',false,{mode:'name'});}
+ }
+ return (!session&&isStepMode()&&editing?.fromTemplate)?startRecording('speech',false,{mode:'description'}):startRecording('speech');
+});
+on('descMic','click',()=>session?stopRecording():dictateDescription());
+on('kbDone','click',()=>{document.activeElement?.blur?.();setTimeout(kbUpdate,60);});
+// Keep the text box focused (keyboard up) when tapping the mic buttons.
+for(const id of ['speakBtn','descMic','kbDone'])for(const ev of ['pointerdown','mousedown'])$(id).addEventListener(ev,e=>{if(document.body.classList.contains('kb')||(id==='descMic'&&document.activeElement===$('description')))e.preventDefault();});
+// On-screen keyboard: lift the bottom bar above it and shrink it to the mic + Done typing.
+let kbBase=0,kbWidth=0,kbOpen=false;
+function kbUpdate(){
+ const vv=window.visualViewport;if(!vv)return;
+ if(!kbBase||Math.abs(vv.width-kbWidth)>40){kbBase=vv.height;kbWidth=vv.width;}
+ const ae=document.activeElement;
+ const typing=!!ae&&ae.matches('textarea,input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=button])')&&!$('editor').hidden&&$('editor').contains(ae);
+ if(!typing&&vv.height>kbBase)kbBase=vv.height;
+ const open=typing&&kbBase-vv.height>120;
+ const off=open?Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop)):0;
+ document.documentElement.style.setProperty('--kb',off+'px');
+ document.body.classList.toggle('kb',open);
+ if(open&&!kbOpen)setTimeout(()=>{const a=document.activeElement;if(!a||!document.body.classList.contains('kb'))return;const dockTop=$('dockEdit').closest('.dock')?.getBoundingClientRect().top??vv.height;const r=a.getBoundingClientRect();if(r.bottom>dockTop-8||r.top<vv.offsetTop+60)window.scrollBy(0,r.bottom-(dockTop-16));},80);
+ kbOpen=open;
+}
+if(window.visualViewport){visualViewport.addEventListener('resize',kbUpdate);visualViewport.addEventListener('scroll',kbUpdate);}
+document.addEventListener('focusin',()=>setTimeout(kbUpdate,50));document.addEventListener('focusout',()=>setTimeout(kbUpdate,120));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
 on('redoPart','click',()=>redoDictation('name'));
 on('redoDescription','click',()=>redoDictation('description'));
 $('autoListen').checked=localStorage.getItem('stripnote-autolisten')!=='off';$('autoListen').addEventListener('change',()=>localStorage.setItem('stripnote-autolisten',$('autoListen').checked?'on':'off'));
@@ -1409,11 +1567,11 @@ function jobRows(r){return [['Document no.',r.docNumber],['Revision',r.revision]
 const COND_KEY='Condition key: OK – serviceable as found. Wear – normal wear; monitor or plan renewal. Damaged – defect found; repair or assess. Replace – not fit for further service. Not rated – not assessed.';
 const REPORT_KIND='EQUIPMENT STRIP-DOWN INVESTIGATION REPORT';
 const paragraphsOf=t=>String(t||'').split(/\n+/).map(x=>capSentences(clean(x))).filter(Boolean);
-const measuresOf=p=>(p.measurements||[]).filter(m=>clean(m.item)||clean(m.measured)||clean(m.spec));
+const measuresOf=p=>(p.measurements||[]).filter(m=>clean(m.item)||clean(m.measured)||clean(m.min)||clean(m.max)||clean(m.spec));
 function footerLeft(r){return [r.docNumber,r.revision?'Rev '+r.revision:''].filter(Boolean).join(' · ')||r.reference||r.equipment||'';}
 function photoNote(){return `Photographs in this report are reduced in size. Full-size originals are kept by ${companyName||'the investigator'}.`;}
 function reportHeading(r){return clean(r.title)||'Equipment inspection report';}
-function figureCaption(partNo,photoNo,caption,partName,prompt){const label=prompt?promptLabel(prompt):'';const cap=clean(caption);const text=label?(cap?`${label} \u2013 ${cap}`:label):(cap||clean(partName)||'Inspection photo');return `Fig ${partNo}.${photoNo} \u2013 ${text}`;}
+function figureCaption(partNo,photoNo,caption,partName,prompt){const label=prompt?promptLabel(prompt):'';const cap=clean(caption);const text=label?(cap?`${label} \u2013 ${cap}`:label):(cap||clean(partName)||'Inspection photo');return `Photo ${partNo}.${photoNo} \u2013 ${text}`;}
 function findingText(part){const d=capSentences(part.description);if(d)return d;const c=conditionOf(part.condition);return c==='OK'?'No damage found.':c==='Not rated'?'Not rated.':'No description recorded.';}
 async function exportDrawing(id){if(!id)return null;const m=await get('media',id);if(!m?.blob)return null;return {blob:m.blob,width:m.width||1,height:m.height||1};}
 function progress(label,done,total){$('progressText').textContent=label;$('progressBar').value=total?Math.round(done/total*100):0;}
@@ -1493,7 +1651,7 @@ async function buildDocx(raw,notify=()=>{}){
  const H1=t=>docxPara(docxRun(t,{size:28,bold:true,color:'1F3A44'}),'<w:pStyle w:val="Heading1"/><w:keepNext/><w:spacing w:before="300" w:after="100"/>');
  const H2=t=>docxPara(docxRun(t,{size:22,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="160" w:after="80"/>');
  const PARAS=t=>paragraphsOf(t).map(x=>docxPara(docxRun(x,{size:21,color:'1F2A30'}),'<w:spacing w:after="120"/>')).join('');
- const simpleTable=(widths,head,rows)=>{let h=docxRow({header:true,html:head.map((t,i)=>docxCell(docxPara(docxRun(t,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),widths[i],{fill:'1F3A44'})).join('')});rows.forEach((row,k)=>{h+=docxRow({html:row.map((t,i)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30'}),'<w:spacing w:before="50" w:after="50"/>'),widths[i],{fill:k%2?'F7F9FA':'FFFFFF'})).join('')});});return `<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${h}</w:tbl>`;};
+ const simpleTable=(widths,head,rows,cellStyle=()=>null)=>{let h=docxRow({header:true,html:head.map((t,i)=>docxCell(docxPara(docxRun(t,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),widths[i],{fill:'1F3A44'})).join('')});rows.forEach((row,k)=>{h+=docxRow({html:row.map((t,i)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30',...(cellStyle(t,i)||{})}),'<w:spacing w:before="50" w:after="50"/>'),widths[i],{fill:k%2?'F7F9FA':'FFFFFF'})).join('')});});return `<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${h}</w:tbl>`;};
  let sec=0;
  if(clean(r.scope))body+=H1(`${++sec}. Scope`)+PARAS(r.scope);
  body+=H1(`${++sec}. Summary`)+PARAS(r.summary);
@@ -1552,7 +1710,7 @@ async function buildDocx(raw,notify=()=>{}){
    body+=docxPara(docxRun(capSentences(text),{size:21,color:'1F2A30'}),pr);
   });
   const ms=measuresOf(part);
-  if(ms.length){body+=docxPara(docxRun('Measurements',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="60" w:after="60"/>');body+=simpleTable([4466,1800,1800,1800],['Item','Measured','Specification','Unit'],ms.map(m=>[m.item,m.measured,m.spec,m.unit]));body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}
+  if(ms.length){body+=docxPara(docxRun('Measurements',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="60" w:after="60"/>');body+=simpleTable([3066,1300,1400,1300,1300,1500],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020'}:i===5&&t==='In spec'?{bold:true,color:'146C36'}:null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}
  };
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
@@ -1684,7 +1842,7 @@ async function buildPDF(raw,notify=()=>{}){
    if(y+rh>bottom){newPage();drawHead();}
    if(k%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
-   let x=ML;cells.forEach((c,i)=>{c.forEach((line,j)=>drawText(line,x+1.6,y+4.8+j*4,{size:9,color:[31,42,48]}));x+=widths[i];});
+   let x=ML;cells.forEach((c,i)=>{const st=opt.cellStyle?.(row[i],i)||{};c.forEach((line,j)=>drawText(line,x+1.6,y+4.8+j*4,{size:9,color:st.color||[31,42,48],bold:!!st.bold}));x+=widths[i];});
    y+=rh;
   });
  };
@@ -1763,7 +1921,7 @@ async function buildPDF(raw,notify=()=>{}){
   for(const line of descLines){if(y+lh>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=lh;}
   y+=3;
   const ms=measuresOf(part);
-  if(ms.length){need(20);drawText('Measurements',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([CW-3*28,28,28,28],['Item','Measured','Specification','Unit'],ms.map(m=>[m.item,m.measured,m.spec,m.unit]));y+=5;}
+  if(ms.length){need(20);drawText('Measurements',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([CW-(18+22+20+20+26),18,22,20,20,26],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),{cellStyle:(t,i)=>i===5&&/^OUT/.test(String(t))?{bold:true,color:[176,0,32]}:i===5&&t==='In spec'?{bold:true,color:[20,108,54]}:null});y+=5;}
  };
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
@@ -1845,15 +2003,14 @@ async function saveOriginals(){
   const folder=zip.folder(jobName);
   const used=new Set();
   let done=0,fallback=0,missing=0;
-  for(const part of parts){
-   const base=uniqueBase(part.name||'Untitled part',used);
+  for(const [pi,part] of parts.entries()){
    for(let j=0;j<part.photos.length;j++){
     const m=await get('media',part.photos[j].id);
     const src=photoSource(m);
     if(!src){missing++;done++;progress(`Skipping a missing photo (${done} of ${total})`,done,total+1);await tick();continue;}
     if(!src.isOriginal)fallback++;
     const ext=fileExt(src.mime,src.name);
-    const fname=`${base}_${String(j+1).padStart(2,'0')}.${ext}`;
+    const fname=`${photoStem(pi,j,parts.length,part.name,part.photos[j].prompt)}.${ext}`;
     folder.file(fname,src.blob, {binary:true,compression:'STORE'});
     done++;
     progress(`Adding ${fname} (${done} of ${total})`,done,total+1);
@@ -1889,14 +2046,13 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
  for(const [pi,part] of exported.parts.entries()){
-  const base=uniqueBase(tj?`${String(pi+1).padStart(2,'0')} ${part.name||'Untitled part'}`:(part.name||'Untitled part'),used);
   for(let j=0;j<part.photos.length;j++){
    const m=await get('media',part.photos[j].id);
    if(!m?.blob)throw Error('Missing attachment; backup stopped.');
    zip.file(`media/${m.id}`,m.blob,{binary:true});
    if(m.thumb)zip.file(`thumbs/${m.id}`,m.thumb,{binary:true});
    let originalPath='';
-   if(m.original){const pr=part.photos[j].prompt?'_'+safeFileName(part.photos[j].prompt,'photo').replace(/\s+/g,'-'):'';originalPath=`Photos/${base}_${String(j+1).padStart(2,'0')}${pr}.${fileExt(m.originalMime||m.original.type,m.originalName)}`;zip.file(originalPath,m.original,{binary:true});}
+   if(m.original){originalPath=`Photos/${photoStem(pi,j,exported.parts.length,part.name,part.photos[j].prompt)}.${fileExt(m.originalMime||m.original.type,m.originalName)}`;zip.file(originalPath,m.original,{binary:true});}
    const meta={id:m.id,kind:m.kind,width:m.width,height:m.height,duration:m.duration,mime:m.blob.type,thumbMime:m.thumb?.type,originalMime:m.originalMime||m.original?.type,originalWidth:m.originalWidth,originalHeight:m.originalHeight,originalName:m.originalName||'',hasOriginal:!!m.original,originalPath};
    zip.file(`metadata/${m.id}.json`,JSON.stringify(meta));
    done++;notify(`Backing up photo ${done} of ${total}`,done,total+1);
@@ -1909,7 +2065,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
   zip.file('logo/logo.json',JSON.stringify({mime:logoRec.mime||logoRec.blob.type,width:logoRec.width,height:logoRec.height,name:logoRec.name||''}));
  }
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
- zip.file('README.txt',`StripNote v7 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''} The Photos folder holds the full-size photos, named by part. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
+ zip.file('README.txt',`StripNote v8 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging ZIP… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function finishJob(){
@@ -2099,9 +2255,11 @@ on('part','input',()=>{if(!editing)return;editing.name=$('part').value;updateEdi
 on('description','input',()=>{if(!editing)return;editing.description=$('description').value;return persistReport();});
 on('condition','change',()=>setCondition($('condition').value));
 on('condButtons','click',e=>{const b=e.target.closest('[data-cond]');if(b)return setCondition(b.dataset.cond);});
-on('addMeasure','click',async()=>{if(!editing)return;editing.measurements.push({id:uid(),item:'',measured:'',spec:'',unit:''});renderMeasures();await persistReport();const rows=$('measureList').querySelectorAll('[data-mfield="item"]');rows[rows.length-1]?.focus();});
-$('measureList').addEventListener('input',e=>{const inp=e.target.closest('[data-mfield]');if(!inp||!editing)return;const row=inp.closest('[data-measure]');const m=editing.measurements.find(x=>x.id===row?.dataset.measure);if(!m)return;m[inp.dataset.mfield]=inp.value;persistReport().catch(()=>{});});
-on('measureList','click',async e=>{const b=e.target.closest('[data-mremove]');if(!b||!editing)return;editing.measurements=editing.measurements.filter(m=>m.id!==b.dataset.mremove);renderMeasures();await persistReport();});
+on('addMeasure','click',async()=>{if(!editing)return;editing.measurements.push(newMeasure());renderMeasures();await persistReport();const rows=$('measureList').querySelectorAll('[data-mfield="item"]');rows[rows.length-1]?.focus();});
+$('measureList').addEventListener('input',e=>{const inp=e.target.closest('[data-mfield]');if(!inp||!editing)return;const row=inp.closest('[data-measure]');const m=editing.measurements.find(x=>x.id===row?.dataset.measure);if(!m)return;m[inp.dataset.mfield]=inp.value;paintMeasureResult(row,m);persistReport().catch(()=>{});});
+$('measureList').addEventListener('change',e=>{if(e.target.matches('select[data-mfield="type"]'))renderMeasures();});
+on('sayMeasure','click',()=>sayMeasurement(null));
+on('measureList','click',async e=>{const mic=e.target.closest('[data-mmic]');if(mic)return sayMeasurement(mic.dataset.mmic);const b=e.target.closest('[data-mremove]');if(!b||!editing)return;if(session?.mode==='measure'&&session.photoId===b.dataset.mremove)await stopRecording();editing.measurements=editing.measurements.filter(m=>m.id!==b.dataset.mremove);renderMeasures();await persistReport();});
 on('outdoor','click',()=>{const on=!document.body.classList.contains('outdoor');localStorage.setItem('stripnote-outdoor',on?'on':'off');applyOutdoor(on);});
 on('companyName','input',async()=>{companyName=$('companyName').value;await put('settings',{id:'company',name:companyName});});
 on('finishJob','click',()=>finishJob());
@@ -2311,10 +2469,11 @@ function paintStep(){
  $('stepDrawAttach').textContent=p.drawingId?'Change drawing':'Attach drawing';
  $('skipBanner').hidden=!p.skipped;$('skipText').textContent=p.skipped?`Skipped – not inspected${p.skipReason?': '+p.skipReason:''}.`:'';
  const list=promptList(p),next=nextPrompt(p);
- $('promptChips').innerHTML=list.map((pr,k)=>{const has=pr?p.photos.some(ph=>ph.prompt===pr):p.photos.length>0;return `<button type="button" class="${has?'done':''}${!has&&pr===next?' next':''}" data-prompt-shot="${k}" aria-label="${has?'Retake':'Take'} photo: ${esc(promptLabel(pr))}">${has?'✓':'○'} ${esc(promptLabel(pr))}</button>`;}).join('');
- $('stepShot').textContent=next!==null?`📷 ${promptLabel(next)}`:'📷 Extra photo';
+ const nextNo=`${i+1}.${p.photos.length+1}`;
+ $('promptChips').innerHTML=list.map((pr,k)=>{const at=pr?p.photos.findIndex(ph=>ph.prompt===pr):(p.photos.length?0:-1);const has=at>=0;const no=has?`${i+1}.${at+1} `:(pr===next?nextNo+' ':'');return `<button type="button" class="${has?'done':''}${!has&&pr===next?' next':''}" data-prompt-shot="${k}" aria-label="${has?'Retake':'Take'} photo: ${esc(promptLabel(pr))}">${has?'✓':'○'} ${no}${esc(promptLabel(pr))}</button>`;}).join('');
+ $('stepShot').textContent=next!==null?`📷 ${nextNo} ${promptLabel(next)}`:`📷 ${nextNo} Extra`;
  const left=missingPrompts(p).length;
- $('stepHint').textContent=p.skipped?'This step is skipped. Take a photo or tap Undo skip to record it.':next!==null?`Photo ${list.length-left+1} of ${list.length}: ${p.name?p.name+' – ':''}${promptLabel(next).toLowerCase()}.`:conditionOf(p.condition)==='Not rated'?'All photos taken. Now tap OK, Wear or Damaged.':'Step complete. Tap Next →.';
+ $('stepHint').textContent=p.skipped?'This step is skipped. Take a photo or tap Undo skip to record it.':next!==null?`Next photo ${nextNo} (${list.length-left+1} of ${list.length}): ${p.name?p.name+' – ':''}${promptLabel(next).toLowerCase()}.`:conditionOf(p.condition)==='Not rated'?'All photos taken. Now tap OK, Wear or Damaged.':'Step complete. Tap Next →.';
  $('stepBack').disabled=i<=0;
  $('stepNext').textContent=i>=n-1?'✓ Finish':'Next →';
  syncMicUI(!!session);
@@ -2507,7 +2666,7 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText
+ parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
 
