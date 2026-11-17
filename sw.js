@@ -1,6 +1,6 @@
 'use strict';
-// v8: photo numbers (1.1, 1.2), mic above the keyboard, spoken measurements with Min/Max checks. Network-first for the app page so updates arrive; cache fallback keeps it working offline.
-const CACHE='stripnote-shell-v8';
+// v9: full-width report photos and a Slides (PowerPoint) export made on the phone. Network-first for the app page so updates arrive; cache fallback keeps it working offline.
+const CACHE='stripnote-shell-v9';
 const SHELL=['./','./index.html','./manifest.json','./icon.svg'];
 self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL.map(u=>new Request(u,{cache:'reload'})))));});
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('stripnote-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

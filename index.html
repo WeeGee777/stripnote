@@ -205,7 +205,7 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,text/plain" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v8</p>
+<p class="ver">StripNote v9</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -235,7 +235,7 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
 </div></details>
-<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word and PDF use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
+<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
 <section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><h2 id="stepTitle"></h2><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"></div><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
@@ -1640,7 +1640,7 @@ async function buildDocx(raw,notify=()=>{}){
   const logoTwips=Math.max(1400,Math.round(cx/635)+200);
   const textTwips=Math.max(4000,TW-logoTwips);
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
-  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'1F3A44',valign:'center'})}${docxCell(headInner,textTwips,{fill:'1F3A44',valign:'center'})}</w:tr></w:tbl>`;
+  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'1F3A44',valign:'center'})}${docxCell(headInner,textTwips,{fill:'1F3A44',valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
  }
  let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:'1F3A44',span:2})});
  for(const [k,v] of jobRows(r)){
@@ -1681,26 +1681,21 @@ async function buildDocx(raw,notify=()=>{}){
  const findNo=++sec;
  body+=H1(`${findNo}. Findings`);
  let rels='', n=0, dn=0;
- const half=TW/2;
  const tj=isTemplateJob(r);
  const docxPhotos=async(part,i)=>{
-  if(!part.photos.length)return;
-  let row='';
-  const flush=()=>{if(!row)return;body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('FFFFFF',0,['none'])}<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="80" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${half}"/><w:gridCol w:w="${half}"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>${row}</w:tr></w:tbl>`;row='';};
+  // v9: one large photo per row at full content width; the picture keeps with its caption.
   for(let j=0;j<part.photos.length;j++){
    const img=await exportPhoto(part.photos[j].id);
    n++;
    zip.file(`word/media/photo${n}.jpg`,await img.blob.arrayBuffer());
-   const {cx,cy}=fitEmu(img.width,img.height);
+   const {cx,cy}=fitEmu(img.width,img.height,6264000,4000000);
    rels+=`<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/photo${n}.jpg"/>`;
    const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
-   const inner=drawingXml(n,cx,cy,cap)+docxPara(docxRun(cap,{size:16,italic:true,color:'5C6B70'}),'<w:jc w:val="center"/><w:spacing w:before="20" w:after="80"/>');
-   row+=docxCell(inner,half);
-   if(j%2===1)flush();
+   body+=drawingXml(n,cx,cy,cap).replace('<w:pPr><w:jc w:val="center"/><w:spacing w:before="60" w:after="40"/>','<w:pPr><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="160" w:after="40"/>');
+   body+=docxPara(docxRun(cap,{size:18,italic:true,color:'5C6B70'}),'<w:keepLines/><w:jc w:val="center"/><w:spacing w:before="20" w:after="160"/>');
    notify(`Preparing photo ${n} of ${totalPhotos}`,n,totalPhotos+1);
    await tick();
   }
-  if(part.photos.length%2===1){row+=docxCell('<w:p/>',half);flush();}
  };
  const docxCondDesc=(part,cond)=>{
   body+=docxPara(docxRun(tj?`Condition: ${cond.label}`:cond.label,{size:20,bold:true,color:cond.hex}),`<w:keepNext/><w:spacing w:before="${tj?120:60}" w:after="80"/>`);
@@ -1883,34 +1878,26 @@ async function buildPDF(raw,notify=()=>{}){
  H1(`${findNo}. Findings`);
  const total=photoCount(r.parts);let n=0;
  const tj=isTemplateJob(r);
- const gap=6,colW=(CW-gap)/2,maxH=62;
+ const maxH=112;
  const pdfPhotos=async(part,i)=>{
-  for(let j=0;j<part.photos.length;j+=2){
-   const slice=part.photos.slice(j,j+2);
-   const prepared=[];
-   for(let k=0;k<slice.length;k++){
-    const img=await exportPhoto(slice[k].id);
-    let w=colW,h=w*img.height/Math.max(1,img.width);
-    if(h>maxH){h=maxH;w=h*img.width/Math.max(1,img.height);}
-    const cap=figureCaption(i+1,j+k+1,slice[k].caption,part.name,slice[k].prompt);
-    doc.setFontSize(8);
-    let capLines=doc.splitTextToSize(cap,colW);
-    if(capLines.length>6){capLines=capLines.slice(0,5);capLines.push('…');}
-    prepared.push({img,w,h,capLines,capH:capLines.length*3.5});
-    n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();
-   }
-   const rowH=Math.max(...prepared.map(p=>p.h+3+p.capH))+4;
-   if(y+rowH>bottom&&y>MT+1)newPage();
-   let x=ML;
-   for(const p of prepared){
-    const bytes=new Uint8Array(await p.img.blob.arrayBuffer());
-    const ix=x+(colW-p.w)/2;
-    doc.addImage(bytes,'JPEG',ix,y,p.w,p.h,'img'+n+'-'+j,'FAST');
-    let cy=y+p.h+3.6;
-    p.capLines.forEach(line=>{drawText(line,x,cy,{size:8,color:[80,88,92]});cy+=3.5;});
-    x+=colW+gap;
-   }
-   y+=rowH;
+  // v9: one large photo per row at full content width; caption always on the same page as its photo.
+  for(let j=0;j<part.photos.length;j++){
+   const img=await exportPhoto(part.photos[j].id);
+   let w=CW,h=w*img.height/Math.max(1,img.width);
+   if(h>maxH){h=maxH;w=h*img.width/Math.max(1,img.height);}
+   const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
+   doc.setFontSize(9);
+   let capLines=doc.splitTextToSize(cap,CW);
+   if(capLines.length>4){capLines=capLines.slice(0,3);capLines.push('…');}
+   n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();
+   const blockH=h+3+capLines.length*4+6;
+   if(y+blockH>bottom&&y>MT+1)newPage();
+   const ix=ML+(CW-w)/2;
+   doc.addImage(new Uint8Array(await img.blob.arrayBuffer()),'JPEG',ix,y,w,h,'img'+n,'FAST');
+   doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(ix,y,w,h);
+   let cy=y+h+4.4;
+   capLines.forEach(line=>{drawText(line,PW/2,cy,{size:9,color:[80,88,92],align:'center'});cy+=4;});
+   y+=blockH;
   }
  };
  const pdfCondDesc=(part,cond)=>{
@@ -1931,7 +1918,7 @@ async function buildPDF(raw,notify=()=>{}){
    const d=await exportDrawing(part.drawingId);
    if(d){let w=CW*0.78,h=w*d.height/Math.max(1,d.width);if(h>78){h=78;w=h*d.width/Math.max(1,d.height);}drw={...d,w,h};}
   }
-  const reserve=tj?(drw?drw.h+24+(part.photos.length?62:0):(part.photos.length&&!part.skipped?42:20)):(part.photos.length?42:28);
+  const reserve=tj?(drw?drw.h+24:(part.photos.length&&!part.skipped?80:20)):(part.photos.length?36:28);
   if(y+reserve>bottom)newPage();
   doc.setFillColor(cond.rgb[0],cond.rgb[1],cond.rgb[2]);doc.rect(ML,y-3.6,1.5,5.2,'F');
   const head=textLines(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,13,CW-6);
@@ -1986,6 +1973,251 @@ async function buildPDF(raw,notify=()=>{}){
  return doc.output('blob');
 }
 
+// v9: Presentation export. Hand-built 16:9 PowerPoint (OOXML) packed with JSZip, made on the phone with no network.
+const PP_NS='xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"';
+const PP_FONT='Arial';
+const PPW=13.333,PPH=7.5;
+const ppE=v=>Math.max(0,Math.round(v*914400));
+const ppXfrm=(x,y,w,h)=>`<a:xfrm><a:off x="${ppE(x)}" y="${ppE(y)}"/><a:ext cx="${Math.max(1,ppE(w))}" cy="${Math.max(1,ppE(h))}"/></a:xfrm>`;
+const ppFill=c=>c?`<a:solidFill><a:srgbClr val="${c}"/></a:solidFill>`:'<a:noFill/>';
+function ppRun(text,o={}){return `<a:r><a:rPr lang="en-GB" sz="${Math.round((o.size||16)*100)}"${o.bold?' b="1"':''}${o.italic?' i="1"':''} dirty="0">${ppFill(o.color||'1F2A30')}<a:latin typeface="${PP_FONT}"/><a:cs typeface="${PP_FONT}"/></a:rPr><a:t>${xml(text)}</a:t></a:r>`;}
+function ppPara(text,o={}){const sp=o.after!=null?`<a:spcAft><a:spcPts val="${Math.round(o.after*100)}"/></a:spcAft>`:'';const runs=Array.isArray(text)?text.map(t=>ppRun(t.text,{...o,...t})).join(''):(String(text??'')?ppRun(text,o):'');return `<a:p><a:pPr algn="${o.align||'l'}">${sp}</a:pPr>${runs}<a:endParaRPr lang="en-GB" sz="${Math.round((o.size||16)*100)}" dirty="0"/></a:p>`;}
+function ppParas(text,o={}){const list=String(text||'').split(/\n+/).map(clean).filter(Boolean);return (list.length?list:['']).map(t=>ppPara(t,o)).join('');}
+function ppShape(s,id,x,y,w,h,paras,o={}){
+ const ins=o.inset??0.08;
+ const ln=o.line?`<a:ln w="${Math.round((o.lineW||1)*12700)}">${ppFill(o.line)}</a:ln>`:'<a:ln><a:noFill/></a:ln>';
+ const body=paras==null?'':`<p:txBody><a:bodyPr wrap="square" lIns="${ppE(ins)}" tIns="${ppE(ins)}" rIns="${ppE(ins)}" bIns="${ppE(ins)}" anchor="${o.anchor||'t'}" rtlCol="0">${o.fit===false?'':'<a:normAutofit/>'}</a:bodyPr><a:lstStyle/>${paras}</p:txBody>`;
+ s.push(`<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="${xml(o.name||'Shape '+id)}"/><p:cNvSpPr${paras!=null?' txBox="1"':''}/><p:nvPr/></p:nvSpPr><p:spPr>${ppXfrm(x,y,w,h)}<a:prstGeom prst="${o.geom||'rect'}"><a:avLst/></a:prstGeom>${ppFill(o.fill)}${ln}</p:spPr>${body}</p:sp>`);
+}
+function ppPic(s,id,rel,x,y,w,h,descr,o={}){
+ const ln=o.line?`<a:ln w="9525">${ppFill(o.line)}</a:ln>`:'';
+ s.push(`<p:pic><p:nvPicPr><p:cNvPr id="${id}" name="Picture ${id}" descr="${xml(descr||'')}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr><p:blipFill><a:blip r:embed="${rel}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill><p:spPr>${ppXfrm(x,y,w,h)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>${ln}</p:spPr></p:pic>`);
+}
+function ppFitBox(iw,ih,bx,by,bw,bh){const sc=Math.min(bw/Math.max(1,iw),bh/Math.max(1,ih));const w=iw*sc,h=ih*sc;return {x:bx+(bw-w)/2,y:by+(bh-h)/2,w,h};}
+function ppTable(s,id,x,y,widths,rows,o={}){
+ const rowH=o.rowH||0.42;
+ const cellXml=(t,i,k)=>{
+  const head=k===0;const st=head?{bold:true,color:'FFFFFF'}:(o.cellStyle?.(t,i,k)||{});
+  const fill=head?'1F3A44':(st.fill||(k%2?'FFFFFF':'F4F7F8'));
+  const b=c=>`<a:ln w="6350">${ppFill(c)}</a:ln>`;
+  const lnX=['lnL','lnR','lnT','lnB'].map(n=>b('C5D0D4').replace('<a:ln','<a:'+n).replace('</a:ln>','</a:'+n+'>')).join('');
+  return `<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>${ppPara(clipText(t,o.clip||90),{size:head?(o.headSize||13):(o.size||14),bold:!!st.bold,color:st.color||(head?'FFFFFF':'1F2A30')})}</a:txBody><a:tcPr marL="${ppE(0.08)}" marR="${ppE(0.08)}" marT="${ppE(0.04)}" marB="${ppE(0.04)}" anchor="ctr">${lnX}${ppFill(fill)}</a:tcPr></a:tc>`;
+ };
+ const W=widths.reduce((a,b)=>a+b,0);
+ const trs=rows.map((row,k)=>`<a:tr h="${ppE(rowH)}">${row.map((t,i)=>cellXml(String(t??''),i,k)).join('')}</a:tr>`).join('');
+ s.push(`<p:graphicFrame><p:nvGraphicFramePr><p:cNvPr id="${id}" name="Table ${id}"/><p:cNvGraphicFramePr><a:graphicFrameLocks noGrp="1"/></p:cNvGraphicFramePr><p:nvPr/></p:nvGraphicFramePr><p:xfrm><a:off x="${ppE(x)}" y="${ppE(y)}"/><a:ext cx="${ppE(W)}" cy="${ppE(rowH*rows.length)}"/></p:xfrm><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table"><a:tbl><a:tblPr firstRow="1" bandRow="1"/><a:tblGrid>${widths.map(w=>`<a:gridCol w="${ppE(w)}"/>`).join('')}</a:tblGrid>${trs}</a:tbl></a:graphicData></a:graphic></p:graphicFrame>`);
+}
+function ppTheme(){
+ const c=(n,v)=>`<a:${n}><a:srgbClr val="${v}"/></a:${n}>`;
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="StripNote"><a:themeElements><a:clrScheme name="StripNote"><a:dk1><a:srgbClr val="1F2A30"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>${c('dk2','1F3A44')}${c('lt2','F4F7F8')}${c('accent1','1F3A44')}${c('accent2','C6B15A')}${c('accent3','166E3A')}${c('accent4','8C5400')}${c('accent5','A82018')}${c('accent6','5A6468')}${c('hlink','1F5F8B')}${c('folHlink','5A6468')}</a:clrScheme><a:fontScheme name="StripNote"><a:majorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="StripNote"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="12700"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
+}
+const PP_TREE_HEAD='<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
+async function buildPptx(raw,notify=()=>{}){
+ const r=migrateReport(raw);
+ const zip=new JSZip();
+ const tj=isTemplateJob(r);
+ const title=reportHeading(r);
+ const logo=await prepareLogo();
+ const slides=[];// {shapes:[], rels:[], bg}
+ let media=0;
+ const addMedia=async(slide,blob,ext)=>{media++;const name=`image${media}.${ext}`;zip.file(`ppt/media/${name}`,await blob.arrayBuffer());const rel=`rId${slide.rels.length+2}`;slide.rels.push(`<Relationship Id="${rel}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${name}"/>`);return rel;};
+ let logoBytes=null;if(logo)logoBytes=logo.blob;
+ let logoMediaName='';
+ const addLogo=async(slide,bx,by,bw,bh)=>{
+  if(!logoBytes)return 0;
+  if(!logoMediaName){media++;logoMediaName=`image${media}.${logo.ext}`;zip.file(`ppt/media/${logoMediaName}`,await logoBytes.arrayBuffer());}
+  const rel=`rId${slide.rels.length+2}`;slide.rels.push(`<Relationship Id="${rel}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${logoMediaName}"/>`);
+  const f=ppFitBox(logo.width,logo.height,bx,by,bw,bh);
+  ppPic(slide.shapes,slide.next++,rel,bx+bw-f.w,f.y,f.w,f.h,'Company logo');return f.w;
+ };
+ const newSlide=(bg)=>{const sl={shapes:[],rels:[],bg:bg||'FFFFFF',next:2};slides.push(sl);return sl;};
+ // standard content slide frame: dark header bar with title, thin accent, footer set later
+ const frame=async(heading,opt={})=>{
+  const sl=newSlide('FFFFFF');
+  ppShape(sl.shapes,sl.next++,0,0,PPW,0.78,null,{fill:'1F3A44',name:'Header bar'});
+  if(opt.accent)ppShape(sl.shapes,sl.next++,0,0.78,PPW,0.07,null,{fill:opt.accent,name:'Condition accent'});
+  const lw=logo?await addLogo(sl,PPW-2.35,0.12,2.0,0.54):0;
+  const rightW=opt.right?3.2:0;
+  ppShape(sl.shapes,sl.next++,0.35,0.06,PPW-0.7-(lw?lw+0.3:0)-rightW,0.66,ppPara(clipText(heading,95),{size:opt.size||24,bold:true,color:'FFFFFF'}),{anchor:'ctr',name:'Title'});
+  if(opt.right)ppShape(sl.shapes,sl.next++,PPW-0.35-(lw?lw+0.3:0)-rightW,0.12,rightW,0.54,ppPara(opt.right,{size:14,bold:true,color:opt.rightColor||'FFFFFF',align:'r'}),{anchor:'ctr',name:'Condition'});
+  sl.framed=true;return sl;
+ };
+ const badge=(sl,x,y,w,cond,size=18)=>ppShape(sl.shapes,sl.next++,x,y,w,0.55,ppPara(cond.label,{size,bold:true,color:'FFFFFF',align:'ctr'}),{fill:cond.hex,anchor:'ctr',geom:'roundRect',name:'Condition badge'});
+ const condFor=part=>tj&&part.skipped?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(part.condition)];
+ const total=photoCount(r.parts);let done=0;
+ // 1. Title slide
+ {
+  const sl=newSlide('1F3A44');
+  ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:'C6B15A',name:'Gold rule'});
+  if(logo)await addLogo(sl,0.6,0.5,3.0,1.2).then(()=>{const p=sl.shapes.pop();sl.shapes.push(p.replace(/<a:off x="\d+"/,`<a:off x="${ppE(0.6)}"`));});
+  let ty=logo?2.0:1.2;
+  if(companyName){ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.5,ppPara(clipText(companyName,70).toUpperCase(),{size:16,bold:true,color:'C6B15A'}),{name:'Company'});ty+=0.5;}
+  ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.4,ppPara(REPORT_KIND,{size:13,color:'D9E2E5'}),{name:'Report kind'});ty+=0.45;
+  ppShape(sl.shapes,sl.next++,0.6,ty,12.1,1.4,ppPara(clipText(title,120),{size:38,bold:true,color:'FFFFFF'}),{name:'Job title',anchor:'t'});ty+=1.6;
+  const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
+  const rows=jobRows(r).filter(([k,v])=>want.includes(k)&&clean(v)).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
+  const colW=6.0,rowH=0.62;
+  rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:'9FB3B9'})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
+  sl.title=true;
+ }
+ // 2. Summary slide
+ const counts={OK:0,Wear:0,Damaged:0,Replace:0,'Not rated':0,'Not inspected':0};
+ const outs=[];
+ r.parts.forEach((p,i)=>{if(tj&&p.skipped)counts['Not inspected']++;else counts[conditionOf(p.condition)]++;for(const m of measuresOf(p)){const res=measureResult(m);if(res&&res!=='In spec'&&/^OUT/i.test(res))outs.push({i,p,m,res});}});
+ {
+  const sl=await frame('Summary of findings');
+  const sumText=paragraphsOf(r.summary).join('\n')||`${r.parts.length} part${r.parts.length===1?'':'s'} inspected with ${total} photograph${total===1?'':'s'}.`;
+  ppShape(sl.shapes,sl.next++,0.4,1.05,6.9,0.4,ppPara('Overall findings',{size:14,bold:true,color:'1F3A44'}),{name:'Findings label',fit:false});
+  ppShape(sl.shapes,sl.next++,0.4,1.45,6.9,outs.length?2.9:5.5,ppParas(clipText(sumText,outs.length?600:1100),{size:16,after:6}),{name:'Findings'});
+  const tiles=[['OK',COND_STYLE.OK.hex],['Wear',COND_STYLE.Wear.hex],['Damaged',COND_STYLE.Damaged.hex],['Replace',COND_STYLE.Replace.hex],['Not rated',COND_STYLE['Not rated'].hex]];
+  if(tj)tiles.push(['Not inspected','8A9599']);
+  tiles.forEach(([k,c],i)=>{const x=7.75+(i%2)*2.65,y=1.1+Math.floor(i/2)*1.3;ppShape(sl.shapes,sl.next++,x,y,2.45,1.12,ppPara(String(counts[k]),{size:30,bold:true,color:'FFFFFF',align:'ctr'})+ppPara(k.toUpperCase(),{size:11,bold:true,color:'FFFFFF',align:'ctr'}),{fill:c,anchor:'ctr',geom:'roundRect',name:k+' count',fit:false,inset:0.04});});
+  ppShape(sl.shapes,sl.next++,7.75,1.1+Math.ceil(tiles.length/2)*1.3,5.1,0.4,ppPara(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${total} photograph${total===1?'':'s'}`,{size:13,color:'5C6B70',align:'ctr'}),{name:'Totals',fit:false});
+  if(outs.length){
+   ppShape(sl.shapes,sl.next++,0.4,4.45,6.9,0.4,ppPara(`Out of spec (${outs.length})`,{size:14,bold:true,color:'B00020'}),{name:'Out of spec label',fit:false});
+   const lines=outs.slice(0,5).map(o=>{const row=measureReportRow(o.m);return `${tj?'Step '+(o.i+1):(o.i+1)+'.'} ${clipText(o.p.name||'Untitled part',34)}: ${clipText(o.m.item||'Measurement',30)} ${row[2]} (min ${row[3]||'—'}, max ${row[4]||'—'}) – ${o.res}`;});
+   if(outs.length>5)lines.push(`…and ${outs.length-5} more on the measurement slides.`);
+   ppShape(sl.shapes,sl.next++,0.4,4.85,6.9,2.1,lines.map(t=>ppPara(t,{size:13,color:'1F2A30',after:3})).join(''),{name:'Out of spec list',fill:'FDF1F2',line:'E8B4BA'});
+  }
+ }
+ // 3. Condition of parts overview
+ if(r.parts.length){
+  const per=11;
+  for(let s=0;s<r.parts.length;s+=per){
+   const sl=await frame(r.parts.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(r.parts.length/per)})`:'Condition of parts');
+   const rows=[[tj?'Step':'No.','Part','Condition','Photos']];
+   const chunk=r.parts.slice(s,s+per);
+   chunk.forEach((p,k)=>rows.push([String(s+k+1),p.name||'Untitled part',condFor(p).label,String(p.photos.length)]));
+   ppTable(sl.shapes,sl.next++,0.4,1.1,[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:condFor(chunk[k-1]).hex}:null});
+  }
+ }
+ const partPhotos=async(part,i,cond,head)=>{
+  const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
+  const ms=measuresOf(part);
+  const note=clipText(desc,260);
+  const condRight=cond.label;
+  let j=0;
+  while(j<part.photos.length){
+   const a=await exportPhoto(part.photos[j].id);done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();
+   let b=null;
+   if(a.height>a.width*1.05&&j+1<part.photos.length){
+    const nb=await exportPhoto(part.photos[j+1].id);
+    if(nb.height>nb.width*1.05){b=nb;done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();}
+    else{nb.blob=null;}
+   }
+   const ps=await frame(head,{accent:cond.hex,size:20,right:condRight,rightColor:cond.label==='OK'?'9BE0B4':'FFD3CF'});
+   if(!b){
+    const rel=await addMedia(ps,a.blob,'jpg');
+    const f=ppFitBox(a.width,a.height,0.35,1.0,8.75,6.05);
+    ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt),{line:'C5D0D4'});
+    const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
+    const m=cap.match(/^(Photo [\d.]+) \u2013 (.*)$/);
+    ppShape(ps.shapes,ps.next++,9.35,1.05,3.65,0.6,ppPara(m?m[1]:cap,{size:22,bold:true,color:'1F3A44'}),{name:'Photo number',fit:false,inset:0.02});
+    if(m)ppShape(ps.shapes,ps.next++,9.35,1.65,3.65,1.4,ppPara(clipText(m[2],140),{size:16,color:'1F2A30'}),{name:'Caption',inset:0.02});
+    badge(ps,9.35,3.15,2.6,cond,15);
+    ppShape(ps.shapes,ps.next++,9.35,3.85,3.65,3.1,ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
+    j++;
+   }else{
+    for(const [k,img] of [[0,a],[1,b]]){
+     const ph=part.photos[j+k];const rel=await addMedia(ps,img.blob,'jpg');
+     const bx=0.35+k*6.4;
+     const f=ppFitBox(img.width,img.height,bx,1.0,6.2,5.15);
+     const cap=figureCaption(i+1,j+k+1,ph.caption,part.name,ph.prompt);
+     ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,cap,{line:'C5D0D4'});
+     ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:'1F3A44',align:'ctr'}),{name:'Caption',inset:0.02});
+    }
+    ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
+    j+=2;
+   }
+  }
+  // measurements
+  if(ms.length){
+   const per=10;
+   for(let s=0;s<ms.length;s+=per){
+    const msl=await frame(`${head} \u00b7 Measurements${ms.length>per?` (${Math.floor(s/per)+1})`:''}`,{accent:cond.hex,size:20});
+    const rows=[['Item','Type','Measured','Min','Max','Result']].concat(ms.slice(s,s+per).map(measureReportRow));
+    ppTable(msl.shapes,msl.next++,0.4,1.15,[4.3,1.5,1.9,1.4,1.4,2.03],rows,{rowH:0.5,size:15,clip:60,cellStyle:(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020',fill:'FDE7EA'}:i===5&&t==='In spec'?{bold:true,color:'146C36',fill:'E6F4EA'}:null});
+   }
+  }
+ };
+ // 4. Per part
+ for(let i=0;i<r.parts.length;i++){
+  const part=r.parts[i];const cond=condFor(part);
+  const head=tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`;
+  if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,i,cond,head);continue;}
+  const sl=await frame(head,{accent:cond.hex});
+  if(tj&&part.skipped){
+   badge(sl,0.5,1.3,3.2,cond);
+   ppShape(sl.shapes,sl.next++,0.5,2.1,12.3,1.2,ppPara(`Not inspected${part.skipReason?': '+clipText(part.skipReason,200):''}`,{size:22,italic:true,color:'5A6468'}),{name:'Not inspected'});
+   continue;
+  }
+  const d=tj&&part.drawingId?await exportDrawing(part.drawingId):null;
+  const ms=measuresOf(part);const msOut=ms.filter(m=>/^OUT/i.test(measureResult(m)||'')).length;
+  const facts=[`${part.photos.length} photo${part.photos.length===1?'':'s'}`];
+  if(ms.length)facts.push(`${ms.length} measurement${ms.length===1?'':'s'}${msOut?` · ${msOut} out of spec`:''}`);
+  const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
+  if(d){
+   const ext=/png/i.test(d.blob.type)?'png':'jpg';
+   const rel=await addMedia(sl,d.blob,ext);
+   const f=ppFitBox(d.width,d.height,0.4,1.1,7.9,5.55);
+   ppShape(sl.shapes,sl.next++,0.4,1.1,7.9,5.55,null,{fill:'FFFFFF',line:'C5D0D4',name:'Drawing frame'});
+   ppPic(sl.shapes,sl.next++,rel,f.x,f.y,f.w,f.h,`Part drawing: ${part.name||''}`);
+   ppShape(sl.shapes,sl.next++,0.4,6.68,7.9,0.3,ppPara('Part drawing',{size:10,italic:true,color:'8AA0A6',align:'ctr'}),{name:'Drawing label',fit:false,inset:0});
+   badge(sl,8.65,1.15,3.0,cond);
+   ppShape(sl.shapes,sl.next++,8.6,1.9,4.35,3.9,ppParas(clipText(desc,700),{size:16,after:6}),{name:'Description'});
+   ppShape(sl.shapes,sl.next++,8.6,5.9,4.35,0.8,facts.map(t=>ppPara(t,{size:13,color:'5C6B70'})).join(''),{name:'Facts'});
+  }else{
+   badge(sl,0.5,1.25,3.0,cond);
+   ppShape(sl.shapes,sl.next++,0.45,2.05,12.4,4.0,ppParas(clipText(desc,1200),{size:20,after:8}),{name:'Description'});
+   ppShape(sl.shapes,sl.next++,0.45,6.2,12.4,0.6,ppPara(facts.join('   ·   '),{size:14,color:'5C6B70'}),{name:'Facts'});
+  }
+  await partPhotos(part,i,cond,head);
+ }
+ // 5. Conclusions and recommendations
+ {
+  const sl=await frame('Conclusions and recommendations');
+  const con=paragraphsOf(r.conclusions).join('\n'),rec=paragraphsOf(r.recommendations).join('\n');
+  const col=(x,w,label,text)=>{ppShape(sl.shapes,sl.next++,x,1.1,w,0.45,ppPara(label,{size:16,bold:true,color:'1F3A44'}),{name:label+' label',fit:false});ppShape(sl.shapes,sl.next++,x,1.6,w,4.4,ppParas(clipText(text||'None recorded.',900),{size:16,after:6,color:text?'1F2A30':'8AA0A6'}),{name:label,line:'DCE3E6',fill:'F8FAFB'});};
+  col(0.4,6.15,'Conclusions',con);col(6.8,6.15,'Recommendations',rec);
+  const who=[r.signName||r.investigator||'',prettyDate(r.signDate)].filter(Boolean).join(' · ');
+  ppShape(sl.shapes,sl.next++,0.4,6.15,12.55,0.4,ppPara(`Prepared by: ${who||'—'}${clean(r.checkedBy)?`   ·   Checked by: ${r.checkedBy}`:''}   ·   Document ${r.docNumber||'—'} rev ${r.revision||'—'}`,{size:13,color:'1F2A30'}),{name:'Sign-off',fit:false});
+  ppShape(sl.shapes,sl.next++,0.4,6.55,12.55,0.35,ppPara(photoNote(),{size:10,italic:true,color:'8AA0A6'}),{name:'Photo note',fit:false});
+ }
+ // footers + package
+ notify('Packaging presentation…',total,total+1);
+ const N=slides.length;const foot=clipText(footerLeft(r)||title,80);
+ const sldIds=[],presRels=[];
+ slides.forEach((sl,k)=>{
+  if(!sl.title){
+   ppShape(sl.shapes,sl.next++,0.35,PPH-0.42,8.5,0.34,ppPara(foot,{size:10,color:'5C6B70'}),{name:'Footer',fit:false,inset:0.02});
+   ppShape(sl.shapes,sl.next++,PPW-3.35,PPH-0.42,3.0,0.34,ppPara(`${companyName?clipText(companyName,30)+'  ·  ':''}${k+1} / ${N}`,{size:10,color:'5C6B70',align:'r'}),{name:'Slide number',fit:false,inset:0.02});
+  }
+  const n=k+1;
+  zip.file(`ppt/slides/slide${n}.xml`,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld ${PP_NS}><p:cSld><p:bg><p:bgPr>${ppFill(sl.bg)}<a:effectLst/></p:bgPr></p:bg><p:spTree>${PP_TREE_HEAD}${sl.shapes.join('')}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`);
+  zip.file(`ppt/slides/_rels/slide${n}.xml.rels`,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout" Target="../slideLayouts/slideLayout1.xml"/>${sl.rels.join('')}</Relationships>`);
+  sldIds.push(`<p:sldId id="${255+n}" r:id="rIdS${n}"/>`);
+  presRels.push(`<Relationship Id="rIdS${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide${n}.xml"/>`);
+ });
+ const R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+ zip.file('ppt/presentation.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:presentation ${PP_NS} saveSubsetFonts="1"><p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rIdM"/></p:sldMasterIdLst><p:sldIdLst>${sldIds.join('')}</p:sldIdLst><p:sldSz cx="12192000" cy="6858000"/><p:notesSz cx="6858000" cy="9144000"/><p:defaultTextStyle><a:defPPr><a:defRPr lang="en-GB"/></a:defPPr></p:defaultTextStyle></p:presentation>`);
+ zip.file('ppt/_rels/presentation.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdM" Type="${R}/slideMaster" Target="slideMasters/slideMaster1.xml"/><Relationship Id="rIdT" Type="${R}/theme" Target="theme/theme1.xml"/><Relationship Id="rIdPP" Type="${R}/presProps" Target="presProps.xml"/><Relationship Id="rIdVP" Type="${R}/viewProps" Target="viewProps.xml"/><Relationship Id="rIdTS" Type="${R}/tableStyles" Target="tableStyles.xml"/>${presRels.join('')}</Relationships>`);
+ zip.file('ppt/presProps.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:presentationPr ${PP_NS}/>`);
+ zip.file('ppt/viewProps.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:viewPr ${PP_NS}><p:normalViewPr><p:restoredLeft sz="15620"/><p:restoredTop sz="94660"/></p:normalViewPr><p:gridSpacing cx="76200" cy="76200"/></p:viewPr>`);
+ zip.file('ppt/tableStyles.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}"/>`);
+ zip.file('ppt/theme/theme1.xml',ppTheme());
+ const lvl=`<a:lvl1pPr><a:defRPr sz="1800"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="${PP_FONT}"/></a:defRPr></a:lvl1pPr>`;
+ zip.file('ppt/slideMasters/slideMaster1.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldMaster ${PP_NS}><p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree>${PP_TREE_HEAD}</p:spTree></p:cSld><p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/><p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle>${lvl}</p:titleStyle><p:bodyStyle>${lvl}</p:bodyStyle><p:otherStyle>${lvl}</p:otherStyle></p:txStyles></p:sldMaster>`);
+ zip.file('ppt/slideMasters/_rels/slideMaster1.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${R}/slideLayout" Target="../slideLayouts/slideLayout1.xml"/><Relationship Id="rId2" Type="${R}/theme" Target="../theme/theme1.xml"/></Relationships>`);
+ zip.file('ppt/slideLayouts/slideLayout1.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sldLayout ${PP_NS} type="blank" preserve="1"><p:cSld name="Blank"><p:spTree>${PP_TREE_HEAD}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>`);
+ zip.file('ppt/slideLayouts/_rels/slideLayout1.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${R}/slideMaster" Target="../slideMasters/slideMaster1.xml"/></Relationships>`);
+ const now=new Date().toISOString().replace(/\.\d+Z$/,'Z');
+ zip.file('docProps/core.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xml(title)}</dc:title><dc:subject>Equipment strip-down investigation presentation</dc:subject><dc:creator>${xml(companyName||r.investigator||'')}</dc:creator><cp:lastModifiedBy>${xml(r.investigator||'')}</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`);
+ zip.file('docProps/app.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>StripNote</Application><PresentationFormat>Widescreen</PresentationFormat><Slides>${N}</Slides></Properties>`);
+ const ov=(p,t)=>`<Override PartName="${p}" ContentType="application/vnd.openxmlformats-officedocument.${t}"/>`;
+ zip.file('[Content_Types].xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="png" ContentType="image/png"/>${ov('/ppt/presentation.xml','presentationml.presentation.main+xml')}${ov('/ppt/slideMasters/slideMaster1.xml','presentationml.slideMaster+xml')}${ov('/ppt/slideLayouts/slideLayout1.xml','presentationml.slideLayout+xml')}${ov('/ppt/theme/theme1.xml','theme+xml')}${ov('/ppt/presProps.xml','presentationml.presProps+xml')}${ov('/ppt/viewProps.xml','presentationml.viewProps+xml')}${ov('/ppt/tableStyles.xml','presentationml.tableStyles+xml')}${slides.map((s,k)=>ov(`/ppt/slides/slide${k+1}.xml`,'presentationml.slide+xml')).join('')}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>${ov('/docProps/app.xml','extended-properties+xml')}</Types>`);
+ zip.file('_rels/.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${R}/officeDocument" Target="ppt/presentation.xml"/><Relationship Id="rIdCore" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rIdApp" Type="${R}/extended-properties" Target="docProps/app.xml"/></Relationships>`);
+ return zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.presentationml.presentation',compression:'STORE'});
+}
 async function saveOriginals(){
  if(busy||startingMic)return;
  await stopRecording();await saveQueue;
@@ -2065,7 +2297,8 @@ async function buildBackup(raw,notify=()=>{},opts={}){
   zip.file('logo/logo.json',JSON.stringify({mime:logoRec.mime||logoRec.blob.type,width:logoRec.width,height:logoRec.height,name:logoRec.name||''}));
  }
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
- zip.file('README.txt',`StripNote v8 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
+ if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
+ zip.file('README.txt',`StripNote v9 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging ZIP… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function finishJob(){
@@ -2088,7 +2321,8 @@ async function finishJob(){
  try{
   const r=structuredClone(current);
   const pdf=await buildPDF(r,(label,d,t)=>progress('Report: '+label,d,t));
-  blob=await buildBackup(r,(label,d,t)=>progress('Backup: '+label,d,t),{pdf});
+  const pptx=await buildPptx(r,(label,d,t)=>progress('Slides: '+label,d,t));
+  blob=await buildBackup(r,(label,d,t)=>progress('Backup: '+label,d,t),{pdf,pptx});
   const base=(r.reference||r.docNumber||r.title||'job').replace(/[^a-z0-9_-]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'job';
   name=`${base}-finished.zip`;
   progress(`Ready · ${(blob.size/1048576).toFixed(1)} MB`,1,1);
@@ -2100,7 +2334,7 @@ async function finishJob(){
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
  const durable=await requestDurable(false);
  await checkStorage(false);
- toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the backup and the full-size photos. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}`);
+ toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the slides, the backup and the full-size photos. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}`);
 }
 async function deliver(blob,name){
  const file=new File([blob],name,{type:blob.type});
@@ -2113,19 +2347,19 @@ async function exportReport(kind){
  await stopRecording();await saveQueue;
  if(hasSaveError)throw Error('Some changes are not saved. Resolve storage errors before exporting.');
  busy=true;setBusy(true);
- $('progressTitle').textContent=kind==='word'?'Creating Word report':kind==='pdf'?'Creating PDF report':'Creating backup';
+ $('progressTitle').textContent=kind==='word'?'Creating Word report':kind==='pdf'?'Creating PDF report':kind==='pptx'?'Creating presentation':'Creating backup';
  $('progressDialog').showModal();progress('Starting…',0,1);
  try{
   const r=structuredClone(current);
-  const builder=kind==='word'?buildDocx:kind==='pdf'?buildPDF:buildBackup;
+  const builder=kind==='word'?buildDocx:kind==='pdf'?buildPDF:kind==='pptx'?buildPptx:buildBackup;
   const blob=await builder(r,progress);
   progress(`Ready · ${(blob.size/1048576).toFixed(1)} MB`,1,1);
   const name=(r.reference||r.title||'inspection-report').replace(/[^a-z0-9_-]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,70)||'inspection-report';
   $('progressDialog').close();
-  await deliver(blob,`${name}.${kind==='word'?'docx':kind==='pdf'?'pdf':'zip'}`);
+  await deliver(blob,`${name}.${kind==='word'?'docx':kind==='pdf'?'pdf':kind==='pptx'?'pptx':'zip'}`);
   if(kind==='backup'){current.backedUpAt=new Date().toISOString();await persistReport();updateHeading();}
   if(kind==='backup'&&blob.size>80*1048576)toast(`Backup is ${(blob.size/1048576).toFixed(1)} MB because it includes full-size originals. Keep it somewhere with enough space.`);
-  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':'Report ready. Keep a backup ZIP if you need the originals.');
+  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':kind==='pptx'?'Presentation ready. It opens in PowerPoint or Google Slides and can be edited there.':'Report ready. Keep a backup ZIP if you need the originals.');
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
 }
 async function importBackup(file){
@@ -2331,6 +2565,7 @@ on('deleteReport','click',async()=>{
 });
 on('wordExport','click',()=>exportReport('word'));
 on('pdfExport','click',()=>exportReport('pdf'));
+on('pptxExport','click',()=>exportReport('pptx'));
 on('backupExport','click',()=>exportReport('backup'));
 on('saveOriginals','click',()=>saveOriginals());
 on('logoPick','click',()=>$('logoFile').click());
@@ -2662,7 +2897,7 @@ window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
  get db(){return db;},get session(){return session;},
  get lastDictation(){return lastDictation;},
- newReport:startBlank,chooseNewReport:newReport,addEntry:addPart,addPart,addPhotos,finishEntry,buildDocx,buildPDF,buildBackup,exportReport,saveOriginals,
+ newReport:startBlank,chooseNewReport:newReport,addEntry:addPart,addPart,addPhotos,finishEntry,buildDocx,buildPDF,buildPptx,buildBackup,exportReport,saveOriginals,
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
