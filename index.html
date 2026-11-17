@@ -197,19 +197,53 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 #cropCanvas{max-width:100%;display:inline-block;touch-action:none;cursor:crosshair;vertical-align:top}
 .dialog-actions{display:flex;gap:8px;margin-top:12px}
 .dialog-actions>button{flex:1}
+.check-card{border:1px solid var(--line);border-radius:12px;padding:10px;margin:10px 0;background:var(--bg)}
+.check-card h3{margin:0}
+.chk{border-top:1px solid var(--line);padding:10px 0;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chk>*{grid-column:1/-1}
+.chk.filled .chk-head strong::before{content:"✓ ";color:var(--mark)}
+.chk-head{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.chk-spec{font-size:14px;color:var(--muted)}
+.chk-spec b{color:var(--ink)}
+.chk-in{display:flex;flex-direction:column;gap:2px;margin:0}
+.chk-in>span{font-size:13px;font-weight:700;color:var(--muted)}
+.chk-yn,.chk-res{display:flex;gap:8px}
+.chk-yn button,.chk-res button{flex:1;min-height:56px}
+.chk-yn button[aria-pressed="true"],.chk-res button[aria-pressed="true"],.choice-row button[aria-checked="true"]{outline:3px solid var(--mark);outline-offset:-3px;background:var(--primary);color:var(--primary-ink)}
+.chk .m-result{font-weight:800;font-size:15px;min-height:0}
+.chk .m-result.in{color:#3fae5a}.chk .m-result.out{color:var(--danger)}
+body.outdoor .chk .m-result.in{color:#0a5c00}
+.choice-row{display:flex;flex-wrap:wrap;gap:8px}
+.choice-row button{flex:1 1 40%;min-height:56px}
+.step-warn{border-color:#d33;background:color-mix(in srgb,#d33 14%,transparent);color:var(--ink)}
+.hintbox,.safetybox{border:1px solid var(--line);border-radius:12px;padding:4px 12px;margin:8px 0}
+.hintbox>summary,.safetybox>summary{min-height:56px;display:flex;align-items:center;font-weight:700;cursor:pointer}
+.safetybox{border-color:#d33}.safetybox>summary{color:var(--danger)}
+.safetybox li{margin:4px 0}
+.sec-tag{color:var(--mark)}
+.steps-sec,.sec-head{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--mark);margin:14px 0 4px}
+.endbox{border:1px solid var(--line);border-radius:12px;padding:4px 12px;margin:8px 0 12px}
+.endbox>summary{min-height:56px;display:flex;align-items:center;font-weight:750;cursor:pointer}
+.endbox h3{margin:10px 0 4px;font-size:16px}
+.tickrow{align-items:flex-start;gap:12px;margin:4px 0;font-weight:500}
+.tickrow input{flex:0 0 28px;margin-top:12px}
+.review-list li{margin:6px 0;font-size:15px}
+#stepDrawCap{text-align:center;color:#33454b;font-size:13px;margin-top:4px}
+body.stepmode #checkCard{order:2}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="outdoor" class="small" type="button" aria-pressed="false" aria-label="Outdoor high-contrast mode">☀ Outdoor</button><button id="theme" class="small" type="button" aria-label="Switch dark or light theme">Theme</button></div></div></header>
 <main>
 <section id="home">
 <div class="card hero"><div class="tag">Field record</div><h1>Record the strip-down while the part is in your hands.</h1><p class="lead muted">Photograph a part, dictate the name and the damage, then add more photos of that same part. Word and PDF reports are built on this phone.</p><button id="newReport" class="primary" type="button">New report</button></div>
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
-<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,text/plain" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
+<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v9</p>
+<p class="ver">StripNote v10</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
 <details class="card" id="details" open><summary>Report details</summary>
+<div id="packHeader" class="grid" hidden></div>
 <div class="grid">
 <div class="wide"><label for="title">Report title</label><input id="title" data-job="title" placeholder="e.g. Circulating water pump CW-P-201"></div>
 <div><label for="reference">Job / reference</label><input id="reference" data-job="reference" placeholder="e.g. JN-2026-1044"></div>
@@ -235,14 +269,15 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
 </div></details>
-<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
+<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
 <section id="editor" class="card" hidden>
-<div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><h2 id="stepTitle"></h2><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"></div><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
+<div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
 <div class="toolbar" id="editorTools"><button id="camera" type="button">Take photo</button><button id="gallery" type="button">Gallery</button></div>
 <input id="cameraFile" type="file" accept="image/*" capture="environment" hidden><input id="galleryFile" type="file" accept="image/*" multiple hidden>
 <div id="editorPhotos" class="photos"></div>
 <p id="noPhotos" class="muted">No photos yet.</p>
+<div id="checkCard" class="check-card" hidden></div>
 <div id="micStatus" class="status" role="status">Tap 🎙 Speak at the bottom and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use + Photo of same part and say a short caption.</div>
 <div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing">
 <label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p>
@@ -262,7 +297,7 @@ body.outdoor .step-item.done .tick{color:#0a5c00}
 <section id="tplEditor" hidden>
 <div class="row between"><button id="tplBack" class="small" type="button">← Home</button><span class="status" id="tplSave" role="status">Saved on this phone</span></div>
 <div class="card"><div class="tag">Template</div><label for="tplName">Template name (equipment)</label><input id="tplName" placeholder="e.g. Super Fishing Jar 4-3/4in"><p class="status" id="tplCount"></p><p class="note">Templates and drawings are stored only on this phone and are never uploaded. Use Back up templates on the home screen to keep a copy.</p></div>
-<div id="tplSteps"></div>
+<div id="tplPackInfo"></div><div id="tplSteps"></div>
 <button id="tplAddStep" type="button" style="width:100%">+ Add step</button>
 <div class="card"><button id="tplStart" class="primary" type="button" style="width:100%">▶ Start a job with this template</button><button id="tplDelete" class="small danger" type="button" style="margin-top:10px">Delete template</button></div>
 </section>
@@ -783,7 +818,7 @@ function migratePart(e){
  const photos=Array.isArray(src.photos)?src.photos.map(asPhoto).filter(Boolean):[];
  const audio=Array.isArray(src.audio)?src.audio.filter(x=>typeof x==='string'):[];
  const measurements=Array.isArray(src.measurements)?src.measurements.map(asMeasure).filter(Boolean):[];
- return {id:String(src.id||uid()),name:String(src.name??src.part??''),condition:conditionOf(src.condition||src.severity),description:String(src.description??''),photos,audio,measurements,severityManual:!!src.severityManual,severityAuto:!!src.severityAuto,prompts:Array.isArray(src.prompts)?src.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof src.drawingId==='string'?src.drawingId:'',fromTemplate:!!src.fromTemplate,skipped:!!src.skipped,skipReason:String(src.skipReason??'')};
+ return {id:String(src.id||uid()),name:String(src.name??src.part??''),condition:conditionOf(src.condition||src.severity),description:String(src.description??''),photos,audio,measurements,severityManual:!!src.severityManual,severityAuto:!!src.severityAuto,prompts:Array.isArray(src.prompts)?src.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof src.drawingId==='string'?src.drawingId:'',fromTemplate:!!src.fromTemplate,skipped:!!src.skipped,skipReason:String(src.skipReason??''),...stepExtras(src,true)};
 }
 function migrateReport(r){
  const src=r&&typeof r==='object'?r:{};
@@ -793,7 +828,7 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:6,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString()};
+ return {id:String(src.id||uid()),schema:6,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack)};
 }
 function isCurrentReport(r){
  if(!r||r.schema!==6||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
@@ -802,6 +837,8 @@ function isCurrentReport(r){
  if(typeof r.client!=='string'||typeof r.site!=='string'||typeof r.investigator!=='string')return false;
  if(!JOB_TEXT.every(k=>typeof r[k]==='string')||typeof r.backedUpAt!=='string')return false;
  if(!r.parts.every(p=>Array.isArray(p?.measurements)&&p.measurements.every(m=>m&&typeof m.type==='string'&&typeof m.min==='string'&&typeof m.max==='string'&&typeof m.spec==='string')&&typeof p.severityAuto==='boolean'))return false;
+ if(!r.header||typeof r.header!=='object'||!('pack' in r))return false;
+ if(!r.parts.every(p=>Array.isArray(p?.checks)&&Array.isArray(p.warnings)&&Array.isArray(p.partNos)&&typeof p.section==='string'&&typeof p.hint==='string'&&typeof p.drawingCaption==='string'&&typeof p.drawingRef==='string'))return false;
  return r.parts.every(p=>p&&typeof p.id==='string'&&typeof p.name==='string'&&typeof p.description==='string'&&CONDITIONS.includes(p.condition)&&Array.isArray(p.audio)&&p.audio.every(a=>typeof a==='string')&&Array.isArray(p.photos)&&p.photos.every(ph=>ph&&typeof ph.id==='string'&&typeof ph.caption==='string'));
 }
 async function migrateStoredReports(){
@@ -905,7 +942,7 @@ function setDock(editingOpen){
 function showReport(){
  current=migrateReport(current);
  $('home').hidden=true;$('tplEditor').hidden=true;$('report').hidden=false;$('editor').hidden=true;editing=null;setDock(false);
- document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});
+ document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});renderPackHeader();renderEndChecks();
  renderEntries();
  window.scrollTo(0,0);
 }
@@ -962,7 +999,8 @@ function renderEntries(){
   const st=tj?stepState(p):null;
   const stLine=tj?`<span class="step-state ${st.done?'':'bad'}">${st.skipped?`⤼ Skipped – not inspected${p.skipReason?': '+esc(p.skipReason):''}`:st.done?'✓ Complete':st.started?'⚠ '+esc(capFirst(stepProblems(p).join(' · '))):'○ Not started'}</span>`:'';
   const mergeOpts=parts.filter(o=>o.id!==p.id).map(o=>`<option value="${esc(o.id)}">${esc(o.name||'Untitled part')}</option>`).join('');
-  return `<article class="card entry" data-part="${esc(p.id)}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div><div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div><p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${esc(p.id)}" style="flex:1">Edit part</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${esc(p.id)}" data-dir="-1" aria-label="Move part ${i+1} up" ${i===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${esc(p.id)}" data-dir="1" aria-label="Move part ${i+1} down" ${i===parts.length-1?'disabled':''}>↓ Down</button><select class="compact" data-merge="${esc(p.id)}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${esc(p.id)}">Delete part</button></div></details></article>`;
+  const secHead=p.section&&p.section!==(parts[i-1]?.section||'')?`<div class="sec-head">${esc(p.section)}</div>`:'';
+  return secHead+`<article class="card entry" data-part="${esc(p.id)}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div><div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div><p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${esc(p.id)}" style="flex:1">Edit part</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${esc(p.id)}" data-dir="-1" aria-label="Move part ${i+1} up" ${i===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${esc(p.id)}" data-dir="1" aria-label="Move part ${i+1} down" ${i===parts.length-1?'disabled':''}>↓ Down</button><select class="compact" data-merge="${esc(p.id)}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${esc(p.id)}">Delete part</button></div></details></article>`;
  }).join(''):'<div class="empty">No parts yet. Use Photo → new part, say the part name, pause, then describe the damage.</div>';
  observeThumbs();
  if(editing)updateEditorChrome();
@@ -1048,7 +1086,7 @@ async function deletePart(id){
  const part=current.parts.find(p=>p.id===id);
  current.parts=current.parts.filter(p=>p.id!==id);
  await persistReport();
- if(part){for(const ph of part.photos){await remove('media',ph.id);dropThumb(ph.id);}for(const a of part.audio)await remove('media',a);if(part.drawingId){await remove('media',part.drawingId);dropDrawingURL(part.drawingId);}}
+ if(part){for(const ph of part.photos){await remove('media',ph.id);dropThumb(ph.id);}for(const a of part.audio)await remove('media',a);if(part.drawingId&&!drawingUsedElsewhere(current.parts,part.drawingId,part)){await remove('media',part.drawingId);dropDrawingURL(part.drawingId);}}
  if(editing?.id===id){editing=null;$('editor').hidden=true;setDock(false);}
  renderEntries();
 }
@@ -1069,7 +1107,8 @@ async function mergeParts(sourceId,targetId){
  target.photos.push(...source.photos);
  target.audio.push(...source.audio);
  if(!String(target.name||'').trim()&&String(source.name||'').trim())target.name=source.name;
- if(source.drawingId){if(!target.drawingId)target.drawingId=source.drawingId;else{await remove('media',source.drawingId).catch(()=>{});dropDrawingURL(source.drawingId);}}
+ target.checks=(target.checks||[]).concat(source.checks||[]);
+ if(source.drawingId){if(!target.drawingId)target.drawingId=source.drawingId;else if(target.drawingId!==source.drawingId&&!drawingUsedElsewhere(parts,source.drawingId,source)){await remove('media',source.drawingId).catch(()=>{});dropDrawingURL(source.drawingId);}}
  parts.splice(si,1);
  if(editing===source)editing=target;
  await persistReport();
@@ -1193,14 +1232,17 @@ async function imageBlob(blob,max=1600,quality=.8){
  try{
   const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(Error('This image format cannot be read. Choose JPEG/PNG or use the camera.'));i.src=url;});
   const scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
-  const canvas=document.createElement('canvas');
-  canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
-  canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+  const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
   const ctx=canvas.getContext('2d');
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
-  const result=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+  // Synchronous JPEG encode (~10–60 ms): Chrome's async canvas.toBlob can sit ~1–6 s per image waiting for its scheduler on a busy page.
+  let result=null;
+  try{const u=canvas.toDataURL('image/jpeg',quality);const bin=atob(u.slice(u.indexOf(',')+1));const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);if(/^data:image\/jpeg/.test(u)&&bytes.length)result=new Blob([bytes],{type:'image/jpeg'});}catch(e){result=null;}
+  if(!result)result=await new Promise(r=>canvas.toBlob(r,'image/jpeg',quality));
+  canvas.width=canvas.height=1;
   if(!result)throw Error('Image compression failed');
-  return {blob:result,width:canvas.width,height:canvas.height};
+  return {blob:result,width:w,height:h};
  }finally{URL.revokeObjectURL(url);}
 }
 async function addPhotos(files){
@@ -1563,7 +1605,13 @@ const COND_STYLE={
 };
 const xml=s=>String(s??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function prettyDate(s){if(!s)return '';const [y,m,d]=String(s).split('-');if(!y||!m||!d)return String(s);return `${d}/${m}/${y}`;}
-function jobRows(r){return [['Document no.',r.docNumber],['Revision',r.revision],['Client',r.client],['Site',r.site],['Equipment',r.equipment],['Serial no.',r.serial],['Work order',r.workOrder],['Job reference',r.reference],['Inspection date',prettyDate(r.date)],['Investigator',r.investigator||r.engineer]];}
+function jobRows(r){const base=[['Document no.',r.docNumber],['Revision',r.revision],['Client',r.client],['Site',r.site],['Equipment',r.equipment],['Serial no.',r.serial],['Work order',r.workOrder],['Job reference',r.reference],['Inspection date',prettyDate(r.date)],['Investigator',r.investigator||r.engineer]];
+ if(!isPackJob(r)||!r.pack.headerFields.length)return base;
+ const rows=[],used=new Set();
+ for(const l of r.pack.headerFields){const k=headerKey(l);if(k==='signName')continue;if(k)used.add(k);rows.push([l,k==='date'?prettyDate(r.date):headerValue(r,l)]);}
+ const keyOf={'Document no.':'docNumber','Revision':'revision','Client':'client','Site':'site','Equipment':'equipment','Serial no.':'serial','Work order':'workOrder','Job reference':'reference','Inspection date':'date','Investigator':'investigator'};
+ for(const [k,v] of base){if(used.has(keyOf[k]))continue;if(clean(v))rows.push([k,v]);}
+ return rows;}
 const COND_KEY='Condition key: OK – serviceable as found. Wear – normal wear; monitor or plan renewal. Damaged – defect found; repair or assess. Replace – not fit for further service. Not rated – not assessed.';
 const REPORT_KIND='EQUIPMENT STRIP-DOWN INVESTIGATION REPORT';
 const paragraphsOf=t=>String(t||'').split(/\n+/).map(x=>capSentences(clean(x))).filter(Boolean);
@@ -1678,9 +1726,10 @@ async function buildDocx(raw,notify=()=>{}){
  const totalPhotos=photoCount(r.parts);
  body+=docxPara(docxRun(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${totalPhotos} photograph${totalPhotos===1?'':'s'}`,{size:18,color:'5C6B70'}),'<w:spacing w:before="80" w:after="60"/>');
  body+=docxPara(docxRun(COND_KEY,{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="0" w:after="200"/>');
+ if(isPackJob(r)&&r.pack.tools.length){body+=H1(`${++sec}. Tools`);body+=simpleTable([3600,2200,4066],['Tool','Size','Use'],r.pack.tools.map(t=>[t.tool,t.size,t.use]));}
  const findNo=++sec;
  body+=H1(`${findNo}. Findings`);
- let rels='', n=0, dn=0;
+ let rels='', n=0, dn=0, prevSec='';
  const tj=isTemplateJob(r);
  const docxPhotos=async(part,i)=>{
   // v9: one large photo per row at full content width; the picture keeps with its caption.
@@ -1710,8 +1759,10 @@ async function buildDocx(raw,notify=()=>{}){
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;body+=docxPara(docxRun(part.section,{size:26,bold:true,color:'FFFFFF'}),'<w:keepNext/><w:shd w:val="clear" w:color="auto" w:fill="1F3A44"/><w:spacing w:before="360" w:after="60"/>');}
   const headingPr=`<w:pStyle w:val="Heading1"/><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="40"/><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="1" w:color="${cond.hex}"/></w:pBdr>`;
   body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:26,bold:true,color:'1F3A44'}),headingPr);
+  if(tj&&part.partNos?.length)body+=docxPara(docxRun(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`,{size:18,color:'5C6B70'}),'<w:keepNext/><w:spacing w:before="20" w:after="80"/>');
   if(!tj){docxCondDesc(part,cond);await docxPhotos(part,i);continue;}
   if(part.skipped){body+=docxPara(docxRun(`Not inspected${part.skipReason?': '+part.skipReason:''}`,{size:21,italic:true,color:'5A6468'}),'<w:spacing w:before="80" w:after="160"/>');continue;}
   const d=part.drawingId?await exportDrawing(part.drawingId):null;
@@ -1721,10 +1772,19 @@ async function buildDocx(raw,notify=()=>{}){
    rels+=`<Relationship Id="rIdD${dn}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/drawing${dn}.jpg"/>`;
    const {cx,cy}=fitEmu(d.width,d.height,4680000,2700000);
    body+=drawingXml(100000+dn,cx,cy,`Part drawing: ${part.name||''}`,`rIdD${dn}`).replace('<w:pPr>','<w:pPr><w:keepNext/>');
-   body+=docxPara(docxRun('Part drawing',{size:15,italic:true,color:'8AA0A6'}),'<w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="120"/>');
+   body+=docxPara(docxRun(part.drawingCaption||part.drawingRef||'Part drawing',{size:16,italic:true,color:'5C6B70'}),'<w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="120"/>');
   }
   await docxPhotos(part,i);
   docxCondDesc(part,cond);
+  {const cr=checkTableRows(part,r);if(cr.length){body+=docxPara(docxRun('Check & record',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="80" w:after="60"/>');body+=simpleTable([2300,2700,800,1500,1366,1200],['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes'],cr,(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}}
+ }
+ if(isPackJob(r)){
+  const resSt=(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null;
+  const rec=recordRows(r);
+  if(rec.length){body+=H1(`${++sec}. Measurements and checks record`);body+=simpleTable([700,2900,2966,1600,1700],['Step','Item / Part no','Spec','Measured / found','Result'],rec,resSt);}
+  const e=r.pack.end;
+  if(e.replaceNew.length){body+=H1(`${++sec}. Parts replaced with NEW`);body+=simpleTable([5466,1800,2600],['Part','Part no','Replaced with NEW'],e.replaceNew.map(x=>[x.part,x.part_no,x.done?'Yes':'NOT ticked']),(t,i)=>i===2?(t==='Yes'?{bold:true,color:'146C36'}:{bold:true,color:'B00020'}):null);}
+  if(e.finalChecks.length){body+=H1(`${++sec}. Final checks`);body+=simpleTable([7666,2200],['Check','Done'],e.finalChecks.map(x=>[x.text,x.done?'Yes':'NOT ticked']),(t,i)=>i===1?(t==='Yes'?{bold:true,color:'146C36'}:{bold:true,color:'B00020'}):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');body+=simpleTable([2400,4566,2900],['Role','Technician (typed name)','Date'],[['Final checks by',r.signName||'',prettyDate(r.signDate||r.date)]]);}
  }
  if(clean(r.conclusions))body+=H1(`${++sec}. Conclusions`)+PARAS(r.conclusions);
  if(clean(r.recommendations))body+=H1(`${++sec}. Recommendations`)+PARAS(r.recommendations);
@@ -1734,6 +1794,7 @@ async function buildDocx(raw,notify=()=>{}){
  body+=simpleTable([2000,3066,2900,1900],['Role','Name','Signature','Date'],signRows);
  body+=docxPara(docxRun(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,{size:17,color:'5C6B70'}),'<w:spacing w:before="120" w:after="0"/>');
  body+=docxPara(docxRun(photoNote(),{size:16,italic:true,color:'8AA0A6'}),'<w:spacing w:before="200" w:after="0"/>');
+ if(isPackJob(r)&&r.pack.appendix.length){let first=true;for(const a of r.pack.appendix){const d=await exportDrawing(a.id);if(!d)continue;dn++;zip.file(`word/media/drawing${dn}.jpg`,await d.blob.arrayBuffer());rels+=`<Relationship Id="rIdD${dn}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/drawing${dn}.jpg"/>`;const {cx,cy}=fitEmu(d.width,d.height,6264000,first?7900000:8500000);body+='<w:p><w:r><w:br w:type="page"/></w:r></w:p>';if(first){body+=H1('Appendix – parts list');first=false;}body+=drawingXml(100000+dn,cx,cy,`Appendix: ${a.name}`,`rIdD${dn}`);}}
  const headerTitle=clipText(title,90);
  const footLeft=footerLeft(r);
  const hdrNs='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
@@ -1874,11 +1935,12 @@ async function buildPDF(raw,notify=()=>{}){
  y+=6;
  for(const line of textLines(COND_KEY,8,CW)){need(4);drawText(line,ML,y,{size:8,color:[90,100,104]});y+=3.6;}
  y+=3;
+ if(isPackJob(r)&&r.pack.tools.length){H1(`${++sec}. Tools`);table([64,40,70],['Tool','Size','Use'],r.pack.tools.map(t=>[t.tool,t.size,t.use]));y+=6;}
  const findNo=++sec;
  H1(`${findNo}. Findings`);
  const total=photoCount(r.parts);let n=0;
  const tj=isTemplateJob(r);
- const maxH=112;
+ const maxH=112;let prevSec='';
  const pdfPhotos=async(part,i)=>{
   // v9: one large photo per row at full content width; caption always on the same page as its photo.
   for(let j=0;j<part.photos.length;j++){
@@ -1913,6 +1975,7 @@ async function buildPDF(raw,notify=()=>{}){
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;if(y+60>bottom)newPage();doc.setFillColor(31,58,68);doc.rect(ML,y-1,CW,10,'F');drawText(textLines(part.section,11.5,CW-8)[0],ML+4,y+5.6,{size:11.5,color:[255,255,255],bold:true});y+=16;}
   let drw=null;
   if(tj&&!part.skipped&&part.drawingId){
    const d=await exportDrawing(part.drawingId);
@@ -1924,17 +1987,28 @@ async function buildPDF(raw,notify=()=>{}){
   const head=textLines(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,13,CW-6);
   head.forEach(line=>{drawText(line,ML+4,y,{size:13,color:[31,42,48],bold:true});y+=6;});
   y+=0.5;doc.setDrawColor(cond.rgb[0],cond.rgb[1],cond.rgb[2]);doc.setLineWidth(0.45);doc.line(ML,y,ML+36,y);y+=5;
+  if(tj&&part.partNos?.length){drawText(clipText(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`,120),ML,y,{size:9,color:[90,100,104]});y+=5.5;}
   if(!tj){pdfCondDesc(part,cond);await pdfPhotos(part,i);y+=4;continue;}
   if(part.skipped){for(const line of textLines(`Not inspected${part.skipReason?': '+part.skipReason:''}`,10.5,CW)){need(5);drawText(line,ML,y,{size:10.5,color:[90,100,104]});y+=5;}y+=5;continue;}
   if(drw){
    const dx=ML+(CW-drw.w)/2;
    doc.addImage(new Uint8Array(await drw.blob.arrayBuffer()),'JPEG',dx,y,drw.w,drw.h,'drw'+i,'FAST');
    doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(dx,y,drw.w,drw.h);
-   y+=drw.h+3.6;drawText('Part drawing',PW/2,y,{size:7.5,color:[120,128,132],align:'center'});y+=5.5;
+   y+=drw.h+3.6;drawText(clipText(part.drawingCaption||part.drawingRef||'Part drawing',130),PW/2,y,{size:8,color:[90,100,104],align:'center'});y+=5.5;
   }
   await pdfPhotos(part,i);
   pdfCondDesc(part,cond);
+  {const cr=checkTableRows(part,r);if(cr.length){need(24);drawText('Check & record',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([40,48,14,26,26,20],['Item / Part no','Spec','Qty exp.','Measured/found','Result','Notes'],cr,{cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null});y+=5;}}
   y+=3;
+ }
+ if(isPackJob(r)){
+  const resSt=(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null;
+  const tickSt=k=>(t,i)=>i===k?(t==='Yes'?{bold:true,color:[20,108,54]}:{bold:true,color:[176,0,32]}):null;
+  const rec=recordRows(r);
+  if(rec.length){H1(`${++sec}. Measurements and checks record`);table([12,48,54,28,32],['Step','Item / Part no','Spec','Measured/found','Result'],rec,{cellStyle:resSt});y+=6;}
+  const e=r.pack.end;
+  if(e.replaceNew.length){H1(`${++sec}. Parts replaced with NEW`);table([100,30,44],['Part','Part no','Replaced with NEW'],e.replaceNew.map(x=>[x.part,x.part_no,x.done?'Yes':'NOT ticked']),{cellStyle:tickSt(2)});y+=6;}
+  if(e.finalChecks.length){H1(`${++sec}. Final checks`);table([144,30],['Check','Done'],e.finalChecks.map(x=>[x.text,x.done?'Yes':'NOT ticked']),{cellStyle:tickSt(1)});y+=5;table([40,84,50],['Role','Technician (typed name)','Date'],[['Final checks by',r.signName||'',prettyDate(r.signDate||r.date)]],{minRow:12});y+=6;}
  }
  if(clean(r.conclusions)){H1(`${++sec}. Conclusions`);PARAS(r.conclusions);}
  if(clean(r.recommendations)){H1(`${++sec}. Recommendations`);PARAS(r.recommendations);}
@@ -1946,6 +2020,7 @@ async function buildPDF(raw,notify=()=>{}){
  if(y+8>bottom)newPage();
  const note=textLines(photoNote(),8,CW);
  note.forEach(line=>{if(y+4>bottom)newPage();drawText(line,ML,y,{size:8,color:[120,128,132]});y+=3.6;});
+ if(isPackJob(r)&&r.pack.appendix.length){let first=true;for(const a of r.pack.appendix){const d=await exportDrawing(a.id);if(!d)continue;newPage();if(first){H1('Appendix – parts list');first=false;}const room=bottom-y-2;let w=CW,h=w*d.height/Math.max(1,d.width);if(h>room){h=room;w=h*d.width/Math.max(1,d.height);}doc.addImage(new Uint8Array(await d.blob.arrayBuffer()),'JPEG',ML+(CW-w)/2,y,w,h,'appx'+a.id,'FAST');y+=h+2;}}
  const pages=doc.getNumberOfPages();
  for(let i=1;i<=pages;i++){
   doc.setPage(i);doc.setFont('StripNoteSans','normal');
@@ -2055,7 +2130,7 @@ async function buildPptx(raw,notify=()=>{}){
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.4,ppPara(REPORT_KIND,{size:13,color:'D9E2E5'}),{name:'Report kind'});ty+=0.45;
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,1.4,ppPara(clipText(title,120),{size:38,bold:true,color:'FFFFFF'}),{name:'Job title',anchor:'t'});ty+=1.6;
   const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
-  const rows=jobRows(r).filter(([k,v])=>want.includes(k)&&clean(v)).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
+  const rows=jobRows(r).filter(([k,v])=>(isPackJob(r)||want.includes(k))&&clean(v)).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
   const colW=6.0,rowH=0.62;
   rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:'9FB3B9'})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
   sl.title=true;
@@ -2139,10 +2214,15 @@ async function buildPptx(raw,notify=()=>{}){
     ppTable(msl.shapes,msl.next++,0.4,1.15,[4.3,1.5,1.9,1.4,1.4,2.03],rows,{rowH:0.5,size:15,clip:60,cellStyle:(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020',fill:'FDE7EA'}:i===5&&t==='In spec'?{bold:true,color:'146C36',fill:'E6F4EA'}:null});
    }
   }
+  const cr=tj&&part.skipped?[]:checkTableRows(part,r);
+  for(let s=0;s<cr.length;s+=8){const csl=await frame(`${head} \u00b7 Check & record${cr.length>8?` (${Math.floor(s/8)+1})`:''}`,{accent:cond.hex,size:20});ppTable(csl.shapes,csl.next++,0.4,1.1,[3.2,3.7,1.0,1.7,1.8,1.13],[['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes']].concat(cr.slice(s,s+8)),{rowH:0.64,size:12,headSize:12,clip:120,cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020',fill:'FDE7EA'}:resultStyle(t)==='good'?{bold:true,color:'146C36',fill:'E6F4EA'}:null):null});}
  };
+ if(isPackJob(r)&&r.pack.tools.length){const tl=r.pack.tools;for(let s=0;s<tl.length;s+=11){const sl=await frame(tl.length>11?`Tools (${Math.floor(s/11)+1} of ${Math.ceil(tl.length/11)})`:'Tools');ppTable(sl.shapes,sl.next++,0.4,1.1,[4.6,2.6,5.33],[['Tool','Size','Use']].concat(tl.slice(s,s+11).map(t=>[t.tool,t.size,t.use])),{rowH:0.48,size:14,clip:80});}}
  // 4. Per part
+ let prevSec='';
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];const cond=condFor(part);
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;const ss=newSlide('1F3A44');ss.title=true;ppShape(ss.shapes,ss.next++,0,PPH-0.12,PPW,0.12,null,{fill:'C6B15A',name:'Gold rule'});ppShape(ss.shapes,ss.next++,0.8,2.5,11.7,1.7,ppPara(clipText(part.section,120),{size:36,bold:true,color:'FFFFFF'}),{name:'Section',anchor:'ctr'});const ns=r.parts.filter(p=>p.section===part.section).length;ppShape(ss.shapes,ss.next++,0.8,4.25,11.7,0.6,ppPara(`${ns} step${ns===1?'':'s'}`,{size:16,color:'D9E2E5'}),{name:'Section steps',fit:false});}
   const head=tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`;
   if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,i,cond,head);continue;}
   const sl=await frame(head,{accent:cond.hex});
@@ -2154,6 +2234,7 @@ async function buildPptx(raw,notify=()=>{}){
   const d=tj&&part.drawingId?await exportDrawing(part.drawingId):null;
   const ms=measuresOf(part);const msOut=ms.filter(m=>/^OUT/i.test(measureResult(m)||'')).length;
   const facts=[`${part.photos.length} photo${part.photos.length===1?'':'s'}`];
+  if(tj&&part.partNos?.length)facts.unshift(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`);
   if(ms.length)facts.push(`${ms.length} measurement${ms.length===1?'':'s'}${msOut?` · ${msOut} out of spec`:''}`);
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
   if(d){
@@ -2162,7 +2243,7 @@ async function buildPptx(raw,notify=()=>{}){
    const f=ppFitBox(d.width,d.height,0.4,1.1,7.9,5.55);
    ppShape(sl.shapes,sl.next++,0.4,1.1,7.9,5.55,null,{fill:'FFFFFF',line:'C5D0D4',name:'Drawing frame'});
    ppPic(sl.shapes,sl.next++,rel,f.x,f.y,f.w,f.h,`Part drawing: ${part.name||''}`);
-   ppShape(sl.shapes,sl.next++,0.4,6.68,7.9,0.3,ppPara('Part drawing',{size:10,italic:true,color:'8AA0A6',align:'ctr'}),{name:'Drawing label',fit:false,inset:0});
+   ppShape(sl.shapes,sl.next++,0.4,6.68,7.9,0.3,ppPara(clipText(part.drawingCaption||part.drawingRef||'Part drawing',120),{size:11,italic:true,color:'5C6B70',align:'ctr'}),{name:'Drawing label',fit:false,inset:0});
    badge(sl,8.65,1.15,3.0,cond);
    ppShape(sl.shapes,sl.next++,8.6,1.9,4.35,3.9,ppParas(clipText(desc,700),{size:16,after:6}),{name:'Description'});
    ppShape(sl.shapes,sl.next++,8.6,5.9,4.35,0.8,facts.map(t=>ppPara(t,{size:13,color:'5C6B70'})).join(''),{name:'Facts'});
@@ -2172,6 +2253,15 @@ async function buildPptx(raw,notify=()=>{}){
    ppShape(sl.shapes,sl.next++,0.45,6.2,12.4,0.6,ppPara(facts.join('   ·   '),{size:14,color:'5C6B70'}),{name:'Facts'});
   }
   await partPhotos(part,i,cond,head);
+ }
+ if(isPackJob(r)){
+  const resSt=(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020',fill:'FDE7EA'}:resultStyle(t)==='good'?{bold:true,color:'146C36',fill:'E6F4EA'}:null):null;
+  const tickSt=k=>(t,i)=>i===k?(t==='Yes'?{bold:true,color:'146C36',fill:'E6F4EA'}:{bold:true,color:'B00020',fill:'FDE7EA'}):null;
+  const rec=recordRows(r);
+  for(let s=0;s<rec.length;s+=10){const sl=await frame(`Measurements and checks record${rec.length>10?` (${Math.floor(s/10)+1} of ${Math.ceil(rec.length/10)})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.05,[0.9,3.9,4.0,1.8,1.93],[['Step','Item / Part no','Spec','Measured / found','Result']].concat(rec.slice(s,s+10)),{rowH:0.54,size:11,headSize:12,clip:100,cellStyle:resSt});}
+  const e=r.pack.end;
+  for(let s=0;s<e.replaceNew.length;s+=11){const sl=await frame(`Parts replaced with NEW${e.replaceNew.length>11?` (${Math.floor(s/11)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[7.5,2.0,3.03],[['Part','Part no','Replaced with NEW']].concat(e.replaceNew.slice(s,s+11).map(x=>[x.part,x.part_no,x.done?'Yes':'NOT ticked'])),{rowH:0.48,size:14,clip:90,cellStyle:tickSt(2)});}
+  for(let s=0;s<e.finalChecks.length;s+=6){const chunk=e.finalChecks.slice(s,s+6);const sl=await frame(`Final checks and sign-off${e.finalChecks.length>6?` (${Math.floor(s/6)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[10.5,2.03],[['Check','Done']].concat(chunk.map(x=>[x.text,x.done?'Yes':'NOT ticked'])),{rowH:0.72,size:13,clip:220,cellStyle:tickSt(1)});ppShape(sl.shapes,sl.next++,0.4,1.1+0.72*(chunk.length+1)+0.35,12.5,0.5,ppPara(`Final checks by: ${r.signName||'—'}   ·   ${prettyDate(r.signDate||r.date)||'—'}`,{size:16,bold:true,color:'1F3A44'}),{name:'Sign-off',fit:false});}
  }
  // 5. Conclusions and recommendations
  {
@@ -2183,6 +2273,7 @@ async function buildPptx(raw,notify=()=>{}){
   ppShape(sl.shapes,sl.next++,0.4,6.15,12.55,0.4,ppPara(`Prepared by: ${who||'—'}${clean(r.checkedBy)?`   ·   Checked by: ${r.checkedBy}`:''}   ·   Document ${r.docNumber||'—'} rev ${r.revision||'—'}`,{size:13,color:'1F2A30'}),{name:'Sign-off',fit:false});
   ppShape(sl.shapes,sl.next++,0.4,6.55,12.55,0.35,ppPara(photoNote(),{size:10,italic:true,color:'8AA0A6'}),{name:'Photo note',fit:false});
  }
+ if(isPackJob(r)){const ap=r.pack.appendix;for(let k=0;k<ap.length;k++){const d=await exportDrawing(ap[k].id);if(!d)continue;const sl=await frame(`Appendix – parts list${ap.length>1?` (${k+1} of ${ap.length})`:''}`);const rel=await addMedia(sl,d.blob,'jpg');const f=ppFitBox(d.width,d.height,0.4,0.98,12.53,6.05);ppPic(sl.shapes,sl.next++,rel,f.x,f.y,f.w,f.h,`Appendix ${ap[k].name}`);}}
  // footers + package
  notify('Packaging presentation…',total,total+1);
  const N=slides.length;const foot=clipText(footerLeft(r)||title,80);
@@ -2272,9 +2363,10 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  const tj=isTemplateJob(exported);
  const addedDrawings=new Set();
  for(const part of exported.parts){if(part.drawingId&&!(await addDrawingTo(zip,part.drawingId,addedDrawings)))part.drawingId='';}
+ if(exported.pack){const keep=[];for(const a of exported.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);exported.pack.appendix=keep;}
  const templates=[];
- if(exported.templateId){const t=await get('settings',exported.templateId).catch(()=>null);if(t&&t.kind==='template'){const shaped=shapeTemplate(t);for(const st of shaped.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,addedDrawings)))st.drawingId='';}templates.push(shaped);}}
- zip.file('report.json',JSON.stringify({format:'stripnote',version:7,company:companyName,report:exported,templates},null,2));
+ if(exported.templateId){const t=await get('settings',exported.templateId).catch(()=>null);if(t&&t.kind==='template'){const shaped=shapeTemplate(t);for(const st of shaped.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,addedDrawings)))st.drawingId='';}if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);shaped.pack.appendix=keep;}templates.push(shaped);}}
+ zip.file('report.json',JSON.stringify({format:'stripnote',version:8,company:companyName,report:exported,templates},null,2));
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
  for(const [pi,part] of exported.parts.entries()){
@@ -2298,7 +2390,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  }
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
  if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
- zip.file('README.txt',`StripNote v9 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
+ zip.file('README.txt',`StripNote v10 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging ZIP… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function finishJob(){
@@ -2311,6 +2403,7 @@ async function finishJob(){
   const gaps=current.parts.map((p,i)=>({i,p,bits:stepProblems(p)})).filter(x=>x.bits.length);
   if(gaps.length){const lines=gaps.slice(0,10).map(x=>`• Step ${x.i+1} ${x.p.name||'Untitled part'}: ${x.bits.join(', ')}`);if(gaps.length>10)lines.push(`…and ${gaps.length-10} more.`);if(!confirm(`${gaps.length} step${gaps.length===1?' is':'s are'} not complete:\n${lines.join('\n')}\n\nFinish the job anyway? They print as they are.`))return;}
  }
+ const endp=packEndProblems(current);if(endp.length&&!confirm(`End of job checklist is not complete:\n• ${endp.join('\n• ')}\n\nFinish the job anyway? It prints as it is.`))return;
  const unrated=isTemplateJob(current)?0:current.parts.filter(p=>conditionOf(p.condition)==='Not rated').length;
  if(unrated&&!confirm(`${unrated} part${unrated===1?' is':'s are'} still Not rated and will print that way. Finish the job anyway?`))return;
  if(editing)await finishEntry();
@@ -2381,7 +2474,7 @@ async function importBackup(file){
    return;
   }
   const data=JSON.parse(rawText);
-  if(data?.format!=='stripnote'||![1,2,3,4,5,6,7].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
+  if(data?.format!=='stripnote'||![1,2,3,4,5,6,7,8].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
   const shaped=migrateReport(data.report);
   if(shaped.parts.length>5000)throw Error('Too many parts in backup');
   const total=shaped.parts.reduce((n,p)=>n+p.photos.length+p.audio.length,0);
@@ -2389,6 +2482,7 @@ async function importBackup(file){
   shaped.id=uid();
   shaped.backedUpAt='';
   if(typeof data.company==='string'&&data.company&&!companyName){companyName=data.company.slice(0,200);await put('settings',{id:'company',name:companyName});if($('companyName'))$('companyName').value=companyName;}
+  const dmap=new Map();const restoreOnce=async old=>{if(!dmap.has(old))dmap.set(old,await restoreDrawing(z,old,importedIds));return dmap.get(old);};
   let done=0;
   for(const part of shaped.parts){
    part.id=uid();
@@ -2406,8 +2500,9 @@ async function importBackup(file){
     await tick();
    }
    part.photos=photos;part.audio=audio;
-   if(part.drawingId){try{part.drawingId=await restoreDrawing(z,part.drawingId,importedIds);}catch(e){console.warn('Drawing in backup could not be restored',e);part.drawingId='';}}
+   if(part.drawingId){try{part.drawingId=await restoreOnce(part.drawingId);}catch(e){console.warn('Drawing in backup could not be restored',e);part.drawingId='';}}
   }
+  if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix){try{keep.push({...a,id:await restoreOnce(a.id)});}catch(e){console.warn('Appendix image skipped',e);}}shaped.pack.appendix=keep;}
   let tplNote='';
   if(Array.isArray(data.templates)&&data.templates.length){const nt=await importTemplates(z,data.templates,importedIds);if(nt){tplNote=` Its template was restored too.`;await renderTemplateList();}}
   shaped.updated=new Date().toISOString();
@@ -2484,7 +2579,7 @@ on('reports','click',e=>{const b=e.target.closest('[data-open]');if(b)return ope
 on('back','click',async()=>{if(busy||startingMic)return;await stopRecording();await saveQueue;if(current&&current.parts.length&&!backupState(current).ok)toast('Reminder: this job is not backed up. Open it and tap Finish job before you leave site.');clearThumbs();for(const u of drawingURLs.values())URL.revokeObjectURL(u);drawingURLs.clear();current=null;editing=null;$('home').hidden=false;$('report').hidden=true;setDock(false);await listReports();await renderTemplateList();await storageInfo();window.scrollTo(0,0);});
 on('theme','click',()=>{document.body.classList.toggle('light');localStorage.setItem('stripnote-theme',document.body.classList.contains('light')?'light':'dark');const dark=!document.body.classList.contains('light');document.querySelector('meta[name="theme-color"]').setAttribute('content',dark?'#10161a':'#f3f6f6');});
 on('persist','click',async()=>{await requestDurable(true);await storageInfo();});
-document.querySelectorAll('[data-job]').forEach(el=>el.addEventListener(el.type==='date'?'change':'input',()=>{if(!current)return;current[el.dataset.job]=el.value;if(el.dataset.job==='investigator')current.engineer=el.value;updateHeading();persistReport().catch(()=>{});}));
+document.querySelectorAll('[data-job]').forEach(el=>el.addEventListener(el.type==='date'?'change':'input',()=>{if(!current)return;current[el.dataset.job]=el.value;if(el.dataset.job==='investigator')current.engineer=el.value;if(isPackJob(current)){document.querySelectorAll('[data-hfield]').forEach(h=>{if(headerKey(h.dataset.hfield)===el.dataset.job&&h!==el)h.value=el.value;});if(el.dataset.job==='signName')renderEndChecks();}updateHeading();persistReport().catch(()=>{});}));
 on('part','input',()=>{if(!editing)return;editing.name=$('part').value;updateEditorChrome();return persistReport();});
 on('description','input',()=>{if(!editing)return;editing.description=$('description').value;return persistReport();});
 on('condition','change',()=>setCondition($('condition').value));
@@ -2558,7 +2653,7 @@ on('audioList','click',async e=>{
 on('deleteReport','click',async()=>{
  if(!confirm('Permanently delete this report and all its photos and voice notes? Export a backup first.'))return;
  await stopRecording();
- const ids=current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...p.audio,...(p.drawingId?[p.drawingId]:[])]);
+ const ids=[...new Set(current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...p.audio,...(p.drawingId?[p.drawingId]:[])]).concat(isPackJob(current)?current.pack.appendix.map(a=>a.id):[]))];
  await remove('reports',current.id);
  for(const id of ids){await remove('media',id);dropThumb(id);}
  clearThumbs();current=null;editing=null;$('report').hidden=true;$('home').hidden=false;setDock(false);await listReports();
@@ -2580,15 +2675,15 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&session)st
 window.addEventListener('beforeunload',e=>{if(session||busy||startingMic||hasSaveError){e.preventDefault();e.returnValue='';}});
 
 // ---------- v7: templates and step-by-step jobs ----------
-function newPartObject(extra={}){return Object.assign({id:uid(),name:'',condition:'Not rated',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:''},extra);}
+function newPartObject(extra={}){return Object.assign({id:uid(),name:'',condition:'Not rated',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
 function isTemplateJob(r){return !!(r&&(r.templateName||(Array.isArray(r.parts)&&r.parts.some(p=>p&&p.fromTemplate))));}
 function isStepMode(){return !!(current&&editing&&isTemplateJob(current));}
 function promptList(p){return p&&Array.isArray(p.prompts)&&p.prompts.length?p.prompts:[''];}
 function promptLabel(pr){return pr?capFirst(pr):'Photo';}
 function missingPrompts(p){const photos=p.photos||[];return promptList(p).filter(pr=>pr?!photos.some(ph=>ph.prompt===pr):!photos.length);}
 function nextPrompt(p){const m=missingPrompts(p);return m.length?m[0]:null;}
-function stepState(p){const missing=p.skipped?[]:missingPrompts(p);const unrated=!p.skipped&&conditionOf(p.condition)==='Not rated';return {skipped:!!p.skipped,missing,unrated,done:!!p.skipped||(!missing.length&&!unrated),started:(p.photos||[]).length>0||!!clean(p.description)||conditionOf(p.condition)!=='Not rated'};}
-function stepProblems(p){const st=stepState(p);const bits=[];if(st.missing.length){const named=st.missing.filter(Boolean);bits.push(named.length?`missing ${named.map(x=>x.toLowerCase()).join(', ')} photo${named.length===1?'':'s'}`:'no photo');}if(st.unrated)bits.push('not rated');return bits;}
+function stepState(p){const missing=p.skipped?[]:missingPrompts(p);const unrated=!p.skipped&&conditionOf(p.condition)==='Not rated';const left=checksLeft(p,current);return {skipped:!!p.skipped,missing,unrated,checksLeft:left,done:!!p.skipped||(!missing.length&&!unrated&&!left),started:(p.photos||[]).length>0||!!clean(p.description)||conditionOf(p.condition)!=='Not rated'||(p.checks||[]).some(c=>clean(c.measured)||c.result)};}
+function stepProblems(p){const st=stepState(p);const bits=[];if(st.missing.length){const named=st.missing.filter(Boolean);bits.push(named.length?`missing ${named.map(x=>x.toLowerCase()).join(', ')} photo${named.length===1?'':'s'}`:'no photo');}if(st.unrated)bits.push('not rated');if(st.checksLeft)bits.push(`${st.checksLeft} check${st.checksLeft===1?'':'s'} to fill`);return bits;}
 function parseTemplateText(text,fallback){
  const lines=String(text||'').replace(/^\uFEFF/,'').split(/\r?\n/);
  let name='';const steps=[];
@@ -2607,14 +2702,14 @@ function parseTemplateText(text,fallback){
 function shapeTemplate(t){
  const src=t&&typeof t==='object'?t:{};
  return {id:typeof src.id==='string'&&src.id.startsWith(TPL_PREFIX)&&src.id.length<120?src.id:TPL_PREFIX+uid(),kind:'template',name:String(src.name||'Untitled template').slice(0,200),
-  steps:(Array.isArray(src.steps)?src.steps:[]).slice(0,500).map(st=>({id:String(st?.id||uid()).slice(0,80),name:String(st?.name??'').slice(0,200),prompts:Array.isArray(st?.prompts)?st.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof st?.drawingId==='string'?st.drawingId:''})),
-  updated:String(src.updated||new Date().toISOString())};
+  steps:(Array.isArray(src.steps)?src.steps:[]).slice(0,500).map(st=>({id:String(st?.id||uid()).slice(0,80),name:String(st?.name??'').slice(0,200),prompts:Array.isArray(st?.prompts)?st.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof st?.drawingId==='string'?st.drawingId:'',packId:sstr(st?.packId,40),...stepExtras(st,false)})),
+  pack:shapePack(src.pack),updated:String(src.updated||new Date().toISOString())};
 }
 async function getTemplates(){const all=await getAll('settings');return all.filter(x=>x&&x.kind==='template'&&typeof x.id==='string'&&x.id.startsWith(TPL_PREFIX)).map(shapeTemplate).sort((a,b)=>a.name.localeCompare(b.name));}
 async function saveTemplate(t){t.updated=new Date().toISOString();await put('settings',structuredClone(t));if($('tplSave'))$('tplSave').textContent='Saved on this phone';}
 async function renderTemplateList(){
  const list=await getTemplates();
- $('templateList').innerHTML=list.length?list.map(t=>{const d=t.steps.filter(x=>x.drawingId).length;return `<div class="tpl-item"><button class="report-button" type="button" data-tpl-edit="${esc(t.id)}"><span><strong>${esc(t.name)}</strong><small>${t.steps.length} step${t.steps.length===1?'':'s'} · ${d} drawing${d===1?'':'s'} · tap to edit</small></span></button><button class="primary" type="button" data-tpl-start="${esc(t.id)}">Start job</button></div>`;}).join(''):'<p class="muted">No templates yet. Import a .txt part list, make one here, or save a finished job’s part list as a template.</p>';
+ $('templateList').innerHTML=list.length?list.map(t=>{const d=new Set(t.steps.map(x=>x.drawingId).filter(Boolean)).size;const nc=t.steps.reduce((n,x)=>n+(x.checks?.length||0),0);return `<div class="tpl-item"><button class="report-button" type="button" data-tpl-edit="${esc(t.id)}"><span><strong>${esc(t.name)}</strong><small>${t.steps.length} step${t.steps.length===1?'':'s'} · ${d} drawing${d===1?'':'s'}${nc?` · ${nc} checks`:''}${t.pack?' · pack':''} · tap to edit</small></span></button><button class="primary" type="button" data-tpl-start="${esc(t.id)}">Start job</button></div>`;}).join(''):'<p class="muted">No templates yet. Import a .txt part list, make one here, or save a finished job’s part list as a template.</p>';
 }
 async function importTemplateFile(file){
  if(!file)return null;
@@ -2640,13 +2735,13 @@ async function openTemplateEditor(id){
  tplEditing=shapeTemplate(t||{name:'New template',steps:[]});
  if(!t)await saveTemplate(tplEditing);
  $('home').hidden=true;$('report').hidden=true;$('tplEditor').hidden=false;window.scrollTo(0,0);
- $('tplName').value=tplEditing.name;renderTemplateSteps();
+ $('tplName').value=tplEditing.name;renderTemplateSteps();renderTplPackInfo(tplEditing);
  if(!t){$('tplName').select();}
 }
 function renderTemplateSteps(){
  const t=tplEditing;if(!t)return;
  $('tplCount').textContent=`${t.steps.length} step${t.steps.length===1?'':'s'} · ${t.steps.filter(x=>x.drawingId).length} with a drawing`;
- $('tplSteps').innerHTML=t.steps.length?t.steps.map((st,i)=>{const id=esc(st.id);const item=itemOf(st.name);return `<article class="card tpl-step" data-step="${id}"><div class="row between"><strong>Step ${i+1}</strong>${item?`<span class="badge Notrated">Item ${esc(item)}</span>`:''}</div><label for="ts-n-${id}">Part or step name</label><input id="ts-n-${id}" data-tfield="name" value="${esc(st.name)}" placeholder="e.g. Floater (44)"><label for="ts-p-${id}">Photo prompts, separated by commas</label><input id="ts-p-${id}" data-tfield="prompts" value="${esc(st.prompts.join(', '))}" placeholder="e.g. before, after, removed (empty = 1 photo)"><div class="drawing-row">${st.drawingId?`<img class="drawing-thumb" data-drawing="${esc(st.drawingId)}" alt="Drawing for step ${i+1}" role="button" tabindex="0">`:'<span class="muted">No drawing</span>'}<button type="button" data-tdraw="${id}">${st.drawingId?'Change drawing':'Attach drawing'}</button>${st.drawingId?`<button type="button" class="small danger" data-tdraw-remove="${id}">Remove</button>`:''}</div><details class="more"><summary>⋯ Move or delete step</summary><div class="more-row"><button type="button" class="small" data-tup="${id}" ${i===0?'disabled':''}>↑ Up</button><button type="button" class="small" data-tdown="${id}" ${i===t.steps.length-1?'disabled':''}>↓ Down</button><button type="button" class="small danger" data-tdel="${id}">Delete step</button></div></details></article>`;}).join(''):'<div class="empty">No steps yet. Tap + Add step.</div>';
+ $('tplSteps').innerHTML=t.steps.length?t.steps.map((st,i)=>{const id=esc(st.id);const item=itemOf(st.name);return `${st.section&&st.section!==(t.steps[i-1]?.section||'')?`<div class="sec-head">${esc(st.section)}</div>`:''}<article class="card tpl-step" data-step="${id}"><div class="row between"><strong>Step ${i+1}</strong>${item?`<span class="badge Notrated">Item ${esc(item)}</span>`:''}</div><label for="ts-n-${id}">Part or step name</label><input id="ts-n-${id}" data-tfield="name" value="${esc(st.name)}" placeholder="e.g. Floater (44)"><label for="ts-p-${id}">Photo prompts, separated by commas</label><input id="ts-p-${id}" data-tfield="prompts" value="${esc(st.prompts.join(', '))}" placeholder="e.g. before, after, removed (empty = 1 photo)">${st.checks?.length||st.partNos?.length?`<p class="status">${st.partNos?.length?'Part nos: '+esc(st.partNos.join(', '))+' · ':''}${st.checks?.length||0} check${st.checks?.length===1?'':'s'}${st.hint?' · hint':''}${st.warnings?.length?' · ⚠ warning':''}</p>`:''}<div class="drawing-row">${st.drawingId?`<img class="drawing-thumb" data-drawing="${esc(st.drawingId)}" alt="Drawing for step ${i+1}" role="button" tabindex="0">`:'<span class="muted">No drawing</span>'}<button type="button" data-tdraw="${id}">${st.drawingId?'Change drawing':'Attach drawing'}</button>${st.drawingId?`<button type="button" class="small danger" data-tdraw-remove="${id}">Remove</button>`:''}</div><details class="more"><summary>⋯ Move or delete step</summary><div class="more-row"><button type="button" class="small" data-tup="${id}" ${i===0?'disabled':''}>↑ Up</button><button type="button" class="small" data-tdown="${id}" ${i===t.steps.length-1?'disabled':''}>↓ Down</button><button type="button" class="small danger" data-tdel="${id}">Delete step</button></div></details></article>`;}).join(''):'<div class="empty">No steps yet. Tap + Add step.</div>';
  loadDrawingThumbs($('tplSteps')).catch(console.warn);
 }
 async function copyDrawing(id){if(!id)return '';const m=await get('media',id);if(!m?.blob)return '';const nid=uid();await put('media',{id:nid,kind:'drawing',blob:m.blob,thumb:m.thumb,width:m.width,height:m.height});return nid;}
@@ -2659,7 +2754,9 @@ async function startFromTemplate(id){
  if($('newJobDialog').open)$('newJobDialog').close();
  const r=blankReport();
  r.templateId=t.id;r.templateName=t.name;r.equipment=t.name;r.title=`${t.name} strip-down`;
- for(const st of t.steps)r.parts.push(newPartObject({name:st.name||'Untitled step',prompts:[...st.prompts],drawingId:await copyDrawing(st.drawingId),fromTemplate:true}));
+ const dmap=new Map();
+ for(const st of t.steps)r.parts.push(newPartObject({name:st.name||'Untitled step',prompts:[...st.prompts],drawingId:await copyDrawingOnce(st.drawingId,dmap),fromTemplate:true,...stepExtras(st,true)}));
+ if(t.pack){const pk=structuredClone(t.pack);for(const a of pk.appendix)a.id=await copyDrawingOnce(a.id,dmap);pk.appendix=pk.appendix.filter(a=>a.id);r.pack=pk;}
  r.stepIndex=0;current=r;tplEditing=null;
  await persistReport();
  showReport();
@@ -2672,10 +2769,12 @@ async function saveJobAsTemplate(){
  const name=prompt('Name for the new template (usually the equipment):',current.templateName||current.equipment||current.title||'');
  if(name===null)return;
  const t=shapeTemplate({name:clean(name)||'Untitled template',steps:[]});
+ const dmap=new Map();
  for(const p of current.parts){
   const prompts=p.prompts.length?[...p.prompts]:[...new Set(p.photos.map(ph=>ph.prompt).filter(Boolean))];
-  t.steps.push({id:uid(),name:p.name||'Untitled part',prompts,drawingId:await copyDrawing(p.drawingId)});
+  t.steps.push({id:uid(),name:p.name||'Untitled part',prompts,drawingId:await copyDrawingOnce(p.drawingId,dmap),...stepExtras(p,false)});
  }
+ if(current.pack){const pk=structuredClone(current.pack);for(const a of pk.appendix)a.id=await copyDrawingOnce(a.id,dmap);pk.appendix=pk.appendix.filter(a=>a.id);pk.end.replaceNew.forEach(x=>x.done=false);pk.end.finalChecks.forEach(x=>x.done=false);t.pack=pk;}
  await saveTemplate(t);
  toast(`Saved as template “${t.name}” with ${t.steps.length} steps. Pick it next time you tap New report.`);
 }
@@ -2691,7 +2790,7 @@ async function goStep(i){
 function paintStep(){
  const on=isStepMode();document.body.classList.toggle('stepmode',on);
  $('stepHead').hidden=!on;
- if(!on)return;
+ if(!on){renderChecks();return;}
  const p=editing,n=current.parts.length,i=current.parts.indexOf(p);
  $('stepCount').textContent=`Step ${i+1} of ${n}${p.fromTemplate?'':' · extra part'}`;
  $('stepTitle').textContent=`Step ${i+1} of ${n}: ${p.name||'New part'}`;
@@ -2708,9 +2807,10 @@ function paintStep(){
  $('promptChips').innerHTML=list.map((pr,k)=>{const at=pr?p.photos.findIndex(ph=>ph.prompt===pr):(p.photos.length?0:-1);const has=at>=0;const no=has?`${i+1}.${at+1} `:(pr===next?nextNo+' ':'');return `<button type="button" class="${has?'done':''}${!has&&pr===next?' next':''}" data-prompt-shot="${k}" aria-label="${has?'Retake':'Take'} photo: ${esc(promptLabel(pr))}">${has?'✓':'○'} ${no}${esc(promptLabel(pr))}</button>`;}).join('');
  $('stepShot').textContent=next!==null?`📷 ${nextNo} ${promptLabel(next)}`:`📷 ${nextNo} Extra`;
  const left=missingPrompts(p).length;
- $('stepHint').textContent=p.skipped?'This step is skipped. Take a photo or tap Undo skip to record it.':next!==null?`Next photo ${nextNo} (${list.length-left+1} of ${list.length}): ${p.name?p.name+' – ':''}${promptLabel(next).toLowerCase()}.`:conditionOf(p.condition)==='Not rated'?'All photos taken. Now tap OK, Wear or Damaged.':'Step complete. Tap Next →.';
+ $('stepHint').textContent=p.skipped?'This step is skipped. Take a photo or tap Undo skip to record it.':next!==null?`Next photo ${nextNo} (${list.length-left+1} of ${list.length}): ${p.name?p.name+' – ':''}${promptLabel(next).toLowerCase()}.`:checksLeft(p,current)?`All photos taken. Fill the ${checksLeft(p,current)} check${checksLeft(p,current)===1?'':'s'} below, then rate it.`:conditionOf(p.condition)==='Not rated'?'All photos taken. Now tap OK, Wear or Damaged.':'Step complete. Tap Next →.';
  $('stepBack').disabled=i<=0;
  $('stepNext').textContent=i>=n-1?'✓ Finish':'Next →';
+ paintStepExtras(p);
  syncMicUI(!!session);
 }
 async function insertPartHere(){
@@ -2738,7 +2838,7 @@ function renderStepList(){
  const rows=r.parts.map((p,i)=>{const st=states[i];const gap=!st.done&&(st.started||i<cur);if(st.skipped)skipped++;else if(st.done)done++;else if(gap)gaps++;else todo++;
   const tick=st.skipped?'⤼':st.done?'✓':gap?'⚠':'○';
   const line=st.skipped?`Skipped${p.skipReason?': '+p.skipReason:''}`:st.done?`${conditionOf(p.condition)} · ${p.photos.length} photo${p.photos.length===1?'':'s'}`:gap?capFirst(stepProblems(p).join(' · ')):'Not started';
-  return `<button type="button" class="step-item${i===cur?' current':''}${gap?' gap':''}${st.done&&!st.skipped?' done':''}" data-goto="${i}"><span class="tick" aria-hidden="true">${tick}</span><span><strong>${i+1}. ${esc(p.name||'Untitled part')}</strong><small>${esc(line)}</small></span></button>`;}).join('');
+  const sec=p.section&&p.section!==(r.parts[i-1]?.section||'')?`<div class="steps-sec">${esc(p.section)}</div>`:'';return sec+`<button type="button" class="step-item${i===cur?' current':''}${gap?' gap':''}${st.done&&!st.skipped?' done':''}" data-goto="${i}"><span class="tick" aria-hidden="true">${tick}</span><span><strong>${i+1}. ${esc(p.name||'Untitled part')}</strong><small>${esc(line)}</small></span></button>`;}).join('');
  $('stepsSummary').textContent=`✓ ${done} done · ⤼ ${skipped} skipped · ⚠ ${gaps} with gaps · ○ ${todo} not started`;
  $('stepsList').innerHTML=rows;
 }
@@ -2772,7 +2872,9 @@ async function importTemplates(z,list,importedIds){
  for(const raw of list.slice(0,200)){
   const t=shapeTemplate(raw);
   if(await get('settings',t.id))continue;
-  for(const st of t.steps){if(st.drawingId){try{st.drawingId=await restoreDrawing(z,st.drawingId,importedIds);}catch(e){console.warn('Template drawing skipped',e);st.drawingId='';}}}
+  const tmap=new Map();const once=async old=>{if(!tmap.has(old))tmap.set(old,await restoreDrawing(z,old,importedIds));return tmap.get(old);};
+  for(const st of t.steps){if(st.drawingId){try{st.drawingId=await once(st.drawingId);}catch(e){console.warn('Template drawing skipped',e);st.drawingId='';}}}
+  if(t.pack){const keep=[];for(const a of t.pack.appendix){try{keep.push({...a,id:await once(a.id)});}catch(e){console.warn('Template appendix skipped',e);}}t.pack.appendix=keep;}
   await put('settings',t);n++;
  }
  return n;
@@ -2781,8 +2883,8 @@ async function buildTemplateBackup(){
  const list=await getTemplates();
  if(!list.length)throw Error('There are no templates on this phone to back up.');
  const zip=new JSZip();const added=new Set();
- for(const t of list)for(const st of t.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,added)))st.drawingId='';}
- zip.file('templates.json',JSON.stringify({format:'stripnote-templates',version:7,templates:list},null,2));
+ for(const t of list){for(const st of t.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,added)))st.drawingId='';}if(t.pack){const keep=[];for(const a of t.pack.appendix)if(await addDrawingTo(zip,a.id,added))keep.push(a);t.pack.appendix=keep;}}
+ zip.file('templates.json',JSON.stringify({format:'stripnote-templates',version:8,templates:list},null,2));
  zip.file('README.txt','StripNote templates backup: your step lists and part drawings. Drawings may come from confidential manuals, so keep this file private. To restore, open StripNote and tap Import backup ZIP on the home screen.');
  return zip.generateAsync({type:'blob',compression:'STORE'});
 }
@@ -2827,17 +2929,17 @@ async function saveDrawingFor(blob,width,height){
  if(target.kind==='tpl'&&tplEditing){
   const st=tplEditing.steps.find(x=>x.id===target.stepId);if(!st){await remove('media',id);return;}
   const old=st.drawingId;st.drawingId=id;await saveTemplate(tplEditing);
-  if(old){await remove('media',old);dropDrawingURL(old);}
+  if(old&&!drawingUsedElsewhere(tplEditing.steps,old,st)){await remove('media',old);dropDrawingURL(old);}
   renderTemplateSteps();toast('Drawing attached. It stays on this phone.');
  }else if(target.kind==='part'&&current){
   const p=current.parts.find(x=>x.id===target.partId);if(!p){await remove('media',id);return;}
   const old=p.drawingId;p.drawingId=id;await persistReport();
-  if(old){await remove('media',old);dropDrawingURL(old);}
+  if(old&&!drawingUsedElsewhere(current.parts,old,p)){await remove('media',old);dropDrawingURL(old);}
   if(editing===p)paintStep();renderEntries();toast('Drawing attached to this part of the job.');
  }else await remove('media',id);
 }
 on('tplImport','click',()=>$('tplFile').click());
-on('tplFile','change',async e=>{const f=e.target.files?.[0];e.target.value='';await importTemplateFile(f);});
+on('tplFile','change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;const head=new Uint8Array(await f.slice(0,4).arrayBuffer());if(/\.zip$/i.test(f.name)||/zip/.test(f.type)||(head[0]===0x50&&head[1]===0x4b))await importTemplatePack(f);else await importTemplateFile(f);});
 on('tplNew','click',()=>openTemplateEditor(null));
 on('tplBackup','click',()=>exportTemplates());
 on('templateList','click',async e=>{let b=e.target.closest('[data-tpl-edit]');if(b)return openTemplateEditor(b.dataset.tplEdit);b=e.target.closest('[data-tpl-start]');if(b)return startFromTemplate(b.dataset.tplStart);});
@@ -2846,15 +2948,15 @@ $('tplSteps').addEventListener('input',e=>{const inp=e.target.closest('[data-tfi
 on('tplSteps','click',async e=>{
  const t=tplEditing;if(!t)return;
  let b=e.target.closest('[data-tdraw]');if(b){pendingDrawing={kind:'tpl',stepId:b.dataset.tdraw};$('drawingFile').click();return;}
- b=e.target.closest('[data-tdraw-remove]');if(b){const st=t.steps.find(x=>x.id===b.dataset.tdrawRemove);if(st?.drawingId&&confirm('Remove this drawing from the template?')){const old=st.drawingId;st.drawingId='';await saveTemplate(t);await remove('media',old);dropDrawingURL(old);renderTemplateSteps();}return;}
+ b=e.target.closest('[data-tdraw-remove]');if(b){const st=t.steps.find(x=>x.id===b.dataset.tdrawRemove);if(st?.drawingId&&confirm('Remove this drawing from the template?')){const old=st.drawingId;st.drawingId='';await saveTemplate(t);if(!drawingUsedElsewhere(t.steps,old,st)){await remove('media',old);dropDrawingURL(old);}renderTemplateSteps();}return;}
  b=e.target.closest('[data-tup],[data-tdown]');if(b){const id=b.dataset.tup||b.dataset.tdown;const i=t.steps.findIndex(x=>x.id===id);if(moveItem(t.steps,i,b.dataset.tup?-1:1)){await saveTemplate(t);renderTemplateSteps();}return;}
- b=e.target.closest('[data-tdel]');if(b){const st=t.steps.find(x=>x.id===b.dataset.tdel);if(st&&confirm(`Delete step “${st.name||'Untitled'}” from the template? Jobs already started are not changed.`)){t.steps=t.steps.filter(x=>x!==st);await saveTemplate(t);if(st.drawingId){await remove('media',st.drawingId);dropDrawingURL(st.drawingId);}renderTemplateSteps();}return;}
+ b=e.target.closest('[data-tdel]');if(b){const st=t.steps.find(x=>x.id===b.dataset.tdel);if(st&&confirm(`Delete step “${st.name||'Untitled'}” from the template? Jobs already started are not changed.`)){t.steps=t.steps.filter(x=>x!==st);await saveTemplate(t);if(st.drawingId&&!drawingUsedElsewhere(t.steps,st.drawingId,st)){await remove('media',st.drawingId);dropDrawingURL(st.drawingId);}renderTemplateSteps();}return;}
  if(e.target.matches('img[data-drawing]'))return viewPhoto(e.target.dataset.drawing);
 });
 on('tplAddStep','click',async()=>{if(!tplEditing)return;const st={id:uid(),name:'',prompts:[],drawingId:''};tplEditing.steps.push(st);await saveTemplate(tplEditing);renderTemplateSteps();const el=document.getElementById('ts-n-'+st.id);el?.scrollIntoView({block:'center'});el?.focus();});
 on('tplBack','click',async()=>{tplEditing=null;$('tplEditor').hidden=true;$('home').hidden=false;window.scrollTo(0,0);await renderTemplateList();});
 on('tplStart','click',async()=>{if(!tplEditing)return;await saveTemplate(tplEditing);await startFromTemplate(tplEditing.id);});
-on('tplDelete','click',async()=>{const t=tplEditing;if(!t||!confirm(`Delete template “${t.name}” and its drawings from this phone? Jobs already started keep their own copy.`))return;await remove('settings',t.id);for(const st of t.steps)if(st.drawingId){await remove('media',st.drawingId);dropDrawingURL(st.drawingId);}tplEditing=null;$('tplEditor').hidden=true;$('home').hidden=false;await renderTemplateList();toast('Template deleted.');});
+on('tplDelete','click',async()=>{const t=tplEditing;if(!t||!confirm(`Delete template “${t.name}” and its drawings from this phone? Jobs already started keep their own copy.`))return;await remove('settings',t.id);if(t.pack)for(const a of t.pack.appendix)await remove('media',a.id).catch(()=>{});for(const st of t.steps)if(st.drawingId){await remove('media',st.drawingId).catch(()=>{});dropDrawingURL(st.drawingId);}tplEditing=null;$('tplEditor').hidden=true;$('home').hidden=false;await renderTemplateList();toast('Template deleted.');});
 on('drawingFile','change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f||!pendingDrawing)return;if(f.size>40*1048576){pendingDrawing=null;throw Error('That image is too large (40 MB limit).');}await openCrop(f);});
 $('cropCanvas').addEventListener('pointerdown',e=>{if(!cropState)return;e.preventDefault();try{$('cropCanvas').setPointerCapture(e.pointerId);}catch{}const p=cropPoint(e);cropState.drag=p;cropState.sel={x:p.x,y:p.y,w:0,h:0};drawCrop();});
 $('cropCanvas').addEventListener('pointermove',e=>{const st=cropState;if(!st?.drag)return;const p=cropPoint(e);st.sel={x:Math.min(p.x,st.drag.x),y:Math.min(p.y,st.drag.y),w:Math.abs(p.x-st.drag.x),h:Math.abs(p.y-st.drag.y)};drawCrop();});
@@ -2893,6 +2995,206 @@ on('stepDrawAttach','click',()=>{if(!editing)return;pendingDrawing={kind:'part',
 on('stepDrawing','click',()=>{if(editing?.drawingId)return viewPhoto(editing.drawingId);});
 on('insertPart','click',()=>insertPartHere());
 on('saveAsTemplate','click',()=>saveJobAsTemplate());
+// ---------- v10: template packs (stripnote-template/1): sections, checks, job header, end checklists ----------
+const CHECK_TYPES=['size','quantity','torque','volume','mass','text','yesno'];
+const CHECK_NUMERIC=new Set(['size','quantity','torque','volume','mass']);
+const CHECK_TYPE_ALIAS={weight:'mass',length:'size',dimension:'size',diameter:'size',clearance:'size',pressure:'size',count:'quantity',qty:'quantity','yes/no':'yesno',yes_no:'yesno',bool:'yesno',boolean:'yesno',check:'yesno'};
+function numOrNull(v){if(v==null||v===''||typeof v==='boolean')return null;if(typeof v==='number')return Number.isFinite(v)?v:null;const t=numText(v);if(t==='')return null;const n=Number(t);return Number.isFinite(n)?n:null;}
+const sstr=(v,n=300)=>v==null||typeof v==='object'?'':String(v).slice(0,n);
+function reviewText(x){if(typeof x==='string')return x;if(!x||typeof x!=='object')return '';const head=[x.step&&x.step!=='all'?`Step ${x.step}`:x.step==='all'?'All steps':'',x.item].map(clean).filter(Boolean).join(' · ');const body=clean(x.issue||x.note||x.text||'');return `${head}${head&&body?' – ':''}${body}${clean(x.source)?` (${clean(x.source)})`:''}`;}
+function strList(a,n,len,fn=x=>typeof x==='string'?x:''){return Array.isArray(a)?a.map(fn).map(clean).filter(Boolean).slice(0,n).map(x=>x.slice(0,len)):[];}
+function shapeCheckSpec(c){
+ if(typeof c==='string')c={item:c,type:'yesno'};
+ if(!c||typeof c!=='object')return null;
+ let type=String(c.type||'').toLowerCase().trim();type=CHECK_TYPE_ALIAS[type]||type;
+ if(!CHECK_TYPES.includes(type))type=(c.min!=null||c.max!=null)?'size':'text';
+ let byc=null;
+ if(c.by_capacity&&typeof c.by_capacity==='object'&&!Array.isArray(c.by_capacity)){byc={};for(const [k,v] of Object.entries(c.by_capacity).slice(0,60)){if(!v||typeof v!=='object')continue;byc[String(k).slice(0,80)]={min:numOrNull(v.min),max:numOrNull(v.max),qty_expected:numOrNull(v.qty_expected)};}if(!Object.keys(byc).length)byc=null;}
+ const item=sstr(c.item,300),part_no=sstr(c.part_no,60);
+ if(!clean(item)&&!clean(part_no))return null;
+ return {item,part_no,type,unit:sstr(c.unit,30),min:numOrNull(c.min),max:numOrNull(c.max),qty_expected:numOrNull(c.qty_expected),spec_text:sstr(c.spec_text,800),by_capacity:byc};
+}
+function shapeJobCheck(c){const s=shapeCheckSpec(c);if(!s)return null;return Object.assign(s,{id:typeof c?.id==='string'&&c.id?c.id.slice(0,80):uid(),measured:sstr(c.measured,300),result:['OK','Replace'].includes(c?.result)?c.result:'',notes:sstr(c?.notes,1000)});}
+function stepExtras(src,job){
+ const s=src&&typeof src==='object'?src:{};
+ return {section:sstr(s.section,200),partNos:strList(s.partNos||s.part_nos,60,60,x=>typeof x==='string'||typeof x==='number'?String(x):''),drawingRef:sstr(s.drawingRef??s.drawing_ref,200),drawingCaption:sstr(s.drawingCaption??s.drawing_caption,300),hint:sstr(s.hint,3000),warnings:strList(s.warnings,30,800),
+  checks:(Array.isArray(s.checks)?s.checks:[]).slice(0,200).map(job?shapeJobCheck:shapeCheckSpec).filter(Boolean)};
+}
+function shapePack(p){
+ if(!p||typeof p!=='object')return null;
+ const options={};
+ if(p.options&&typeof p.options==='object'&&!Array.isArray(p.options))for(const [k,v] of Object.entries(p.options).slice(0,20)){const list=strList(Array.isArray(v)?v:[],60,80,x=>typeof x==='string'||typeof x==='number'?String(x):'');if(list.length)options[String(k).slice(0,80)]=list;}
+ const headerFields=strList(p.headerFields,40,80);
+ for(const k of Object.keys(options))if(!headerFields.includes(k))headerFields.push(k);
+ const end=p.end&&typeof p.end==='object'?p.end:{};
+ return {schema:sstr(p.schema,60),headerFields,options,
+  tools:(Array.isArray(p.tools)?p.tools:[]).slice(0,300).map(t=>typeof t==='string'?{tool:t.slice(0,200),size:'',use:''}:{tool:sstr(t?.tool??t?.name,200),size:sstr(t?.size,100),use:sstr(t?.use,200)}).filter(t=>clean(t.tool)),
+  appendix:(Array.isArray(p.appendix)?p.appendix:[]).filter(a=>a&&typeof a.id==='string'&&a.id).slice(0,100).map(a=>({id:a.id,name:sstr(a.name,200)})),
+  review:strList(p.review,300,800,reviewText),safety:strList(p.safety,100,800),
+  end:{replaceNew:(Array.isArray(end.replaceNew)?end.replaceNew:[]).slice(0,300).map(x=>typeof x==='string'?{part:x.slice(0,200),part_no:'',source:'',done:false}:{part:sstr(x?.part??x?.item,200),part_no:sstr(x?.part_no,60),source:sstr(x?.source,100),done:!!x?.done}).filter(x=>clean(x.part)||clean(x.part_no)),
+   finalChecks:(Array.isArray(end.finalChecks)?end.finalChecks:[]).slice(0,200).map(x=>typeof x==='string'?{text:x.slice(0,800),done:false}:{text:sstr(x?.text??x?.item,800),done:!!x?.done}).filter(x=>clean(x.text))}};
+}
+function isPackJob(r){return !!(r&&r.pack&&typeof r.pack==='object');}
+// Template header labels that match a normal job field fill that field, so older report parts keep working.
+function headerKey(label){const l=clean(label).toLowerCase();
+ if(/sign-?\s?off|signed by|signature/.test(l))return 'signName';
+ if(/^serial/.test(l))return 'serial';
+ if(/^(job ref|job reference|job no\.?|job number|reference|ref\.?)$/.test(l))return 'reference';
+ if(/^(date|inspection date|job date)$/.test(l))return 'date';
+ if(/^(technician|investigator|engineer|inspector)$/.test(l))return 'investigator';
+ if(/^(client|customer)$/.test(l))return 'client';
+ if(/^(site|location)$/.test(l))return 'site';
+ if(/^(work order|work order no\.?|wo)$/.test(l))return 'workOrder';
+ if(/^(document no\.?|document number|doc no\.?)$/.test(l))return 'docNumber';
+ if(/^(rev|revision)$/.test(l))return 'revision';
+ if(/^equipment$/.test(l))return 'equipment';
+ return '';}
+function headerValue(r,label){const k=headerKey(label);return k?String(r?.[k]||''):String(r?.header?.[label]||'');}
+function capacityCode(c,r){
+ if(!c.by_capacity)return '';const keys=Object.keys(c.by_capacity);
+ const hf=r?.pack?.headerFields||[],opt=r?.pack?.options||{};const vals=hf.filter(l=>opt[l]).concat(hf.filter(l=>!opt[l])).map(l=>clean(headerValue(r,l))).concat(Object.values(r?.header||{}).map(clean)).filter(Boolean);
+ for(const v of vals)if(keys.includes(v))return v;
+ for(const v of vals){const k=keys.find(x=>x.toLowerCase()===v.toLowerCase());if(k)return k;}
+ return '';}
+function checkSpec(c,r){
+ let min=c.min,max=c.max,qty=c.qty_expected;const code=capacityCode(c,r);
+ if(code){const o=c.by_capacity[code];if(o.min!=null||o.max!=null){min=o.min;max=o.max;}if(o.qty_expected!=null)qty=o.qty_expected;}
+ const na=!!code&&((min===0&&max===0)||qty===0);
+ if(qty==null&&c.type==='quantity'&&min!=null&&min===max)qty=min;
+ return {min,max,qty,code,pending:!!c.by_capacity&&!code,na};
+}
+function checkAuto(c,r){const s=checkSpec(c,r);if(s.na||!CHECK_NUMERIC.has(c.type))return '';const v=numText(c.measured);if(v==='')return '';let lo=s.min,hi=s.max;if(lo==null&&hi==null&&s.qty!=null){lo=s.qty;hi=s.qty;}if(lo==null&&hi==null)return '';const x=Number(v);if(lo!=null&&x<lo-1e-9)return 'OUT – low';if(hi!=null&&x>hi+1e-9)return 'OUT – high';return 'In spec';}
+function rangeText(s,unit){const u=clean(unit);const f=n=>`${n}${u?' '+u:''}`;if(s.min!=null&&s.max!=null)return s.min===s.max?f(s.min):`${s.min}–${f(s.max)}`;if(s.min!=null)return `min ${f(s.min)}`;if(s.max!=null)return `max ${f(s.max)}`;return '';}
+function checkSpecText(c,r){const s=checkSpec(c,r);const range=rangeText(s,c.unit);return [s.code?`${s.code}: ${range||'see note'}`:s.pending?'Depends on capacity (not chosen yet)':'',clean(c.spec_text)||(!s.code?range:'')].filter(Boolean).join(' – ');}
+function checkItemText(c){return clean(c.part_no)&&!clean(c.item).includes(clean(c.part_no))?`${clean(c.item)||'Item'} (${clean(c.part_no)})`:(clean(c.item)||clean(c.part_no));}
+function checkMeasuredText(c){const v=clean(c.measured);return CHECK_NUMERIC.has(c.type)&&v?withUnit(v,c.unit):v;}
+function checkResultText(c,r){return [c.result==='Replace'?'REPLACE':c.result,checkAuto(c,r)].filter(Boolean).join(' · ');}
+function activeChecks(p,r){return (p?.checks||[]).filter(c=>!checkSpec(c,r).na);}
+function checkFilled(c){return !!clean(c.measured)&&!!c.result;}
+function checksLeft(p,r){return p&&!p.skipped?activeChecks(p,r).filter(c=>!checkFilled(c)).length:0;}
+function checkTableRows(p,r){return activeChecks(p,r).map(c=>{const s=checkSpec(c,r);return [checkItemText(c),checkSpecText(c,r),s.qty!=null?String(s.qty):'',checkMeasuredText(c)||'—',checkResultText(c,r)||'—',clean(c.notes)];});}
+function recordRows(r){const rows=[];r.parts.forEach((p,i)=>{for(const c of activeChecks(p,r))rows.push([`${i+1}`,checkItemText(c),checkSpecText(c,r),p.skipped?'—':(checkMeasuredText(c)||'—'),p.skipped?'Step not inspected':(checkResultText(c,r)||'—')]);});return rows;}
+const resultStyle=t=>/^REPLACE|OUT/.test(String(t))?'bad':/^OK|In spec/.test(String(t))?'good':'';
+function packEndProblems(r){if(!isPackJob(r))return [];const out=[];const rn=r.pack.end.replaceNew.filter(x=>!x.done).length,fc=r.pack.end.finalChecks.filter(x=>!x.done).length;if(rn)out.push(`${rn} part${rn===1?'':'s'} to replace with NEW not ticked`);if(fc)out.push(`${fc} final check${fc===1?'':'s'} not ticked`);if(r.pack.end.finalChecks.length&&!clean(r.signName))out.push('no technician name for the sign-off');return out;}
+async function packImage(blob,max){const out=await imageBlob(blob,max,.88);const thumb=await imageBlob(out.blob,360,.8);return {blob:out.blob,thumb:thumb.blob,width:out.width,height:out.height};}
+function zipPath(p){return String(p||'').replace(/\\/g,'/').replace(/^\.\/+/,'').replace(/^\/+/,'').split('/').filter(x=>x&&x!=='.').join('/');}
+async function importTemplatePack(file){
+ if(!file)return null;
+ if(file.size>400*1048576)throw Error('That template pack is too big (400 MB limit).');
+ let z;try{z=await JSZip.loadAsync(file);}catch(e){throw Error('This file is not a readable .zip template pack.');}
+ const jsonFiles=Object.keys(z.files).filter(n=>!z.files[n].dir&&/(^|\/)template\.json$/i.test(n)&&!/__MACOSX/.test(n)).sort((a,b)=>a.length-b.length);
+ if(!jsonFiles.length)throw Error('No template.json found in that ZIP. A template pack needs template.json plus a drawings folder.');
+ const base=jsonFiles[0].slice(0,jsonFiles[0].length-'template.json'.length);
+ let d;try{d=JSON.parse((await z.file(jsonFiles[0]).async('string')).replace(/^\uFEFF/,''));}catch(e){throw Error(`template.json is not valid JSON: ${e.message}`);}
+ if(!d||typeof d!=='object'||Array.isArray(d))throw Error('template.json must be one JSON object.');
+ const schema=typeof d.schema==='string'?d.schema:'';
+ if(schema&&!/^stripnote-template\/1(\.|$)/.test(schema))throw Error(`This pack is schema “${schema.slice(0,60)}”. This StripNote reads stripnote-template/1.`);
+ let sections=Array.isArray(d.sections)?d.sections:[];
+ if(!sections.length&&Array.isArray(d.steps))sections=[{title:'',steps:d.steps}];
+ const flat=[];
+ for(const sec of sections.slice(0,200)){if(!sec||typeof sec!=='object')continue;for(const st of (Array.isArray(sec.steps)?sec.steps:[]).slice(0,500)){if(st&&typeof st==='object')flat.push({sec:sstr(sec.title,200),st});}}
+ if(!flat.length)throw Error('template.json has no steps. It needs sections: [{title, steps: [...]}].');
+ if(flat.length>500)throw Error('Too many steps in this pack (500 limit).');
+ const findFile=p=>{const rel=zipPath(p);if(!rel||rel.includes('..'))return null;const full=base+rel;let f=z.file(full);if(f)return f;const low=full.toLowerCase();const n=Object.keys(z.files).find(k=>!z.files[k].dir&&k.toLowerCase()===low);return n?z.file(n):null;};
+ const wanted=new Set();for(const {st} of flat)if(typeof st.drawing==='string'&&st.drawing.trim())wanted.add(zipPath(st.drawing));
+ const appx=(Array.isArray(d.appendix)?d.appendix:[]).map(a=>typeof a==='string'?a:(a&&typeof a==='object'&&typeof a.path==='string'?a.path:'')).filter(Boolean).map(zipPath);
+ const missing=[...new Set([...wanted,...appx])].filter(p=>!findFile(p));
+ if(missing.length&&!confirm(`${missing.length} image${missing.length===1?' is':'s are'} listed in template.json but not in the ZIP:\n${missing.slice(0,8).join('\n')}${missing.length>8?`\n…and ${missing.length-8} more`:''}\n\nImport anyway without ${missing.length===1?'it':'them'}?`))throw Error('Import cancelled: images missing from the pack.');
+ const created=[],ids=new Map(),bad=[];
+ busy=true;setBusy(true);$('progressTitle').textContent='Importing template pack';$('progressDialog').showModal();
+ try{
+  const all=[...new Set([...wanted,...appx])].filter(p=>findFile(p));let k=0;
+  for(const p of all){
+   progress(`Reading image ${++k} of ${all.length}`,k,all.length+1);await tick();
+   const f=findFile(p);if(f._data?.uncompressedSize>60*1048576){bad.push(p);continue;}
+   const bytes=await f.async('uint8array');
+   const ext=p.split('.').pop().toLowerCase();const mime=ext==='png'?'image/png':ext==='webp'?'image/webp':ext==='gif'?'image/gif':ext==='svg'?'image/svg+xml':'image/jpeg';
+   try{const img=await packImage(new Blob([bytes],{type:mime}),appx.includes(p)&&!wanted.has(p)?2200:1600);const id=uid();await put('media',{id,kind:'drawing',...img});created.push(id);ids.set(p,id);}catch(e){bad.push(p);}
+  }
+  const name=clean(sstr(d.equipment,200))||clean(sstr(d.name,200))||clean(String(file.name||'').replace(/\.[^.]+$/,''))||'Untitled template';
+  const steps=flat.map(({sec,st})=>{const photos=Array.isArray(st.photos)?st.photos:typeof st.photos==='string'?st.photos.split(','):[];const ex=stepExtras({...st,section:sec},false);
+   return {id:uid(),name:(clean(sstr(st.title??st.name,200))||'Untitled step'),prompts:photos.filter(x=>typeof x==='string').map(clean).filter(Boolean).map(x=>x.slice(0,120)).slice(0,30),drawingId:typeof st.drawing==='string'?(ids.get(zipPath(st.drawing))||''):'',packId:sstr(st.id,40),...ex};});
+  const end=d.end&&typeof d.end==='object'?d.end:{};
+  const pack=shapePack({schema:schema||'stripnote-template/1',headerFields:d.header_fields,options:d.options,tools:d.tools,appendix:appx.filter(p=>ids.has(p)).map(p=>({id:ids.get(p),name:p.split('/').pop()})),review:d.review,safety:d.safety,end:{replaceNew:end.replace_new_parts,finalChecks:end.final_checks}});
+  const t=shapeTemplate({name,steps,pack});
+  progress('Saving template…',1,1);
+  await saveTemplate(t);await renderTemplateList();
+  const nChecks=t.steps.reduce((n,s)=>n+s.checks.length,0),nDraw=new Set(t.steps.map(s=>s.drawingId).filter(Boolean)).size;
+  const warn=[missing.length?`${missing.length} missing`:'',bad.length?`${bad.length} unreadable (${bad.slice(0,3).join(', ')})`:''].filter(Boolean).join(', ');
+  toast(`Template pack “${t.name}” imported: ${t.steps.length} steps, ${nChecks} checks, ${nDraw} drawings${pack.appendix.length?`, ${pack.appendix.length} appendix pages`:''}.${warn?` Images: ${warn}.`:''} Stored only on this phone.`);
+  return t;
+ }catch(e){for(const id of created)await remove('media',id).catch(()=>{});throw e;}
+ finally{if($('progressDialog').open)$('progressDialog').close();busy=false;setBusy(false);}
+}
+async function copyDrawingOnce(id,map){if(!id)return '';if(map.has(id))return map.get(id);const nid=await copyDrawing(id);map.set(id,nid);return nid;}
+function drawingUsedElsewhere(list,id,except){return !!id&&(list||[]).some(x=>x!==except&&x&&x.drawingId===id);}
+// ---- runner UI ----
+function renderChecks(){
+ const box=$('checkCard');if(!box)return;
+ const p=editing;const list=p&&isStepMode()?(p.checks||[]):[];
+ if(!list.length){box.hidden=true;box.innerHTML='';return;}
+ box.hidden=false;
+ const act=activeChecks(p,current),hidden=list.length-act.length;const filled=act.filter(checkFilled).length;
+ const code=list.map(c=>checkSpec(c,current).code).find(Boolean)||'';
+ const rows=act.map((c,k)=>{
+  const s=checkSpec(c,current),id=esc(c.id),auto=checkAuto(c,current),num=CHECK_NUMERIC.has(c.type);
+  const unit=clean(c.unit);
+  let entry;
+  if(c.type==='yesno')entry=`<div class="chk-yn" role="group" aria-label="Found for check ${k+1}">${['Yes','No'].map(v=>`<button type="button" data-cyes="${v}" aria-pressed="${c.measured===v}">${v}</button>`).join('')}</div>`;
+  else entry=`<label class="m-f chk-in"><span>${c.type==='quantity'?'Found (qty)':num?`Measured${unit?' ('+esc(unit)+')':''}`:'Found'}</span><input class="compact" data-cfield="measured" value="${esc(c.measured)}" ${num?'inputmode="decimal"':''} placeholder="${num?(s.min!=null?esc(String(s.min)):'0'):'What you found'}" aria-label="Check ${k+1} ${esc(c.item)}: ${num?'measured':'found'}"></label>`;
+  return `<div class="chk${checkFilled(c)?' filled':''}" data-check="${id}"><div class="chk-head"><strong>${esc(clean(c.item)||'Check')}</strong>${clean(c.part_no)?`<span class="badge Notrated">${esc(c.part_no)}</span>`:''}</div><div class="chk-spec">${esc(checkSpecText(c,current)||'No spec given')}${s.qty!=null?` · <b>Qty expected: ${esc(String(s.qty))}</b>`:''}</div>${entry}<div class="chk-res"><button type="button" data-cres="OK" aria-pressed="${c.result==='OK'}">✓ OK</button><button type="button" data-cres="Replace" aria-pressed="${c.result==='Replace'}">Replace</button></div><div class="m-result ${auto==='In spec'?'in':auto?'out':''}" data-cauto>${auto?(auto==='In spec'?'✓ In spec':'⚠ '+esc(auto)):''}</div><input class="compact chk-note" data-cfield="notes" value="${esc(c.notes)}" placeholder="Note (optional)" aria-label="Check ${k+1} note"></div>`;}).join('');
+ box.innerHTML=`<div class="row between"><h3>Check &amp; record</h3><span class="status" id="checkCount">${filled} of ${act.length} done</span></div>${rows}${hidden?`<p class="status">${hidden} check${hidden===1?'':'s'} not applicable to ${esc(code)} hidden.</p>`:''}`;
+}
+function findCheck(el){const row=el?.closest('[data-check]');return row&&editing?(editing.checks||[]).find(c=>c.id===row.dataset.check):null;}
+function paintCheckRow(row,c){const auto=checkAuto(c,current);const el=row.querySelector('[data-cauto]');if(el){el.className='m-result '+(auto==='In spec'?'in':auto?'out':'');el.textContent=auto?(auto==='In spec'?'✓ In spec':'⚠ '+auto):'';}row.classList.toggle('filled',checkFilled(c));const act=activeChecks(editing,current);const cc=$('checkCount');if(cc)cc.textContent=`${act.filter(checkFilled).length} of ${act.length} done`;}
+function paintStepExtras(p){
+ const pj=isPackJob(current);
+ $('stepSection').hidden=!clean(p.section);$('stepSection').textContent=p.section||'';
+ $('stepPartNos').hidden=!p.partNos?.length;$('stepPartNos').textContent=p.partNos?.length?`Part no${p.partNos.length===1?'':'s'}: ${p.partNos.join(', ')}`:'';
+ const w=p.warnings||[];$('stepWarn').hidden=!w.length;$('stepWarn').innerHTML=w.map(x=>`<div>⚠ ${esc(x)}</div>`).join('');
+ $('stepHintBox').hidden=!clean(p.hint);$('stepHintText').textContent=p.hint||'';
+ const saf=pj?current.pack.safety:[];$('safetyBox').hidden=!saf.length;$('safetyList').innerHTML=saf.map(x=>`<li>${esc(x)}</li>`).join('');
+ $('stepDrawCap').hidden=!(p.drawingId&&(p.drawingCaption||p.drawingRef));$('stepDrawCap').textContent=p.drawingCaption||p.drawingRef||'';
+ renderChecks();
+}
+function renderPackHeader(){
+ const box=$('packHeader');if(!box)return;const on=!!(current&&isPackJob(current)&&current.pack.headerFields.length);
+ box.hidden=!on;if(!on){box.innerHTML='';return;}
+ box.innerHTML=`<div class="wide"><div class="tag" style="margin-top:6px">Job header from the template</div></div>`+current.pack.headerFields.map((l,i)=>{const opts=current.pack.options[l];const k=headerKey(l);const v=headerValue(current,l);const id='ph-'+i;
+  if(opts)return `<div class="wide"><label id="${id}-l">${esc(l)} — tick one</label><div class="choice-row" role="radiogroup" aria-labelledby="${id}-l">${opts.map(o=>`<button type="button" role="radio" aria-checked="${v===o}" data-hchoice="${esc(l)}" data-hval="${esc(o)}">${v===o?'☑':'☐'} ${esc(o)}</button>`).join('')}</div></div>`;
+  return `<div${k==='signName'?' class="wide"':''}><label for="${id}">${esc(l)}</label><input id="${id}" data-hfield="${esc(l)}" ${k==='date'?'type="date"':''} value="${esc(v)}"${k==='signName'?' autocomplete="name" placeholder="Typed name (no drawn signature)"':k==='investigator'?' autocomplete="name"':''}></div>`;}).join('');
+}
+function setHeaderValue(label,value){
+ const k=headerKey(label);
+ if(k){current[k]=value;if(k==='investigator')current.engineer=value;document.querySelectorAll(`[data-job="${k}"]`).forEach(el=>{if(el.value!==value)el.value=value;});}
+ else{current.header=current.header||{};current.header[label]=value;}
+}
+function renderEndChecks(){
+ const box=$('endChecks');if(!box)return;const on=!!(current&&isPackJob(current)&&(current.pack.end.replaceNew.length||current.pack.end.finalChecks.length));
+ box.hidden=!on;if(!on){box.innerHTML='';return;}
+ const e=current.pack.end;
+ const rep=e.replaceNew.map((x,i)=>`<label class="row tickrow"><input type="checkbox" data-endrep="${i}" ${x.done?'checked':''}><span>${esc(x.part)}${x.part_no?` <b>${esc(x.part_no)}</b>`:''}</span></label>`).join('');
+ const fin=e.finalChecks.map((x,i)=>`<label class="row tickrow"><input type="checkbox" data-endfin="${i}" ${x.done?'checked':''}><span>${esc(x.text)}</span></label>`).join('');
+ const probs=packEndProblems(current);
+ box.innerHTML=`<details class="endbox" ${probs.length?'open':''}><summary>End of job: ${e.replaceNew.filter(x=>x.done).length}/${e.replaceNew.length} new parts · ${e.finalChecks.filter(x=>x.done).length}/${e.finalChecks.length} final checks</summary>${rep?`<h3>Parts replaced with NEW</h3>${rep}`:''}${fin?`<h3>Final checks</h3>${fin}`:''}<p class="status">Sign-off: ${clean(current.signName)?esc(current.signName):'<b>enter the technician name (sign-off) in Report details</b>'}</p></details>`;
+}
+function renderTplPackInfo(t){
+ const box=$('tplPackInfo');if(!box)return;const p=t?.pack;
+ if(!p){box.innerHTML='';return;}
+ const nChecks=t.steps.reduce((n,s)=>n+(s.checks?.length||0),0);
+ box.innerHTML=`<div class="card"><div class="tag">Template pack</div><p>${t.steps.length} steps in ${new Set(t.steps.map(s=>s.section).filter(Boolean)).size} sections · ${nChecks} checks · ${p.tools.length} tools · ${p.appendix.length} appendix page${p.appendix.length===1?'':'s'}</p><p class="status">Job header: ${esc(p.headerFields.join(', ')||'none')}${Object.keys(p.options).length?` · choices: ${esc(Object.entries(p.options).map(([k,v])=>`${k} (${v.join(', ')})`).join('; '))}`:''}</p><p class="status">End: ${p.end.replaceNew.length} parts to replace with NEW · ${p.end.finalChecks.length} final checks</p>${p.safety.length?`<details class="safetybox"><summary>⚠ Safety notes (${p.safety.length}) – phone only</summary><ul>${p.safety.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>`:''}${p.review.length?`<details class="more" open><summary>To confirm (${p.review.length}) – shown here only, never in the report</summary><ul class="review-list">${p.review.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>`:''}</div>`;
+}
+$('checkCard').addEventListener('input',e=>{const inp=e.target.closest('[data-cfield]');if(!inp)return;const c=findCheck(inp);if(!c)return;c[inp.dataset.cfield]=inp.value.slice(0,1000);paintCheckRow(inp.closest('[data-check]'),c);persistReport().catch(()=>{});});
+$('checkCard').addEventListener('change',e=>{if(e.target.closest('[data-cfield]')&&editing){renderEntries();const st=current.parts.map(stepState),n=st.length,d=st.filter(x=>x.done).length;$('stepProgress').value=Math.round(d/Math.max(1,n)*100);}});// no re-render here: a tap on OK/Replace right after typing must land on the same button
+$('checkCard').addEventListener('pointerdown',e=>{if(e.target.closest('[data-cfield]')&&session)stopRecording().catch(fail);});
+on('checkCard','click',async e=>{const b=e.target.closest('[data-cres],[data-cyes]');if(!b)return;const c=findCheck(b);if(!c)return;
+ if(b.dataset.cres)c.result=c.result===b.dataset.cres?'':b.dataset.cres;else c.measured=c.measured===b.dataset.cyes?'':b.dataset.cyes;
+ const y=window.scrollY;paintStep();renderEntries();window.scrollTo(0,y);await persistReport();});
+$('packHeader').addEventListener('input',e=>{const inp=e.target.closest('[data-hfield]');if(!inp||!current)return;setHeaderValue(inp.dataset.hfield,inp.value.slice(0,300));updateHeading();renderEndChecks();persistReport().catch(()=>{});});
+$('packHeader').addEventListener('change',e=>{const inp=e.target.closest('[data-hfield]');if(!inp||!current)return;setHeaderValue(inp.dataset.hfield,inp.value.slice(0,300));persistReport().catch(()=>{});});
+on('packHeader','click',async e=>{const b=e.target.closest('[data-hchoice]');if(!b||!current)return;const l=b.dataset.hchoice,v=b.dataset.hval;const now=headerValue(current,l)===v?'':v;setHeaderValue(l,now);renderPackHeader();renderEntries();if(editing)paintStep();await persistReport();toast(now?`${l}: ${now}. Specs that depend on it are updated.`:`${l} cleared.`);});
+on('endChecks','change',async e=>{const a=e.target.closest('[data-endrep],[data-endfin]');if(!a||!isPackJob(current))return;const list=a.dataset.endrep!=null?current.pack.end.replaceNew:current.pack.end.finalChecks;const x=list[Number(a.dataset.endrep??a.dataset.endfin)];if(x)x.done=a.checked;await persistReport();const open=true;renderEndChecks();if(open)$('endChecks').querySelector('details')?.setAttribute('open','');});
+function shapeHeader(h){const o={};if(h&&typeof h==='object'&&!Array.isArray(h))for(const [k,v] of Object.entries(h).slice(0,60))if(typeof v==='string'||typeof v==='number')o[String(k).slice(0,80)]=String(v).slice(0,300);return o;}
 window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
  get db(){return db;},get session(){return session;},
@@ -2901,7 +3203,8 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement
+ parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
+ importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
 
