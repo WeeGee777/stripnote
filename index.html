@@ -3009,7 +3009,7 @@ function shapeCheckSpec(c){
  let type=String(c.type||'').toLowerCase().trim();type=CHECK_TYPE_ALIAS[type]||type;
  if(!CHECK_TYPES.includes(type))type=(c.min!=null||c.max!=null)?'size':'text';
  let byc=null;
- if(c.by_capacity&&typeof c.by_capacity==='object'&&!Array.isArray(c.by_capacity)){byc={};for(const [k,v] of Object.entries(c.by_capacity).slice(0,60)){if(!v||typeof v!=='object')continue;byc[String(k).slice(0,80)]={min:numOrNull(v.min),max:numOrNull(v.max),qty_expected:numOrNull(v.qty_expected)};}if(!Object.keys(byc).length)byc=null;}
+ if(c.by_capacity&&typeof c.by_capacity==='object'&&!Array.isArray(c.by_capacity)){byc={};for(const [k,v] of Object.entries(c.by_capacity).slice(0,60)){if(!v||typeof v!=='object')continue;byc[String(k).slice(0,80)]={min:numOrNull(v.min),max:numOrNull(v.max),qty_expected:numOrNull(v.qty_expected),note:sstr(v.note,200)};}if(!Object.keys(byc).length)byc=null;}
  const item=sstr(c.item,300),part_no=sstr(c.part_no,60);
  if(!clean(item)&&!clean(part_no))return null;
  return {item,part_no,type,unit:sstr(c.unit,30),min:numOrNull(c.min),max:numOrNull(c.max),qty_expected:numOrNull(c.qty_expected),spec_text:sstr(c.spec_text,800),by_capacity:byc};
@@ -3059,13 +3059,14 @@ function capacityCode(c,r){
 function checkSpec(c,r){
  let min=c.min,max=c.max,qty=c.qty_expected;const code=capacityCode(c,r);
  if(code){const o=c.by_capacity[code];if(o.min!=null||o.max!=null){min=o.min;max=o.max;}if(o.qty_expected!=null)qty=o.qty_expected;}
+ const note=code?clean(c.by_capacity[code].note||''):'';
  const na=!!code&&((min===0&&max===0)||qty===0);
  if(qty==null&&c.type==='quantity'&&min!=null&&min===max)qty=min;
- return {min,max,qty,code,pending:!!c.by_capacity&&!code,na};
+ return {min,max,qty,code,note,pending:!!c.by_capacity&&!code,na};
 }
 function checkAuto(c,r){const s=checkSpec(c,r);if(s.na||!CHECK_NUMERIC.has(c.type))return '';const v=numText(c.measured);if(v==='')return '';let lo=s.min,hi=s.max;if(lo==null&&hi==null&&s.qty!=null){lo=s.qty;hi=s.qty;}if(lo==null&&hi==null)return '';const x=Number(v);if(lo!=null&&x<lo-1e-9)return 'OUT – low';if(hi!=null&&x>hi+1e-9)return 'OUT – high';return 'In spec';}
 function rangeText(s,unit){const u=clean(unit);const f=n=>`${n}${u?' '+u:''}`;if(s.min!=null&&s.max!=null)return s.min===s.max?f(s.min):`${s.min}–${f(s.max)}`;if(s.min!=null)return `min ${f(s.min)}`;if(s.max!=null)return `max ${f(s.max)}`;return '';}
-function checkSpecText(c,r){const s=checkSpec(c,r);const range=rangeText(s,c.unit);return [s.code?`${s.code}: ${range||'see note'}`:s.pending?'Depends on capacity (not chosen yet)':'',clean(c.spec_text)||(!s.code?range:'')].filter(Boolean).join(' – ');}
+function checkSpecText(c,r){const s=checkSpec(c,r);const range=rangeText(s,c.unit);const capSpec=[range,s.note].filter(Boolean).join(' · ');return [s.code?`${s.code}: ${capSpec||'see note'}`:s.pending?'Depends on capacity (not chosen yet)':'',clean(c.spec_text)||(!s.code?range:'')].filter(Boolean).join(' – ');}
 function checkItemText(c){return clean(c.part_no)&&!clean(c.item).includes(clean(c.part_no))?`${clean(c.item)||'Item'} (${clean(c.part_no)})`:(clean(c.item)||clean(c.part_no));}
 function checkMeasuredText(c){const v=clean(c.measured);return CHECK_NUMERIC.has(c.type)&&v?withUnit(v,c.unit):v;}
 function checkResultText(c,r){return [c.result==='Replace'?'REPLACE':c.result,checkAuto(c,r)].filter(Boolean).join(' · ');}
