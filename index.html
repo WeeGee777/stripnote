@@ -230,6 +230,66 @@ body.outdoor .chk .m-result.in{color:#0a5c00}
 .review-list li{margin:6px 0;font-size:15px}
 #stepDrawCap{text-align:center;color:#33454b;font-size:13px;margin-top:4px}
 body.stepmode #checkCard{order:2}
+/* v11 */
+[hidden]{display:none!important}
+#micStatus:empty{display:none}
+.howto{flex:0 0 auto}
+.howto>summary{list-style:none;display:inline-flex;align-items:center;justify-content:center;min-height:56px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--button);font-weight:650;cursor:pointer;user-select:none}
+.howto>summary::-webkit-details-marker{display:none}
+.howto[open]{flex:1 1 100%}
+.howto[open]>summary{margin-bottom:6px}
+.howto p{margin:0;font-size:14px;color:var(--muted);line-height:1.4}
+.name-row{display:flex;gap:10px;align-items:flex-end}
+.name-col{flex:1.7 1 0;min-width:0}.pn-col{flex:1 1 0;min-width:0}
+.name-row .field-head{margin:10px 0 6px;min-height:40px}
+.photo{padding:6px}
+.photo .fig{margin-bottom:4px}
+.photo-row{display:flex;gap:6px;margin-top:6px;align-items:stretch}
+.photo-row input{flex:1;min-width:0}
+.photo .img-wrap{position:relative}
+.photo .img-wrap img{display:block;width:100%}
+.photo .opt-btn{position:absolute;top:4px;right:4px;width:56px;min-width:56px;min-height:56px;padding:0;font-size:22px;background:rgba(15,20,22,.72);color:#fff;border-color:rgba(255,255,255,.35)}
+.photo-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.photo-opts>*{flex:1 1 45%}
+.photo-opts .wide{flex:1 1 100%}
+.photo .danger{margin-top:0}
+.subbox{border:1px solid var(--line);border-radius:12px;padding:10px;margin:14px 0;background:var(--bg)}
+.sub{border:1px solid var(--line);border-left:5px solid var(--muted);border-radius:12px;padding:8px;margin:8px 0;background:var(--panel)}
+.sub.OK{border-left-color:#3fae6a}.sub.Damaged{border-left-color:#e0574b}.sub.Replace{border-left-color:#b3263a}
+.sub-head{display:flex;gap:8px;align-items:center}
+.sub-no{font-size:18px;font-weight:800;min-width:42px;font-variant-numeric:tabular-nums}
+.sub-head input{flex:1;min-width:0}
+.sub-grid{display:flex;gap:8px;margin-top:6px}
+.sub-grid .m-f{flex:1;min-width:0;display:flex;flex-direction:column;font-size:13px;color:var(--muted)}
+.sub-grid .m-f.qty{flex:0 0 84px}
+.sub-cond{display:flex;gap:6px;margin-top:6px}
+.sub-cond button{flex:1;min-height:56px;padding:6px}
+.sub-cond button[aria-pressed="true"]{background:var(--primary);color:var(--primary-ink)}
+.sub .chk-note{margin-top:6px;width:100%}
+.sub .photos{margin-top:6px}
+.sub-tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sub-tools button{flex:1 1 22%;min-height:56px;padding:6px}
+.sub-quick{display:flex;flex-wrap:wrap;gap:6px}
+.sub-quick button{flex:1 1 30%;min-height:56px;padding:6px}
+.entry .pn{font-size:14px;color:var(--muted);margin-top:2px}
+.entry .subs-line{font-size:14px;margin-top:6px}
+.list-tools{margin:8px 0 0}
+.pos-row{display:flex;gap:6px;align-items:center;flex:1 1 100%!important}
+.pos-row span{white-space:nowrap;font-size:15px}
+.pos-row input{flex:1;min-width:0}
+.pos-row button{flex:0 0 auto}
+.pick-dialog{max-height:85vh;overflow:auto}
+.pick-list button{width:100%;justify-content:flex-start;text-align:left;margin:4px 0}
+.pick-list button.sub-pick{padding-left:34px;font-weight:500}
+.pick-list button[disabled]{opacity:.5}
+.add-field{margin-top:12px}
+.add-field select{width:100%}
+.dhead{margin:14px 0 6px}
+.dhead .dx{min-width:56px;min-height:56px;padding:4px 8px}
+.dhead{margin:8px 0 4px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+body.stepmode #nameRow{order:3}
+body.stepmode #subBox{order:4}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="outdoor" class="small" type="button" aria-pressed="false" aria-label="Outdoor high-contrast mode">☀ Outdoor</button><button id="theme" class="small" type="button" aria-label="Switch dark or light theme">Theme</button></div></div></header>
 <main>
@@ -238,25 +298,31 @@ body.stepmode #checkCard{order:2}
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v10</p>
+<p class="ver">StripNote v11</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
 <details class="card" id="details" open><summary>Report details</summary>
 <div id="packHeader" class="grid" hidden></div>
-<div class="grid">
-<div class="wide"><label for="title">Report title</label><input id="title" data-job="title" placeholder="e.g. Circulating water pump CW-P-201"></div>
-<div><label for="reference">Job / reference</label><input id="reference" data-job="reference" placeholder="e.g. JN-2026-1044"></div>
-<div><label for="date">Inspection date</label><input id="date" data-job="date" type="date"></div>
-<div><label for="client">Client</label><input id="client" data-job="client" placeholder="Company"></div>
-<div><label for="site">Site</label><input id="site" data-job="site" placeholder="Plant or location"></div>
-<div><label for="equipment">Equipment</label><input id="equipment" data-job="equipment" placeholder="Asset, make, model"></div>
-<div><label for="serial">Serial number</label><input id="serial" data-job="serial" placeholder="Equipment serial no."></div>
-<div><label for="workOrder">Work order</label><input id="workOrder" data-job="workOrder" placeholder="e.g. WO-55821"></div>
-<div><label for="docNumber">Document number</label><input id="docNumber" data-job="docNumber" placeholder="e.g. SPS-RPT-1044"></div>
-<div><label for="revision">Revision</label><input id="revision" data-job="revision" placeholder="e.g. A"></div>
-<div><label for="investigator">Investigator</label><input id="investigator" data-job="investigator" autocomplete="name" placeholder="Name"></div>
-</div></details>
+<div class="grid" id="detailGrid">
+<div data-dfield="equipment"><label for="equipment">Equipment</label><input id="equipment" data-job="equipment" placeholder="Tool, make, model"></div>
+<div data-dfield="serial"><label for="serial">Serial no.</label><input id="serial" data-job="serial" placeholder="Equipment serial no."></div>
+<div data-dfield="client"><label for="client">Client</label><input id="client" data-job="client" placeholder="Company"></div>
+<div data-dfield="date"><label for="date">Date</label><input id="date" data-job="date" type="date"></div>
+<div data-dfield="workOrder" data-dopt hidden><div class="field-head dhead"><label for="workOrder">Work order</label><button type="button" class="redo dx" data-dremove="workOrder" aria-label="Remove Work order">✕</button></div><input id="workOrder" data-job="workOrder" placeholder="e.g. WO-55821"></div>
+<div data-dfield="reference" data-dopt hidden><div class="field-head dhead"><label for="reference">Job ref</label><button type="button" class="redo dx" data-dremove="reference" aria-label="Remove Job ref">✕</button></div><input id="reference" data-job="reference" placeholder="e.g. JN-2026-1044"></div>
+<div data-dfield="site" data-dopt hidden><div class="field-head dhead"><label for="site">Location</label><button type="button" class="redo dx" data-dremove="site" aria-label="Remove Location">✕</button></div><input id="site" data-job="site" placeholder="Yard, plant or base"></div>
+<div data-dfield="investigator" data-dopt hidden><div class="field-head dhead"><label for="investigator">Technician</label><button type="button" class="redo dx" data-dremove="investigator" aria-label="Remove Technician">✕</button></div><input id="investigator" data-job="investigator" placeholder="Name" autocomplete="name"></div>
+<div data-dfield="contact" data-dopt hidden><div class="field-head dhead"><label for="contact">Customer contact</label><button type="button" class="redo dx" data-dremove="contact" aria-label="Remove Customer contact">✕</button></div><input id="contact" data-job="contact" placeholder="Name, phone or email"></div>
+<div data-dfield="rigWell" data-dopt hidden><div class="field-head dhead"><label for="rigWell">Rig / Well</label><button type="button" class="redo dx" data-dremove="rigWell" aria-label="Remove Rig / Well">✕</button></div><input id="rigWell" data-job="rigWell" placeholder="e.g. Rig 12 / Well A-04"></div>
+<div data-dfield="poNumber" data-dopt hidden><div class="field-head dhead"><label for="poNumber">PO number</label><button type="button" class="redo dx" data-dremove="poNumber" aria-label="Remove PO number">✕</button></div><input id="poNumber" data-job="poNumber" placeholder="e.g. PO-88812"></div>
+<div data-dfield="title" data-dopt hidden><div class="field-head dhead"><label for="title">Report title</label><button type="button" class="redo dx" data-dremove="title" aria-label="Remove Report title">✕</button></div><input id="title" data-job="title" placeholder="e.g. Chain hoist strip-down"></div>
+<div data-dfield="docNumber" data-dopt hidden><div class="field-head dhead"><label for="docNumber">Document no.</label><button type="button" class="redo dx" data-dremove="docNumber" aria-label="Remove Document no.">✕</button></div><input id="docNumber" data-job="docNumber" placeholder="e.g. RPT-1044"></div>
+<div data-dfield="revision" data-dopt hidden><div class="field-head dhead"><label for="revision">Revision</label><button type="button" class="redo dx" data-dremove="revision" aria-label="Remove Revision">✕</button></div><input id="revision" data-job="revision" placeholder="e.g. A"></div>
+</div>
+<div class="grid" id="customFields"></div>
+<div class="add-field"><label for="addField" class="sr-only">Add a field</label><select id="addField" class="compact" aria-label="Add a field to the report details"><option value="">+ Add field…</option></select></div>
+</details>
 <details class="card" id="reportText"><summary>Report text: scope, summary, conclusions</summary>
 <label for="scope">Scope</label><textarea id="scope" data-job="scope" placeholder="Why the equipment was stripped, what was inspected, and any limits on the inspection."></textarea>
 <label for="summary">Summary</label><textarea id="summary" data-job="summary" placeholder="The main findings in two or three sentences."></textarea>
@@ -273,21 +339,23 @@ body.stepmode #checkCard{order:2}
 <section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
-<div class="toolbar" id="editorTools"><button id="camera" type="button">Take photo</button><button id="gallery" type="button">Gallery</button></div>
 <input id="cameraFile" type="file" accept="image/*" capture="environment" hidden><input id="galleryFile" type="file" accept="image/*" multiple hidden>
 <div id="editorPhotos" class="photos"></div>
 <p id="noPhotos" class="muted">No photos yet.</p>
+<div class="toolbar" id="editorTools"><button id="camera" type="button">📷 Take photo</button><button id="gallery" type="button">🖼 Gallery / files</button><details id="howTo" class="howto"><summary aria-label="How to use this screen">? How to</summary><p>Tap 🎙 Speak at the bottom and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use 📷 Same part and say a short caption. Photos already on the phone: 🖼 Gallery / files. Use ⋯ on a photo to move or copy it to another part.</p></details></div>
+<div id="micStatus" class="status" role="status"></div>
+<div class="name-row" id="nameRow"><div class="name-col"><div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing"></div><div class="pn-col"><div class="field-head"><label for="partNo">Part no.</label></div><input id="partNo" placeholder="e.g. 1234-56" autocomplete="off" autocapitalize="characters" spellcheck="false"></div></div>
 <div id="checkCard" class="check-card" hidden></div>
-<div id="micStatus" class="status" role="status">Tap 🎙 Speak at the bottom and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use + Photo of same part and say a short caption.</div>
-<div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing">
 <label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p>
 <div class="field-head" id="descHead"><label for="description">Description</label><button id="descMic" class="redo" type="button" aria-label="Speak the description">🎙 Speak</button><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
+<div id="subBox" class="subbox"><div class="row between"><h3 style="margin:0">Sub-parts</h3><span class="status" id="subCount"></span></div><p class="note" style="margin:4px 0 8px">O-rings, screws, seals… Each gets its own heading in the report (e.g. 3.a, 3.b), with its own photos if you add them.</p><div id="subList"></div><div class="sub-quick" id="subQuick" role="group" aria-label="Add a sub-part"><button type="button" data-subadd="O-ring">+ O-ring</button><button type="button" data-subadd="Seal">+ Seal</button><button type="button" data-subadd="Screw">+ Screw</button><button type="button" data-subadd="Bolt">+ Bolt</button><button type="button" data-subadd="">+ Other</button></div></div>
 <label>Measurements (optional)</label><p class="note" style="margin:2px 0 6px">Size or Quantity, then what you measured with its Min and Max. Outside Min–Max is flagged OUT.</p><div id="measureList"></div><div class="measure-tools"><button id="sayMeasure" type="button">🎙 Say measurement</button><button id="addMeasure" type="button">+ Type measurement</button></div><p class="note" style="margin:4px 0 0">Say it like: “pin OD 101.2 min 101 max 101.5” or “quantity bolts 7 min 8 max 8”.</p>
 <p class="note">Voice not working? Tap a box above and press the 🎙 on your phone keyboard to type by voice.</p>
 <label class="row" style="font-weight:500;font-size:15px"><input id="autoListen" type="checkbox" checked style="width:22px;min-height:22px"> Start listening automatically after each photo</label>
 <div id="audioList"></div>
 <p class="muted">Autosaved on this phone. Use the buttons along the bottom for another photo of this part, or the next part.</p>
 </section>
+<div id="listTools" class="row between list-tools" hidden><span class="status" id="listOrderText"></span><button id="sortToggle" class="small" type="button" aria-label="Change the order of the part list">⇅ Order</button></div>
 <div id="entries"></div>
 <div id="dock" class="dock">
 <div id="dockIdle" class="dock-row"><button id="resume" class="primary" type="button" hidden>▶ Continue steps</button><button id="rapid" class="primary" type="button">Photo → new part</button><button id="addPart" type="button">Add part</button></div>
@@ -309,6 +377,7 @@ body.stepmode #checkCard{order:2}
 <dialog id="skipDialog"><h2>Skip this step?</h2><p class="muted" id="skipStepName"></p><label for="skipReason">Reason (optional)</label><input id="skipReason" placeholder="e.g. Not fitted"><div class="toolbar"><button type="button" class="small" data-skip-reason="Not fitted">Not fitted</button><button type="button" class="small" data-skip-reason="Not stripped">Not stripped</button><button type="button" class="small" data-skip-reason="Seized">Seized</button></div><p class="status">It prints as “Not inspected” with the reason.</p><div class="dialog-actions"><button id="skipCancel" type="button">Cancel</button><button id="skipConfirm" class="primary" type="button">Skip step</button></div></dialog>
 <dialog id="cropDialog"><h2>Crop the drawing</h2><p class="muted">Drag a box round the part, then Use selection. Or use the whole image.</p><div class="crop-wrap"><canvas id="cropCanvas" width="300" height="200"></canvas></div><div class="dialog-actions"><button id="cropWhole" type="button">Whole image</button><button id="cropUse" class="primary" type="button" disabled>Use selection</button></div><button id="cropCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <input id="drawingFile" type="file" accept="image/*" hidden>
+<dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
 <script>
 /*!
@@ -719,6 +788,7 @@ let pendingDrawing=null, forcedPrompt=null, cropState=null, tplEditing=null;
 const drawingURLs=new Map();
 let captureReady=Promise.resolve();
 let listenCaptionForNextPhoto=false;
+let photoDest=null, galleryForPart=null, pickState=null;
 let db, current=null, editing=null, session=null, startingMic=false, busy=false, io, toastTimer, saveQueue=Promise.resolve(), hasSaveError=false, fullURL=null, logoPreviewURL=null;
 const lastDictation=new Map();
 const thumbById=new Map();
@@ -815,11 +885,34 @@ function parseMeasureSpeech(raw){
 }
 function migratePart(e){
  const src=e&&typeof e==='object'?e:{};
+ let out;
  const photos=Array.isArray(src.photos)?src.photos.map(asPhoto).filter(Boolean):[];
  const audio=Array.isArray(src.audio)?src.audio.filter(x=>typeof x==='string'):[];
  const measurements=Array.isArray(src.measurements)?src.measurements.map(asMeasure).filter(Boolean):[];
- return {id:String(src.id||uid()),name:String(src.name??src.part??''),condition:conditionOf(src.condition||src.severity),description:String(src.description??''),photos,audio,measurements,severityManual:!!src.severityManual,severityAuto:!!src.severityAuto,prompts:Array.isArray(src.prompts)?src.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof src.drawingId==='string'?src.drawingId:'',fromTemplate:!!src.fromTemplate,skipped:!!src.skipped,skipReason:String(src.skipReason??''),...stepExtras(src,true)};
+ out={id:String(src.id||uid()),name:String(src.name??src.part??''),condition:conditionOf(src.condition||src.severity),description:String(src.description??''),photos,audio,measurements,severityManual:!!src.severityManual,severityAuto:!!src.severityAuto,prompts:Array.isArray(src.prompts)?src.prompts.filter(x=>typeof x==='string').map(x=>x.slice(0,120)).slice(0,30):[],drawingId:typeof src.drawingId==='string'?src.drawingId:'',fromTemplate:!!src.fromTemplate,skipped:!!src.skipped,skipReason:String(src.skipReason??''),...stepExtras(src,true)};
+ // v11: part number (prefilled from a template's part_nos) and sub-parts (O-rings, screws, seals…) with their own photos.
+ out.partNo=typeof src.partNo==='string'?src.partNo.slice(0,120):out.partNos.join(', ').slice(0,120);
+ out.subParts=(Array.isArray(src.subParts)?src.subParts:[]).slice(0,200).map(asSub).filter(Boolean);
+ return out;
 }
+const SUB_CONDS=['OK','Damaged','Replace'];
+function asSub(x){
+ if(typeof x==='string')x={name:x};
+ if(!x||typeof x!=='object')return null;
+ return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
+}
+function subLetter(k){let t='';k++;while(k>0){const m=(k-1)%26;t=String.fromCharCode(97+m)+t;k=Math.floor((k-1)/26);}return t;}
+function subLabel(i,k){return `${i+1}.${subLetter(k)}`;}
+function subCond(x){return SUB_CONDS.includes(x?.condition)?x.condition:'Not rated';}
+function subFacts(x){return [clean(x.partNo)?`Part no. ${clean(x.partNo)}`:'',clean(x.qty)?`Qty ${clean(x.qty)}`:''].filter(Boolean).join(' · ');}
+function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
+function partNoLabel(p){const v=clean(p?.partNo);return v?`Part no. ${v}`:'';}
+// Every photo of a job in report order: part photos, then each sub-part's photos.
+function photoEntries(parts){const out=[];(parts||[]).forEach((p,pi)=>{(p.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:p.name,prompt:ph.prompt,sub:-1}));(p.subParts||[]).forEach((x,k)=>(x.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:x.name||'Sub-part',prompt:'',sub:k})));});return out;}
+const DEFAULT_FIELDS=['equipment','serial','client','date'];
+const OPT_FIELD_LABELS={workOrder:'Work order',reference:'Job ref',site:'Location',investigator:'Technician',contact:'Customer contact',rigWell:'Rig / Well',poNumber:'PO number',title:'Report title',docNumber:'Document no.',revision:'Revision'};
+const OPT_FIELDS=Object.keys(OPT_FIELD_LABELS);
+function shapeCustom(a){return (Array.isArray(a)?a:[]).slice(0,40).map(x=>x&&typeof x==='object'?{id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),label:String(x.label??'').slice(0,80),value:String(x.value??'').slice(0,500)}:null).filter(x=>x&&clean(x.label));}
 function migrateReport(r){
  const src=r&&typeof r==='object'?r:{};
  const investigator=String(src.investigator||src.engineer||'');
@@ -828,10 +921,12 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:6,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack)};
+ return {id:String(src.id||uid()),schema:7,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
 }
 function isCurrentReport(r){
- if(!r||r.schema!==6||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
+ if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
+ if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields))return false;
+ if(!r.parts.every(p=>typeof p?.partNo==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.photos)&&typeof x.condition==='string')))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
  if(!r.parts.every(p=>Array.isArray(p?.prompts)&&typeof p.drawingId==='string'&&typeof p.fromTemplate==='boolean'&&typeof p.skipped==='boolean'&&typeof p.skipReason==='string'&&Array.isArray(p.photos)&&p.photos.every(ph=>typeof ph?.prompt==='string')))return false;
  if(typeof r.client!=='string'||typeof r.site!=='string'||typeof r.investigator!=='string')return false;
@@ -852,8 +947,8 @@ async function migrateStoredReports(){
   }catch(e){console.warn('Could not migrate a saved report',e);}
  }
 }
-function photoCount(parts){return (parts||[]).reduce((n,p)=>n+(p.photos?.length||0),0);}
-function blankReport(){return migrateReport({id:uid(),title:'',equipment:'',reference:'',client:'',site:'',date:day(),investigator:'',revision:'A',parts:[],updated:new Date().toISOString()});}
+function photoCount(parts){return (parts||[]).reduce((n,p)=>n+(p.photos?.length||0)+(Array.isArray(p.subParts)?p.subParts.reduce((m,x)=>m+(x?.photos?.length||0),0):0),0);}
+function blankReport(){return migrateReport({id:uid(),title:'',equipment:'',reference:'',client:'',site:'',date:day(),investigator:'',revision:'',parts:[],updated:new Date().toISOString()});}
 
 async function init(){
  db=await new Promise((resolve,reject)=>{const r=indexedDB.open('stripnote-v1',2);r.onupgradeneeded=()=>{const base=r.result;if(!base.objectStoreNames.contains('reports'))base.createObjectStore('reports',{keyPath:'id'});if(!base.objectStoreNames.contains('media'))base.createObjectStore('media',{keyPath:'id'});if(!base.objectStoreNames.contains('settings'))base.createObjectStore('settings',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
@@ -921,8 +1016,8 @@ async function listReports(){
  reports.sort((a,b)=>String(b.updated||'').localeCompare(String(a.updated||'')));
  $('reports').innerHTML=reports.length?reports.map(r=>{
   const parts=Array.isArray(r.parts)?r.parts:(Array.isArray(r.entries)?r.entries:[]);
-  const photos=photoCount(parts.map(p=>({photos:Array.isArray(p.photos)?p.photos:[]})));
-  return `<button class="report-button" type="button" data-open="${esc(r.id)}"><span><strong>${esc(r.title||'Untitled report')}</strong><br><small>${esc(reportMeta(r))}<br>${esc(r.date||'No date')} · ${parts.length} part${parts.length===1?'':'s'} · ${photos} photo${photos===1?'':'s'}</small>${(()=>{const b=backupState(r);return `<span class="backup-state ${b.ok?'':'bad'}">${b.ok?'✓':'⚠'} ${esc(b.text)}</span>`;})()}</span><span>→</span></button>`;
+  const photos=photoCount(parts.map(p=>({photos:Array.isArray(p.photos)?p.photos:[],subParts:Array.isArray(p.subParts)?p.subParts.filter(x=>x&&Array.isArray(x.photos)):[]})));
+  return `<button class="report-button" type="button" data-open="${esc(r.id)}"><span><strong>${esc(r.title||r.equipment||'Untitled report')}</strong><br><small>${esc(reportMeta(r))}<br>${esc(r.date||'No date')} · ${parts.length} part${parts.length===1?'':'s'} · ${photos} photo${photos===1?'':'s'}</small>${(()=>{const b=backupState(r);return `<span class="backup-state ${b.ok?'':'bad'}">${b.ok?'✓':'⚠'} ${esc(b.text)}</span>`;})()}</span><span>→</span></button>`;
  }).join(''):'<p class="muted">No reports yet. Start one when the job starts.</p>';
 }
 async function newReport(){
@@ -930,7 +1025,7 @@ async function newReport(){
  if(list.length){$('newJobList').innerHTML=list.map(t=>`<button type="button" class="report-button" data-newjob="${esc(t.id)}"><span><strong>▶ ${esc(t.name)}</strong><small>${t.steps.length} step${t.steps.length===1?'':'s'}, in order</small></span><span>→</span></button>`).join('');$('newJobDialog').showModal();return;}
  await startBlank();
 }
-async function startBlank(){await stopRecording();current=blankReport();await persistReport();showReport();$('title').focus();}
+async function startBlank(){await stopRecording();current=blankReport();await persistReport();showReport();$('equipment').focus();}
 async function openReport(id){await stopRecording();const raw=await get('reports',id);if(!raw)throw Error('Report not found');current=migrateReport(raw);if(!isCurrentReport(raw))await persistReport();showReport();}
 function setDock(editingOpen){
  $('dockIdle').hidden=!!editingOpen;$('dockEdit').hidden=!editingOpen;
@@ -942,12 +1037,12 @@ function setDock(editingOpen){
 function showReport(){
  current=migrateReport(current);
  $('home').hidden=true;$('tplEditor').hidden=true;$('report').hidden=false;$('editor').hidden=true;editing=null;setDock(false);
- document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});renderPackHeader();renderEndChecks();
+ document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});renderPackHeader();renderEndChecks();renderDetails();
  renderEntries();
  window.scrollTo(0,0);
 }
 function updateHeading(){
- $('reportTitle').textContent=current.title||'Untitled report';
+ $('reportTitle').textContent=current.title||current.equipment||'Untitled report';
  const n=current.parts.length, p=photoCount(current.parts);
  $('counts').textContent=`${n} part${n===1?'':'s'} · ${p} photo${p===1?'':'s'}`;
  const bs=backupState(current);if($('backupStatus'))$('backupStatus').textContent=(bs.ok?'✓ ':'⚠ ')+bs.text+'.';
@@ -962,15 +1057,16 @@ function clearThumbs(){io?.disconnect();for(const [id,url] of thumbById){if(url)
 function sweepThumbs(){
  const used=new Set();
  document.querySelectorAll('img[data-media][src]').forEach(img=>used.add(img.dataset.media));
- document.querySelectorAll('#editorPhotos img[data-media]').forEach(img=>used.add(img.dataset.media));
- for(const [id,url] of [...thumbById]){if(!used.has(id)){if(url)URL.revokeObjectURL(url);thumbById.delete(id);}}
+ document.querySelectorAll('#editor img[data-media]').forEach(img=>used.add(img.dataset.media));
+ // v11: keep entries still loading (null) – sweeping them made loadThumb give up, so list thumbnails could stay blank.
+ for(const [id,url] of [...thumbById]){if(url&&!used.has(id)){URL.revokeObjectURL(url);thumbById.delete(id);}}
 }
 async function loadThumb(img){
  const id=img?.dataset?.media;if(!id)return;
  if(thumbById.has(id)){const url=thumbById.get(id);if(url)img.src=url;return;}
  thumbById.set(id,null);
- const m=await get('media',id);
- if(!thumbById.has(id)&&!document.querySelector(`#editorPhotos img[data-media="${CSS.escape(id)}"]`))return;
+ let m;try{m=await get('media',id);}catch(e){thumbById.delete(id);return;}
+ if(!thumbById.has(id)&&!document.querySelector(`#editor img[data-media="${CSS.escape(id)}"]`))return;
  if(!m?.thumb){thumbById.delete(id);return;}
  const url=URL.createObjectURL(m.thumb);
  thumbById.set(id,url);
@@ -987,23 +1083,53 @@ function observeThumbs(){
  },{rootMargin:'400px'});
  document.querySelectorAll('#entries img[data-media]').forEach(img=>io.observe(img));
 }
+function listNewestFirst(){return localStorage.getItem('stripnote-order')!=='oldest';}
 function renderEntries(){
  if(io)io.disconnect();
  updateHeading();
  const parts=current.parts;
  const tj=isTemplateJob(current);
- $('entries').innerHTML=parts.length?parts.map((p,i)=>{
+ // v11: free-form jobs list the newest part first in the app (22 … 1); reports always print 1 … N.
+ const rev=!tj&&parts.length>1&&listNewestFirst();
+ const lt=$('listTools');if(lt){lt.hidden=tj||parts.length<2;$('listOrderText').textContent=rev?`Newest first (${parts.length} → 1). Reports print 1 → ${parts.length}.`:`Report order (1 → ${parts.length}).`;$('sortToggle').textContent=rev?'⇅ Show no. 1 first':'⇅ Show newest first';}
+ const order=parts.map((p,i)=>i);if(rev)order.reverse();
+ $('entries').innerHTML=parts.length?order.map((i,pos)=>{
+  const p=parts[i];
   const cond=conditionOf(p.condition);
   const thumbs=p.photos.slice(0,6).map((ph,j)=>`<span class="thumbwrap"><img data-media="${esc(ph.id)}" alt="Photo ${i+1}.${j+1}${ph.prompt?' '+esc(promptLabel(ph.prompt)):''}" tabindex="0" role="button"><b class="thumbno">${i+1}.${j+1}</b></span>`).join('');
   const more=p.photos.length>6?`<span class="muted">+${p.photos.length-6}</span>`:'';
   const st=tj?stepState(p):null;
   const stLine=tj?`<span class="step-state ${st.done?'':'bad'}">${st.skipped?`⤼ Skipped – not inspected${p.skipReason?': '+esc(p.skipReason):''}`:st.done?'✓ Complete':st.started?'⚠ '+esc(capFirst(stepProblems(p).join(' · '))):'○ Not started'}</span>`:'';
   const mergeOpts=parts.filter(o=>o.id!==p.id).map(o=>`<option value="${esc(o.id)}">${esc(o.name||'Untitled part')}</option>`).join('');
-  const secHead=p.section&&p.section!==(parts[i-1]?.section||'')?`<div class="sec-head">${esc(p.section)}</div>`:'';
-  return secHead+`<article class="card entry" data-part="${esc(p.id)}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div><div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div><p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${esc(p.id)}" style="flex:1">Edit part</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${esc(p.id)}" data-dir="-1" aria-label="Move part ${i+1} up" ${i===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${esc(p.id)}" data-dir="1" aria-label="Move part ${i+1} down" ${i===parts.length-1?'disabled':''}>↓ Down</button><select class="compact" data-merge="${esc(p.id)}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${esc(p.id)}">Delete part</button></div></details></article>`;
+  const secHead=!rev&&p.section&&p.section!==(parts[i-1]?.section||'')?`<div class="sec-head">${esc(p.section)}</div>`:'';
+  const subs=p.subParts||[];const subPh=subs.reduce((n,x)=>n+x.photos.length,0);
+  const subsLine=subs.length?`<div class="subs-line"><b>Sub-parts:</b> ${subs.map((x,k)=>`${subLabel(i,k)} ${esc(x.name||'Sub-part')}${clean(x.qty)?' ×'+esc(clean(x.qty)):''}${x.condition?` (${esc(x.condition)})`:''}`).join(' · ')}</div>`:'';
+  const pn=clean(p.partNo)?`<div class="pn">Part no. ${esc(clean(p.partNo))}</div>`:'';
+  const id=esc(p.id),n=parts.length,up=rev?1:-1;
+  return secHead+`<article class="card entry" data-part="${id}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div>${pn}<div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${subPh?` + ${subPh} in sub-parts`:''}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div>${subsLine}<p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${id}" style="flex:1">Edit part</button><button type="button" data-add-photos="${id}" aria-label="Add photos to part ${i+1} from the gallery or files">🖼 Add photos</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${id}" data-dir="${up}" aria-label="Move part ${i+1} up the list" ${pos===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${id}" data-dir="${-up}" aria-label="Move part ${i+1} down the list" ${pos===order.length-1?'disabled':''}>↓ Down</button><button class="small" type="button" data-move-to="${id}" data-pos="1" ${i===0?'disabled':''}>⤒ To top (no. 1)</button><button class="small" type="button" data-move-to="${id}" data-pos="${n}" ${i===n-1?'disabled':''}>⤓ To bottom (no. ${n})</button><div class="pos-row"><span>Move to no.</span><input class="compact" type="number" inputmode="numeric" min="1" max="${n}" data-pos-for="${id}" placeholder="1–${n}" aria-label="New number for part ${i+1}"><button class="small" type="button" data-pos-go="${id}">Go</button></div><select class="compact" data-merge="${id}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${id}">Delete part</button></div></details></article>`;
  }).join(''):'<div class="empty">No parts yet. Use Photo → new part, say the part name, pause, then describe the damage.</div>';
  observeThumbs();
  if(editing)updateEditorChrome();
+}
+async function movePartTo(id,n){
+ const parts=current.parts;const i=parts.findIndex(p=>p.id===id);if(i<0)return;
+ const j=Math.max(0,Math.min(parts.length-1,Math.round(Number(n))-1));if(i===j)return;
+ await stopRecording();
+ const [p]=parts.splice(i,1);parts.splice(j,0,p);
+ if(isTemplateJob(current)&&editing)current.stepIndex=Math.max(0,parts.indexOf(editing));
+ await persistReport();renderEntries();if(editing)paintStep();
+ $('entries').querySelector(`[data-part="${CSS.escape(id)}"]`)?.scrollIntoView({block:'nearest'});
+ toast(`“${p.name||'Untitled part'}” is now no. ${j+1}. Parts and photos renumbered.`);
+}
+function detailVisible(k){return DEFAULT_FIELDS.includes(k)||(current.shownFields||[]).includes(k)||!!clean(current[k]);}
+function renderDetails(){
+ if(!current)return;
+ const packKeys=new Set(isPackJob(current)?current.pack.headerFields.map(headerKey).filter(Boolean):[]);
+ document.querySelectorAll('#detailGrid [data-dfield]').forEach(el=>{const k=el.dataset.dfield;el.hidden=packKeys.has(k)||!detailVisible(k);});
+ $('customFields').innerHTML=(current.customFields||[]).map(f=>`<div data-custom="${esc(f.id)}"><div class="field-head dhead"><label for="cf-${esc(f.id)}">${esc(f.label)}</label><button type="button" class="redo dx" data-cremove="${esc(f.id)}" aria-label="Remove ${esc(f.label)}">✕</button></div><input id="cf-${esc(f.id)}" data-custom-input="${esc(f.id)}" value="${esc(f.value)}"></div>`).join('');
+ const avail=OPT_FIELDS.filter(k=>!packKeys.has(k)&&!detailVisible(k));
+ $('addField').innerHTML=`<option value="">+ Add field…</option>${avail.map(k=>`<option value="${k}">${esc(OPT_FIELD_LABELS[k])}</option>`).join('')}<option value="__custom">Custom label…</option>`;
+ $('addField').value='';
 }
 function updateEditorChrome(){
  if(!editing)return;
@@ -1012,6 +1138,7 @@ function updateEditorChrome(){
  const badge=$('conditionBadge');
  const cond=conditionOf(editing.condition);
  badge.className='badge '+condClass(cond);badge.textContent=cond;
+ paintSubLabels();
  $('editorPhotos').querySelectorAll('[data-fig]').forEach(el=>{const ph=editing.photos[Number(el.dataset.fig)];el.textContent=`Photo ${Math.max(1,n+1)}.${Number(el.dataset.fig)+1}${ph?.prompt?' · '+promptLabel(ph.prompt):''}`;});
 }
 function paintEditorBadge(){if(!editing)return;const cond=conditionOf(editing.condition);const badge=$('conditionBadge');badge.className='badge '+condClass(cond);badge.textContent=cond;$('condition').value=cond;
@@ -1052,7 +1179,7 @@ function showEditor(){
  $('editor').hidden=false;setDock(true);
  const n=current.parts.indexOf(editing);
  $('editorTitle').textContent=`Part ${n+1}`;
- $('part').value=editing.name;$('description').value=editing.description;$('condition').value=conditionOf(editing.condition);
+ $('part').value=editing.name;$('partNo').value=editing.partNo||'';$('description').value=editing.description;$('condition').value=conditionOf(editing.condition);
  paintEditorBadge();
  renderMeasures();
  renderEditorMedia();
@@ -1060,14 +1187,28 @@ function showEditor(){
  if(isStepMode())window.scrollTo(0,Math.max(0,$('editor').getBoundingClientRect().top+window.scrollY-72));
  else $('editor').scrollIntoView({behavior:'smooth',block:'start'});
 }
+function photoCardHTML(ph,i,label,ctx){
+ const id=esc(ph.id);
+ const labelSel=ctx.main&&editing.prompts.length?`<select class="compact wide" data-photo-prompt="${id}" aria-label="Label for photo ${label}"><option value="">No label</option>${editing.prompts.map(pr=>`<option value="${esc(pr)}" ${pr===ph.prompt?'selected':''}>${esc(promptLabel(pr))}</option>`).join('')}</select>`:'';
+ return `<div class="photo" data-photo="${id}"><div class="fig" ${ctx.main?`data-fig="${i}"`:'data-subfig'}>Photo ${label}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><div class="img-wrap"><img data-media="${id}" alt="Photo ${label}"><button type="button" class="opt-btn" data-photo-opts="${id}" aria-expanded="false" aria-label="Options for photo ${label}">⋯</button></div><div class="photo-row"><input class="compact" data-caption-for="${id}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${label}"></div><div class="photo-opts" data-opts-for="${id}" hidden>${ctx.main?`<button type="button" class="small" data-caption-mic="${id}" aria-label="Dictate caption for photo ${label}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${id}" aria-label="Re-record caption for photo ${label}">↻ Re-record</button>`:''}<button type="button" class="small" data-photo-up="${id}" aria-label="Move photo ${label} earlier" ${i===0?'disabled':''}>↑ Earlier</button><button type="button" class="small" data-photo-down="${id}" aria-label="Move photo ${label} later" ${i===ctx.count-1?'disabled':''}>↓ Later</button><button type="button" class="small wide" data-photo-move="${id}">➜ Move to another part</button><button type="button" class="small wide" data-photo-copy="${id}">⧉ Copy to another part</button>${labelSel}<button type="button" class="small danger wide" data-remove-photo="${id}">Remove photo</button></div></div>`;
+}
+function subCardHTML(x,k,i){
+ const id=esc(x.id),lab=subLabel(i,k),cond=x.condition;
+ const photos=x.photos.map((ph,j)=>photoCardHTML(ph,j,`${lab}.${j+1}`,{main:false,count:x.photos.length})).join('');
+ return `<div class="sub ${esc(cond)}" data-sub="${id}"><div class="sub-head"><b class="sub-no" data-sub-no="${k}">${lab}</b><input class="compact" data-sfield="name" value="${esc(x.name)}" placeholder="Sub-part name, e.g. O-ring" aria-label="Sub-part ${lab} name"></div><div class="sub-grid"><label class="m-f"><span>Part no.</span><input class="compact" data-sfield="partNo" value="${esc(x.partNo)}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Sub-part ${lab} part number"></label><label class="m-f qty"><span>Qty</span><input class="compact" data-sfield="qty" value="${esc(x.qty)}" inputmode="numeric" aria-label="Sub-part ${lab} quantity"></label></div><div class="sub-cond" role="group" aria-label="Sub-part ${lab} condition">${SUB_CONDS.map(c=>`<button type="button" data-scond="${c}" aria-pressed="${cond===c}">${c}</button>`).join('')}</div><input class="compact chk-note" data-sfield="note" value="${esc(x.note)}" placeholder="Note, e.g. cut, flattened, missing" aria-label="Sub-part ${lab} note">${photos?`<div class="photos">${photos}</div>`:''}<div class="sub-tools"><button type="button" data-sub-cam="${id}" aria-label="Take a photo of sub-part ${lab}">📷 Photo</button><button type="button" data-sub-gal="${id}" aria-label="Add photos of sub-part ${lab} from the gallery">🖼 Gallery</button><button type="button" data-sub-up="${id}" ${k===0?'disabled':''} aria-label="Move sub-part ${lab} up">↑</button><button type="button" data-sub-down="${id}" ${k===editing.subParts.length-1?'disabled':''} aria-label="Move sub-part ${lab} down">↓</button><button type="button" class="danger" data-sub-del="${id}" aria-label="Remove sub-part ${lab}">✕ Remove</button></div></div>`;
+}
+function renderSubParts(){
+ if(!editing)return;const i=Math.max(0,current.parts.indexOf(editing));
+ const list=editing.subParts||(editing.subParts=[]);
+ $('subList').innerHTML=list.map((x,k)=>subCardHTML(x,k,i)).join('');
+ $('subCount').textContent=list.length?`${list.length} sub-part${list.length===1?'':'s'}`:'';
+ for(const img of $('subList').querySelectorAll('img[data-media]'))loadThumb(img);
+}
+function paintSubLabels(){if(!editing)return;const i=Math.max(0,current.parts.indexOf(editing));$('subList').querySelectorAll('[data-sub]').forEach((el,k)=>{const lab=subLabel(i,k);const no=el.querySelector('[data-sub-no]');if(no)no.textContent=lab;el.querySelectorAll('[data-subfig]').forEach((f,j)=>{f.textContent=`Photo ${lab}.${j+1}`;});});}
 function renderEditorMedia(){
- $('editorPhotos').innerHTML=editing.photos.map((ph,i)=>{
-  const n=Math.max(1,current.parts.indexOf(editing)+1);
-  const others=current.parts.filter(p=>p!==editing);
-  const opts=others.map(p=>`<option value="${esc(p.id)}">${esc(p.name||'Untitled part')}</option>`).join('');
-  const labelSel=editing.prompts.length?`<select class="compact" data-photo-prompt="${esc(ph.id)}" aria-label="Label for photo ${i+1}"><option value="">No label</option>${editing.prompts.map(pr=>`<option value="${esc(pr)}" ${pr===ph.prompt?'selected':''}>${esc(promptLabel(pr))}</option>`).join('')}</select>`:'';
-  return `<div class="photo"><div class="fig" data-fig="${i}">Photo ${n}.${i+1}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><img data-media="${esc(ph.id)}" alt="Photo ${i+1}"><input class="compact" data-caption-for="${esc(ph.id)}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${i+1}"><details class="more" data-photo-more="${esc(ph.id)}"><summary aria-label="Options for photo ${i+1}">⋯ Photo options</summary><div class="photo-actions"><button type="button" class="small" data-caption-mic="${esc(ph.id)}" aria-label="Dictate caption for photo ${i+1}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${esc(ph.id)}" aria-label="Re-record caption for photo ${i+1}">↻ Re-record</button><button type="button" class="small" data-photo-up="${esc(ph.id)}" aria-label="Move photo ${i+1} up" ${i===0?'disabled':''}>↑</button><button type="button" class="small" data-photo-down="${esc(ph.id)}" aria-label="Move photo ${i+1} down" ${i===editing.photos.length-1?'disabled':''}>↓</button></div><select class="compact" data-photo-move="${esc(ph.id)}" aria-label="Move photo ${i+1} to another part" ${opts?'':'disabled'}><option value="">Move to…</option>${opts}</select>${labelSel}<button type="button" class="small danger" data-remove-photo="${esc(ph.id)}">Remove photo</button></details></div>`;
- }).join('');
+ const n=Math.max(1,current.parts.indexOf(editing)+1);
+ $('editorPhotos').innerHTML=editing.photos.map((ph,i)=>photoCardHTML(ph,i,`${n}.${i+1}`,{main:true,count:editing.photos.length})).join('');
+ renderSubParts();
  $('noPhotos').hidden=editing.photos.length>0;
  for(const img of $('editorPhotos').querySelectorAll('img'))loadThumb(img);
  audioURLs.forEach(url=>URL.revokeObjectURL(url));audioURLs.clear();
@@ -1086,7 +1227,7 @@ async function deletePart(id){
  const part=current.parts.find(p=>p.id===id);
  current.parts=current.parts.filter(p=>p.id!==id);
  await persistReport();
- if(part){for(const ph of part.photos){await remove('media',ph.id);dropThumb(ph.id);}for(const a of part.audio)await remove('media',a);if(part.drawingId&&!drawingUsedElsewhere(current.parts,part.drawingId,part)){await remove('media',part.drawingId);dropDrawingURL(part.drawingId);}}
+ if(part){for(const ph of [...part.photos,...(part.subParts||[]).flatMap(x=>x.photos)]){await remove('media',ph.id);dropThumb(ph.id);}for(const a of part.audio)await remove('media',a);if(part.drawingId&&!drawingUsedElsewhere(current.parts,part.drawingId,part)){await remove('media',part.drawingId);dropDrawingURL(part.drawingId);}}
  if(editing?.id===id){editing=null;$('editor').hidden=true;setDock(false);}
  renderEntries();
 }
@@ -1105,6 +1246,8 @@ async function mergeParts(sourceId,targetId){
  const extra=String(source.description||'').trim();
  if(extra)target.description=[String(target.description||'').trim(),extra].filter(Boolean).join('\n\n');
  target.photos.push(...source.photos);
+ target.subParts=(target.subParts||[]).concat(source.subParts||[]);
+ if(!clean(target.partNo)&&clean(source.partNo))target.partNo=source.partNo;
  target.audio.push(...source.audio);
  if(!String(target.name||'').trim()&&String(source.name||'').trim())target.name=source.name;
  target.checks=(target.checks||[]).concat(source.checks||[]);
@@ -1134,10 +1277,46 @@ async function removePhoto(id){
  if(!editing)return;
  if(!confirm('Remove this photo from the part?'))return;
  await stopRecording();
- editing.photos=editing.photos.filter(p=>p.id!==id);
+ const f=findPhoto(id);if(!f)return;
+ f.list.splice(f.index,1);
  await persistReport();
  await remove('media',id);dropThumb(id);
  renderEditorMedia();renderEntries();
+}
+// v11: a photo can sit on the part or on one of its sub-parts.
+function findPhoto(id){
+ if(!editing)return null;
+ let k=editing.photos.findIndex(p=>p.id===id);if(k>=0)return {list:editing.photos,index:k,photo:editing.photos[k],part:editing,sub:null};
+ for(const x of editing.subParts||[]){k=x.photos.findIndex(p=>p.id===id);if(k>=0)return {list:x.photos,index:k,photo:x.photos[k],part:editing,sub:x};}
+ return null;
+}
+function openPhotoPicker(photoId,mode){
+ const f=findPhoto(photoId);if(!f)return;
+ pickState={photoId,mode};
+ const n=current.parts.indexOf(editing);
+ const here=f.sub?subLabel(n,editing.subParts.indexOf(f.sub)):String(n+1);
+ $('pickTitle').textContent=mode==='copy'?'Copy photo to…':'Move photo to…';
+ $('pickText').textContent=`Photo ${here}.${f.index+1}. ${mode==='copy'?'The copy keeps this caption and can then be changed on its own; this photo stays here.':'It is taken off here and added as the last photo of the part you pick. Photos are renumbered.'}`;
+ $('pickList').innerHTML=current.parts.map((p,i)=>{const self=p===f.part&&!f.sub;return `<button type="button" data-pick-part="${esc(p.id)}" ${self&&mode==='move'?'disabled':''}>${i+1}. ${esc(p.name||'Untitled part')}${self?' (here)':''}</button>`+(p.subParts||[]).map((x,k)=>{const me=x===f.sub;return `<button type="button" class="sub-pick" data-pick-part="${esc(p.id)}" data-pick-sub="${esc(x.id)}" ${me&&mode==='move'?'disabled':''}>${subLabel(i,k)} ${esc(x.name||'Sub-part')}${me?' (here)':''}</button>`;}).join('');}).join('');
+ $('pickDialog').showModal();
+}
+async function placePhoto(photoId,mode,partId,subId){
+ const f=findPhoto(photoId);if(!f)return;
+ const part=current.parts.find(p=>p.id===partId);if(!part)return;
+ const sub=subId?(part.subParts||[]).find(x=>x.id===subId):null;if(subId&&!sub)return;
+ const dest=sub||part;
+ if(mode==='move'&&dest===(f.sub||f.part))return;
+ await stopRecording();
+ // A step photo keeps its label only if the new step asks for it and does not have it yet.
+ const fit=pr=>sub?'':(part.prompts?.length?((pr&&part.prompts.includes(pr)&&!part.photos.some(x=>x.prompt===pr))?pr:(nextPrompt(part)||'')):'');
+ if(mode==='move'){const [ph]=f.list.splice(f.index,1);ph.prompt=fit(ph.prompt);dest.photos.push(ph);}
+ else{const m=await get('media',photoId);if(!m?.blob)throw Error('That photo could not be read, so it was not copied.');const nid=uid();await put('media',{...m,id:nid});dest.photos.push({id:nid,caption:f.photo.caption,prompt:fit(f.photo.prompt)});}
+ if(!sub&&part.skipped)part.skipped=false;
+ await persistReport();
+ const pi=current.parts.indexOf(part);
+ const label=sub?subLabel(pi,part.subParts.indexOf(sub)):String(pi+1);
+ renderEditorMedia();renderEntries();
+ toast(`Photo ${mode==='copy'?'copied':'moved'} to ${label} ${(sub?sub.name:part.name)||''} – now photo ${label}.${dest.photos.length}. Photos renumbered.`);
 }
 async function imageSize(blob){
  if(typeof createImageBitmap==='function'){
@@ -1156,7 +1335,7 @@ function safeFileName(s,fallback='file'){
  if(/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(t))t+='-file';
  return t;
 }
-function photoStem(partIdx,photoIdx,partCount,name,prompt){const w=Math.max(2,String(partCount).length);const no=`${String(partIdx+1).padStart(w,'0')}.${String(photoIdx+1).padStart(2,'0')}`;const nm=safeFileName(name||'Untitled part','Part').replace(/\s+/g,'-');const pr=prompt?'_'+safeFileName(promptLabel(prompt),'photo').replace(/\s+/g,'-'):'';return `${no}_${nm}${pr}`;}
+function photoStem(partIdx,photoIdx,partCount,name,prompt,sub=-1){const w=Math.max(2,String(partCount).length);const no=`${String(partIdx+1).padStart(w,'0')}${sub>=0?'.'+subLetter(sub):''}.${String(photoIdx+1).padStart(2,'0')}`;const nm=safeFileName(name||'Untitled part','Part').replace(/\s+/g,'-');const pr=prompt?'_'+safeFileName(promptLabel(prompt),'photo').replace(/\s+/g,'-'):'';return `${no}_${nm}${pr}`;}
 function uniqueBase(name,used){
  let base=safeFileName(name,'Untitled-part'), candidate=base, n=2;
  while(used.has(candidate.toLowerCase()))candidate=base+'-'+(n++);
@@ -1246,28 +1425,34 @@ async function imageBlob(blob,max=1600,quality=.8){
  }finally{URL.revokeObjectURL(url);}
 }
 async function addPhotos(files){
- if(!editing||!files?.length)return;
- const target=editing;busy=true;setBusy(true);
+ if(!editing||!files?.length){photoDest=null;return {added:0,sub:false};}
+ const part=editing;const sub=photoDest?(part.subParts||[]).find(x=>x.id===photoDest)||null:null;photoDest=null;
+ const target=sub||part;busy=true;setBusy(true);
+ let added=0,bad=0;
  try{
   for(let i=0;i<files.length;i++){
    const file=files[i];
+   if(file.type&&!file.type.startsWith('image/')){bad++;continue;}
    const original=file.slice(0,file.size,file.type||'image/jpeg');
    let originalWidth=0,originalHeight=0;
    try{const sz=await imageSize(original);originalWidth=sz.width;originalHeight=sz.height;}catch(e){}
-   const compressed=await imageBlob(original);
-   const thumb=await imageBlob(compressed.blob,240,.65);
+   // Gallery files can be in formats this browser cannot read (e.g. some HEIC); skip those and carry on with the rest.
+   let compressed,thumb;
+   try{compressed=await imageBlob(original);thumb=await imageBlob(compressed.blob,240,.65);}catch(e){console.warn('Photo skipped',file.name,e);bad++;continue;}
    let prompt='';
-   if(forcedPrompt!==null&&i===0)prompt=forcedPrompt;
-   else if(target.prompts&&target.prompts.length)prompt=nextPrompt(target)||'';
+   if(!sub){if(forcedPrompt!==null&&i===0)prompt=forcedPrompt;else if(part.prompts&&part.prompts.length)prompt=nextPrompt(part)||'';}
    const id=uid();
    await put('media',{id,kind:'photo',blob:compressed.blob,thumb:thumb.blob,width:compressed.width,height:compressed.height,original,originalWidth,originalHeight,originalMime:original.type||'image/jpeg',originalName:String(file.name||'')});
-   target.photos.push({id,caption:'',prompt});
-   if(target.skipped)target.skipped=false;
+   target.photos.push({id,caption:'',prompt});added++;
+   if(!sub&&part.skipped)part.skipped=false;
    await persistReport();
   }
   renderEntries();renderEditorMedia();
+  if(bad)toast(`${bad} file${bad===1?'':'s'} could not be read as a photo and ${bad===1?'was':'were'} skipped${added?` (${added} added)`:''}. Choose JPEG or PNG photos.`);
+  else if(added>1)toast(`${added} photos added${sub?` to ${sub.name||'the sub-part'}`:''}.`);
   checkStorage(true).catch(()=>{});
  }catch(e){fail(e);}finally{forcedPrompt=null;busy=false;setBusy(false);$('cameraFile').value='';$('galleryFile').value='';}
+ return {added,sub:!!sub};
 }
 function setBusy(flag){
  document.querySelectorAll('button,input,textarea,select').forEach(el=>{
@@ -1522,7 +1707,7 @@ async function stopRecording(){
  return s.stopping;
 }
 
-function typingTarget(){const el=document.activeElement;if(!el||!editing||$('editor').hidden||!$('editor').contains(el))return null;if(el.id==='description')return {mode:'description',el};if(el.id==='part')return {mode:'name',el};if(el.dataset.captionFor)return {mode:'caption',photoId:el.dataset.captionFor,el};const row=el.closest('[data-measure]');if(row)return {mode:'measure',photoId:row.dataset.measure,el};return null;}
+function typingTarget(){const el=document.activeElement;if(!el||!editing||$('editor').hidden||!$('editor').contains(el))return null;if(el.id==='partNo'||el.closest('#subList'))return {mode:'none',el};if(el.id==='description')return {mode:'description',el};if(el.id==='part')return {mode:'name',el};if(el.dataset.captionFor)return {mode:'caption',photoId:el.dataset.captionFor,el};const row=el.closest('[data-measure]');if(row)return {mode:'measure',photoId:row.dataset.measure,el};return null;}
 function dictateDescription(){
  if(!editing)return;
  const t=$('description');
@@ -1531,7 +1716,7 @@ function dictateDescription(){
 }
 on('speakBtn','click',()=>{
  if(!session){const tt=typingTarget();
-  if(tt){if(tt.mode==='description')return dictateDescription();if(tt.mode==='measure')return sayMeasurement(tt.photoId);if(tt.mode==='caption')return startRecording('speech',false,{mode:'caption',photoId:tt.photoId});return startRecording('speech',false,{mode:'name'});}
+  if(tt){if(tt.mode==='none'){toast('For this box, use the 🎙 on your phone keyboard.');return;}if(tt.mode==='description')return dictateDescription();if(tt.mode==='measure')return sayMeasurement(tt.photoId);if(tt.mode==='caption')return startRecording('speech',false,{mode:'caption',photoId:tt.photoId});return startRecording('speech',false,{mode:'name'});}
  }
  return (!session&&isStepMode()&&editing?.fromTemplate)?startRecording('speech',false,{mode:'description'}):startRecording('speech');
 });
@@ -1558,6 +1743,7 @@ if(window.visualViewport){visualViewport.addEventListener('resize',kbUpdate);vis
 document.addEventListener('focusin',()=>setTimeout(kbUpdate,50));document.addEventListener('focusout',()=>setTimeout(kbUpdate,120));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
 on('redoPart','click',()=>redoDictation('name'));
 on('redoDescription','click',()=>redoDictation('description'));
+$('howTo').open=localStorage.getItem('stripnote-howto')==='open';$('howTo').addEventListener('toggle',()=>localStorage.setItem('stripnote-howto',$('howTo').open?'open':'closed'));
 $('autoListen').checked=localStorage.getItem('stripnote-autolisten')!=='off';$('autoListen').addEventListener('change',()=>localStorage.setItem('stripnote-autolisten',$('autoListen').checked?'on':'off'));
 
 async function maybeAutoListen(){
@@ -1605,20 +1791,24 @@ const COND_STYLE={
 };
 const xml=s=>String(s??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function prettyDate(s){if(!s)return '';const [y,m,d]=String(s).split('-');if(!y||!m||!d)return String(s);return `${d}/${m}/${y}`;}
-function jobRows(r){const base=[['Document no.',r.docNumber],['Revision',r.revision],['Client',r.client],['Site',r.site],['Equipment',r.equipment],['Serial no.',r.serial],['Work order',r.workOrder],['Job reference',r.reference],['Inspection date',prettyDate(r.date)],['Investigator',r.investigator||r.engineer]];
- if(!isPackJob(r)||!r.pack.headerFields.length)return base;
+const DETAIL_ROWS=[['client','Client'],['site','Location'],['rigWell','Rig / Well'],['equipment','Equipment'],['serial','Serial no.'],['workOrder','Work order'],['reference','Job reference'],['poNumber','PO number'],['date','Inspection date'],['investigator','Technician'],['contact','Customer contact'],['docNumber','Document no.'],['revision','Revision']];
+function jobRows(r){
+ const val=k=>k==='date'?prettyDate(r.date):k==='investigator'?String(r.investigator||r.engineer||''):String(r[k]||'');
+ const custom=(r.customFields||[]).filter(f=>clean(f.label)&&clean(f.value)).map(f=>[clean(f.label),f.value]);
+ if(!isPackJob(r)||!r.pack.headerFields.length)return DETAIL_ROWS.filter(([k])=>DEFAULT_FIELDS.includes(k)||clean(val(k))).map(([k,l])=>[l,val(k)]).concat(custom);
  const rows=[],used=new Set();
  for(const l of r.pack.headerFields){const k=headerKey(l);if(k==='signName')continue;if(k)used.add(k);rows.push([l,k==='date'?prettyDate(r.date):headerValue(r,l)]);}
- const keyOf={'Document no.':'docNumber','Revision':'revision','Client':'client','Site':'site','Equipment':'equipment','Serial no.':'serial','Work order':'workOrder','Job reference':'reference','Inspection date':'date','Investigator':'investigator'};
- for(const [k,v] of base){if(used.has(keyOf[k]))continue;if(clean(v))rows.push([k,v]);}
- return rows;}
+ for(const [k,l] of DETAIL_ROWS){if(used.has(k))continue;const v=val(k);if(clean(v))rows.push([l,v]);}
+ return rows.concat(custom);}
+// Condition-of-parts rows, with each part's sub-parts (3.a, 3.b) under it.
+function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:String(i+1),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true}));});return rows;}
 const COND_KEY='Condition key: OK – serviceable as found. Wear – normal wear; monitor or plan renewal. Damaged – defect found; repair or assess. Replace – not fit for further service. Not rated – not assessed.';
 const REPORT_KIND='EQUIPMENT STRIP-DOWN INVESTIGATION REPORT';
 const paragraphsOf=t=>String(t||'').split(/\n+/).map(x=>capSentences(clean(x))).filter(Boolean);
 const measuresOf=p=>(p.measurements||[]).filter(m=>clean(m.item)||clean(m.measured)||clean(m.min)||clean(m.max)||clean(m.spec));
 function footerLeft(r){return [r.docNumber,r.revision?'Rev '+r.revision:''].filter(Boolean).join(' · ')||r.reference||r.equipment||'';}
 function photoNote(){return `Photographs in this report are reduced in size. Full-size originals are kept by ${companyName||'the investigator'}.`;}
-function reportHeading(r){return clean(r.title)||'Equipment inspection report';}
+function reportHeading(r){return clean(r.title)||(clean(r.equipment)?`${clean(r.equipment)} strip-down report`:'')||'Equipment inspection report';}
 function figureCaption(partNo,photoNo,caption,partName,prompt){const label=prompt?promptLabel(prompt):'';const cap=clean(caption);const text=label?(cap?`${label} \u2013 ${cap}`:label):(cap||clean(partName)||'Inspection photo');return `Photo ${partNo}.${photoNo} \u2013 ${text}`;}
 function findingText(part){const d=capSentences(part.description);if(d)return d;const c=conditionOf(part.condition);return c==='OK'?'No damage found.':c==='Not rated'?'Not rated.':'No description recorded.';}
 async function exportDrawing(id){if(!id)return null;const m=await get('media',id);if(!m?.blob)return null;return {blob:m.blob,width:m.width||1,height:m.height||1};}
@@ -1710,14 +1900,14 @@ async function buildDocx(raw,notify=()=>{}){
  if(!r.parts.length){
   summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:4})});
  }else{
-  r.parts.forEach((part,i)=>{
-   const cond=(part.skipped&&isTemplateJob(r)?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(part.condition)]);
+  summaryRows(r).forEach((row,i)=>{
+   const cond=row.cond;
    const fill=i%2? 'F7F9FA':'FFFFFF';
    const cells=[
-    docxCell(docxPara(docxRun(String(i+1),{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[0],{fill}),
-    docxCell(docxPara(docxRun(part.name||'Untitled part',{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[1],{fill}),
+    docxCell(docxPara(docxRun(row.no,{size:row.sub?18:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[0],{fill}),
+    docxCell(docxPara(docxRun(row.name,{size:row.sub?18:20,color:row.sub?'3C4A50':'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[1],{fill}),
     docxCell(docxPara(docxRun(cond.label,{size:18,bold:true,color:cond.hex}),'<w:spacing w:before="40" w:after="40"/>'),cols[2],{fill}),
-    docxCell(docxPara(docxRun(String(part.photos.length),{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[3],{fill})
+    docxCell(docxPara(docxRun(row.photos,{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[3],{fill})
    ].join('');
    summary+=docxRow({html:cells});
   });
@@ -1731,7 +1921,7 @@ async function buildDocx(raw,notify=()=>{}){
  body+=H1(`${findNo}. Findings`);
  let rels='', n=0, dn=0, prevSec='';
  const tj=isTemplateJob(r);
- const docxPhotos=async(part,i)=>{
+ const docxPhotos=async(part,label)=>{
   // v9: one large photo per row at full content width; the picture keeps with its caption.
   for(let j=0;j<part.photos.length;j++){
    const img=await exportPhoto(part.photos[j].id);
@@ -1739,7 +1929,7 @@ async function buildDocx(raw,notify=()=>{}){
    zip.file(`word/media/photo${n}.jpg`,await img.blob.arrayBuffer());
    const {cx,cy}=fitEmu(img.width,img.height,6264000,4000000);
    rels+=`<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/photo${n}.jpg"/>`;
-   const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
+   const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
    body+=drawingXml(n,cx,cy,cap).replace('<w:pPr><w:jc w:val="center"/><w:spacing w:before="60" w:after="40"/>','<w:pPr><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="160" w:after="40"/>');
    body+=docxPara(docxRun(cap,{size:18,italic:true,color:'5C6B70'}),'<w:keepLines/><w:jc w:val="center"/><w:spacing w:before="20" w:after="160"/>');
    notify(`Preparing photo ${n} of ${totalPhotos}`,n,totalPhotos+1);
@@ -1756,15 +1946,22 @@ async function buildDocx(raw,notify=()=>{}){
   const ms=measuresOf(part);
   if(ms.length){body+=docxPara(docxRun('Measurements',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="60" w:after="60"/>');body+=simpleTable([3066,1300,1400,1300,1300,1500],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020'}:i===5&&t==='In spec'?{bold:true,color:'146C36'}:null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}
  };
+ const docxSubs=async(part,i)=>{
+  for(const [k,x] of (part.subParts||[]).entries()){
+   const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
+   body+=docxPara(docxRun(`${lab}  ${x.name||'Sub-part'}`,{size:23,bold:true,color:'1F3A44'})+(facts?docxRun(`   ·  ${facts}`,{size:19,color:'5C6B70'}):''),`<w:keepNext/><w:keepLines/><w:ind w:left="284"/><w:spacing w:before="220" w:after="40"/><w:pBdr><w:left w:val="single" w:sz="24" w:space="8" w:color="${sc.hex}"/></w:pBdr>`);
+   body+=docxPara(docxRun(sc.label,{size:19,bold:true,color:sc.hex})+(clean(x.note)?docxRun(`  –  ${capSentences(clean(x.note))}`,{size:21,color:'1F2A30'}):''),`${x.photos.length?'<w:keepNext/>':''}<w:ind w:left="284"/><w:spacing w:before="20" w:after="100"/>`);
+   if(x.photos.length)await docxPhotos(subPseudo(x),lab);
+  }
+ };
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
   if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;body+=docxPara(docxRun(part.section,{size:26,bold:true,color:'FFFFFF'}),'<w:keepNext/><w:shd w:val="clear" w:color="auto" w:fill="1F3A44"/><w:spacing w:before="360" w:after="60"/>');}
   const headingPr=`<w:pStyle w:val="Heading1"/><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="40"/><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="1" w:color="${cond.hex}"/></w:pBdr>`;
-  body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:26,bold:true,color:'1F3A44'}),headingPr);
-  if(tj&&part.partNos?.length)body+=docxPara(docxRun(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`,{size:18,color:'5C6B70'}),'<w:keepNext/><w:spacing w:before="20" w:after="80"/>');
-  if(!tj){docxCondDesc(part,cond);await docxPhotos(part,i);continue;}
-  if(part.skipped){body+=docxPara(docxRun(`Not inspected${part.skipReason?': '+part.skipReason:''}`,{size:21,italic:true,color:'5A6468'}),'<w:spacing w:before="80" w:after="160"/>');continue;}
+  body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:26,bold:true,color:'1F3A44'})+(partNoLabel(part)?docxRun(`   ·  ${partNoLabel(part)}`,{size:20,color:'5C6B70'}):''),headingPr);
+  if(!tj){docxCondDesc(part,cond);await docxPhotos(part,String(i+1));await docxSubs(part,i);continue;}
+  if(part.skipped){body+=docxPara(docxRun(`Not inspected${part.skipReason?': '+part.skipReason:''}`,{size:21,italic:true,color:'5A6468'}),'<w:spacing w:before="80" w:after="160"/>');await docxSubs(part,i);continue;}
   const d=part.drawingId?await exportDrawing(part.drawingId):null;
   if(d){
    dn++;
@@ -1774,9 +1971,10 @@ async function buildDocx(raw,notify=()=>{}){
    body+=drawingXml(100000+dn,cx,cy,`Part drawing: ${part.name||''}`,`rIdD${dn}`).replace('<w:pPr>','<w:pPr><w:keepNext/>');
    body+=docxPara(docxRun(part.drawingCaption||part.drawingRef||'Part drawing',{size:16,italic:true,color:'5C6B70'}),'<w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="120"/>');
   }
-  await docxPhotos(part,i);
+  await docxPhotos(part,String(i+1));
   docxCondDesc(part,cond);
   {const cr=checkTableRows(part,r);if(cr.length){body+=docxPara(docxRun('Check & record',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="80" w:after="60"/>');body+=simpleTable([2300,2700,800,1500,1366,1200],['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes'],cr,(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}}
+  await docxSubs(part,i);
  }
  if(isPackJob(r)){
   const resSt=(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null;
@@ -1916,17 +2114,17 @@ async function buildPDF(raw,notify=()=>{}){
  drawSummaryHead();
  if(!r.parts.length){drawText('No parts recorded.',ML+2,y+5,{size:10,color:[90,100,104]});y+=10;}
  else{
-  r.parts.forEach((part,i)=>{
-   const nameLines=textLines(part.name||'Untitled part',9,cols[1]-3).slice(0,4);
+  summaryRows(r).forEach((row,i)=>{
+   const nameLines=textLines(row.name,row.sub?8.5:9,cols[1]-3).slice(0,4);
    const rh=Math.max(7,nameLines.length*4+2.5);
    if(y+rh>bottom){newPage();drawSummaryHead();}
    if(i%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
-   drawText(String(i+1),ML+1.6,y+4.6,{size:9,color:[31,42,48]});
+   drawText(row.no,ML+1.6,y+4.6,{size:row.sub?8.5:9,color:[31,42,48]});
    nameLines.forEach((line,k)=>drawText(line,ML+cols[0]+1.6,y+4.6+k*4,{size:9,color:[31,42,48]}));
-   const cond=(part.skipped&&isTemplateJob(r)?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(part.condition)]);
+   const cond=row.cond;
    drawText(cond.label,ML+cols[0]+cols[1]+1.6,y+4.6,{size:8,color:cond.rgb,bold:true});
-   drawText(String(part.photos.length),ML+cols[0]+cols[1]+cols[2]+1.6,y+4.6,{size:9,color:[31,42,48]});
+   drawText(row.photos,ML+cols[0]+cols[1]+cols[2]+1.6,y+4.6,{size:9,color:[31,42,48]});
    y+=rh;
   });
  }
@@ -1941,13 +2139,13 @@ async function buildPDF(raw,notify=()=>{}){
  const total=photoCount(r.parts);let n=0;
  const tj=isTemplateJob(r);
  const maxH=112;let prevSec='';
- const pdfPhotos=async(part,i)=>{
+ const pdfPhotos=async(part,label)=>{
   // v9: one large photo per row at full content width; caption always on the same page as its photo.
   for(let j=0;j<part.photos.length;j++){
    const img=await exportPhoto(part.photos[j].id);
    let w=CW,h=w*img.height/Math.max(1,img.width);
    if(h>maxH){h=maxH;w=h*img.width/Math.max(1,img.height);}
-   const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
+   const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
    doc.setFontSize(9);
    let capLines=doc.splitTextToSize(cap,CW);
    if(capLines.length>4){capLines=capLines.slice(0,3);capLines.push('…');}
@@ -1972,6 +2170,23 @@ async function buildPDF(raw,notify=()=>{}){
   const ms=measuresOf(part);
   if(ms.length){need(20);drawText('Measurements',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([CW-(18+22+20+20+26),18,22,20,20,26],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),{cellStyle:(t,i)=>i===5&&/^OUT/.test(String(t))?{bold:true,color:[176,0,32]}:i===5&&t==='In spec'?{bold:true,color:[20,108,54]}:null});y+=5;}
  };
+ const pdfSubs=async(part,i)=>{
+  for(const [k,x] of (part.subParts||[]).entries()){
+   const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
+   // Keep the sub-heading with its note and its first photo (no heading stranded at the foot of a page).
+   let need=26+(clean(x.note)?textLines(capSentences(clean(x.note)),10,CW-8).length*4.8:0);
+   if(x.photos.length){const m=await get('media',x.photos[0].id).catch(()=>null);let h=CW*((m?.height||3)/Math.max(1,m?.width||4));if(h>maxH)h=maxH;need+=h+16;}
+   if(y+need>bottom&&y>MT+1)newPage();
+   y+=2;
+   doc.setFillColor(sc.rgb[0],sc.rgb[1],sc.rgb[2]);doc.rect(ML+4,y-3.8,1.3,5.4,'F');
+   for(const line of textLines(`${lab}  ${x.name||'Sub-part'}`,11.5,CW-12)){drawText(line,ML+8,y,{size:11.5,color:[31,42,48],bold:true});y+=5.4;}
+   if(facts){drawText(clipText(facts,120),ML+8,y,{size:9,color:[90,100,104]});y+=4.8;}
+   drawText(sc.label,ML+8,y+0.4,{size:9,color:sc.rgb,bold:true});y+=5;
+   if(clean(x.note))for(const line of textLines(capSentences(clean(x.note)),10,CW-8)){if(y+5>bottom)newPage();drawText(line,ML+8,y,{size:10,color:[31,42,48]});y+=4.8;}
+   y+=2.5;
+   if(x.photos.length)await pdfPhotos(subPseudo(x),lab);
+  }
+ };
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
@@ -1985,20 +2200,22 @@ async function buildPDF(raw,notify=()=>{}){
   if(y+reserve>bottom)newPage();
   doc.setFillColor(cond.rgb[0],cond.rgb[1],cond.rgb[2]);doc.rect(ML,y-3.6,1.5,5.2,'F');
   const head=textLines(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,13,CW-6);
-  head.forEach(line=>{drawText(line,ML+4,y,{size:13,color:[31,42,48],bold:true});y+=6;});
+  const pnText=partNoLabel(part);let pnInline=false;
+  head.forEach((line,k)=>{drawText(line,ML+4,y,{size:13,color:[31,42,48],bold:true});if(k===head.length-1&&pnText){doc.setFontSize(13);const lw=doc.getTextWidth(line);doc.setFontSize(9.5);const pw=doc.getTextWidth(pnText);if(ML+4+lw+5+pw<=ML+CW){drawText(pnText,ML+4+lw+5,y,{size:9.5,color:[90,100,104]});pnInline=true;}}y+=6;});
   y+=0.5;doc.setDrawColor(cond.rgb[0],cond.rgb[1],cond.rgb[2]);doc.setLineWidth(0.45);doc.line(ML,y,ML+36,y);y+=5;
-  if(tj&&part.partNos?.length){drawText(clipText(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`,120),ML,y,{size:9,color:[90,100,104]});y+=5.5;}
-  if(!tj){pdfCondDesc(part,cond);await pdfPhotos(part,i);y+=4;continue;}
-  if(part.skipped){for(const line of textLines(`Not inspected${part.skipReason?': '+part.skipReason:''}`,10.5,CW)){need(5);drawText(line,ML,y,{size:10.5,color:[90,100,104]});y+=5;}y+=5;continue;}
+  if(pnText&&!pnInline){drawText(clipText(pnText,120),ML,y,{size:9,color:[90,100,104]});y+=5.5;}
+  if(!tj){pdfCondDesc(part,cond);await pdfPhotos(part,String(i+1));await pdfSubs(part,i);y+=4;continue;}
+  if(part.skipped){for(const line of textLines(`Not inspected${part.skipReason?': '+part.skipReason:''}`,10.5,CW)){need(5);drawText(line,ML,y,{size:10.5,color:[90,100,104]});y+=5;}y+=5;await pdfSubs(part,i);continue;}
   if(drw){
    const dx=ML+(CW-drw.w)/2;
    doc.addImage(new Uint8Array(await drw.blob.arrayBuffer()),'JPEG',dx,y,drw.w,drw.h,'drw'+i,'FAST');
    doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(dx,y,drw.w,drw.h);
    y+=drw.h+3.6;drawText(clipText(part.drawingCaption||part.drawingRef||'Part drawing',130),PW/2,y,{size:8,color:[90,100,104],align:'center'});y+=5.5;
   }
-  await pdfPhotos(part,i);
+  await pdfPhotos(part,String(i+1));
   pdfCondDesc(part,cond);
   {const cr=checkTableRows(part,r);if(cr.length){need(24);drawText('Check & record',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([40,48,14,26,26,20],['Item / Part no','Spec','Qty exp.','Measured/found','Result','Notes'],cr,{cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null});y+=5;}}
+  await pdfSubs(part,i);
   y+=3;
  }
  if(isPackJob(r)){
@@ -2130,7 +2347,7 @@ async function buildPptx(raw,notify=()=>{}){
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.4,ppPara(REPORT_KIND,{size:13,color:'D9E2E5'}),{name:'Report kind'});ty+=0.45;
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,1.4,ppPara(clipText(title,120),{size:38,bold:true,color:'FFFFFF'}),{name:'Job title',anchor:'t'});ty+=1.6;
   const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
-  const rows=jobRows(r).filter(([k,v])=>(isPackJob(r)||want.includes(k))&&clean(v)).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
+  const rows=jobRows(r).filter(([k,v])=>clean(v)).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
   const colW=6.0,rowH=0.62;
   rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:'9FB3B9'})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
   sl.title=true;
@@ -2155,18 +2372,18 @@ async function buildPptx(raw,notify=()=>{}){
    ppShape(sl.shapes,sl.next++,0.4,4.85,6.9,2.1,lines.map(t=>ppPara(t,{size:13,color:'1F2A30',after:3})).join(''),{name:'Out of spec list',fill:'FDF1F2',line:'E8B4BA'});
   }
  }
- // 3. Condition of parts overview
- if(r.parts.length){
-  const per=11;
-  for(let s=0;s<r.parts.length;s+=per){
-   const sl=await frame(r.parts.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(r.parts.length/per)})`:'Condition of parts');
-   const rows=[[tj?'Step':'No.','Part','Condition','Photos']];
-   const chunk=r.parts.slice(s,s+per);
-   chunk.forEach((p,k)=>rows.push([String(s+k+1),p.name||'Untitled part',condFor(p).label,String(p.photos.length)]));
-   ppTable(sl.shapes,sl.next++,0.4,1.1,[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:condFor(chunk[k-1]).hex}:null});
+  // 3. Condition of parts overview (sub-parts listed under their part)
+  if(r.parts.length){
+   const per=11;const all=summaryRows(r);
+   for(let s=0;s<all.length;s+=per){
+    const sl=await frame(all.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(all.length/per)})`:'Condition of parts');
+    const rows=[[tj?'Step':'No.','Part','Condition','Photos']];
+    const chunk=all.slice(s,s+per);
+    chunk.forEach(x=>rows.push([x.no,x.name,x.cond.label,x.photos]));
+    ppTable(sl.shapes,sl.next++,0.4,1.1,[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:chunk[k-1].cond.hex}:null});
+   }
   }
- }
- const partPhotos=async(part,i,cond,head)=>{
+ const partPhotos=async(part,label,cond,head)=>{
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
   const ms=measuresOf(part);
   const note=clipText(desc,260);
@@ -2184,8 +2401,8 @@ async function buildPptx(raw,notify=()=>{}){
    if(!b){
     const rel=await addMedia(ps,a.blob,'jpg');
     const f=ppFitBox(a.width,a.height,0.35,1.0,8.75,6.05);
-    ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt),{line:'C5D0D4'});
-    const cap=figureCaption(i+1,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
+    ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt),{line:'C5D0D4'});
+    const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
     const m=cap.match(/^(Photo [\d.]+) \u2013 (.*)$/);
     ppShape(ps.shapes,ps.next++,9.35,1.05,3.65,0.6,ppPara(m?m[1]:cap,{size:22,bold:true,color:'1F3A44'}),{name:'Photo number',fit:false,inset:0.02});
     if(m)ppShape(ps.shapes,ps.next++,9.35,1.65,3.65,1.4,ppPara(clipText(m[2],140),{size:16,color:'1F2A30'}),{name:'Caption',inset:0.02});
@@ -2197,7 +2414,7 @@ async function buildPptx(raw,notify=()=>{}){
      const ph=part.photos[j+k];const rel=await addMedia(ps,img.blob,'jpg');
      const bx=0.35+k*6.4;
      const f=ppFitBox(img.width,img.height,bx,1.0,6.2,5.15);
-     const cap=figureCaption(i+1,j+k+1,ph.caption,part.name,ph.prompt);
+     const cap=figureCaption(label,j+k+1,ph.caption,part.name,ph.prompt);
      ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,cap,{line:'C5D0D4'});
      ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:'1F3A44',align:'ctr'}),{name:'Caption',inset:0.02});
     }
@@ -2218,23 +2435,35 @@ async function buildPptx(raw,notify=()=>{}){
   for(let s=0;s<cr.length;s+=8){const csl=await frame(`${head} \u00b7 Check & record${cr.length>8?` (${Math.floor(s/8)+1})`:''}`,{accent:cond.hex,size:20});ppTable(csl.shapes,csl.next++,0.4,1.1,[3.2,3.7,1.0,1.7,1.8,1.13],[['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes']].concat(cr.slice(s,s+8)),{rowH:0.64,size:12,headSize:12,clip:120,cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020',fill:'FDE7EA'}:resultStyle(t)==='good'?{bold:true,color:'146C36',fill:'E6F4EA'}:null):null});}
  };
  if(isPackJob(r)&&r.pack.tools.length){const tl=r.pack.tools;for(let s=0;s<tl.length;s+=11){const sl=await frame(tl.length>11?`Tools (${Math.floor(s/11)+1} of ${Math.ceil(tl.length/11)})`:'Tools');ppTable(sl.shapes,sl.next++,0.4,1.1,[4.6,2.6,5.33],[['Tool','Size','Use']].concat(tl.slice(s,s+11).map(t=>[t.tool,t.size,t.use])),{rowH:0.48,size:14,clip:80});}}
+ const pptSubs=async(part,i,head)=>{
+  const subs=part.subParts||[];if(!subs.length)return;
+  for(let s=0;s<subs.length;s+=8){
+   const sl=await frame(`${head} · Sub-parts${subs.length>8?` (${Math.floor(s/8)+1})`:''}`,{size:20});
+   const chunk=subs.slice(s,s+8);
+   const rows=[['No.','Sub-part','Part no.','Qty','Condition','Note']].concat(chunk.map((x,k)=>[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,x.note]));
+   ppTable(sl.shapes,sl.next++,0.4,1.1,[1.0,3.4,2.0,0.9,1.9,3.33],rows,{rowH:0.62,size:13,headSize:12,clip:110,cellStyle:(t,c,k)=>c===4?{bold:true,color:COND_STYLE[subCond(chunk[k-1])].hex}:null});
+  }
+  for(const [k,x] of subs.entries()){if(!x.photos.length)continue;const lab=subLabel(i,k);await partPhotos(subPseudo(x),lab,COND_STYLE[subCond(x)],`${lab}  ${x.name||'Sub-part'}${subFacts(x)?`  ·  ${subFacts(x)}`:''}`);}
+ };
  // 4. Per part
  let prevSec='';
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];const cond=condFor(part);
   if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;const ss=newSlide('1F3A44');ss.title=true;ppShape(ss.shapes,ss.next++,0,PPH-0.12,PPW,0.12,null,{fill:'C6B15A',name:'Gold rule'});ppShape(ss.shapes,ss.next++,0.8,2.5,11.7,1.7,ppPara(clipText(part.section,120),{size:36,bold:true,color:'FFFFFF'}),{name:'Section',anchor:'ctr'});const ns=r.parts.filter(p=>p.section===part.section).length;ppShape(ss.shapes,ss.next++,0.8,4.25,11.7,0.6,ppPara(`${ns} step${ns===1?'':'s'}`,{size:16,color:'D9E2E5'}),{name:'Section steps',fit:false});}
-  const head=tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`;
-  if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,i,cond,head);continue;}
+  const head=(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`)+(clean(part.partNo)?`  \u00b7  ${clean(part.partNo)}`:'');
+  if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,String(i+1),cond,head);await pptSubs(part,i,head);continue;}
   const sl=await frame(head,{accent:cond.hex});
   if(tj&&part.skipped){
    badge(sl,0.5,1.3,3.2,cond);
    ppShape(sl.shapes,sl.next++,0.5,2.1,12.3,1.2,ppPara(`Not inspected${part.skipReason?': '+clipText(part.skipReason,200):''}`,{size:22,italic:true,color:'5A6468'}),{name:'Not inspected'});
+   await pptSubs(part,i,head);
    continue;
   }
   const d=tj&&part.drawingId?await exportDrawing(part.drawingId):null;
   const ms=measuresOf(part);const msOut=ms.filter(m=>/^OUT/i.test(measureResult(m)||'')).length;
   const facts=[`${part.photos.length} photo${part.photos.length===1?'':'s'}`];
-  if(tj&&part.partNos?.length)facts.unshift(`Part no${part.partNos.length===1?'':'s'}: ${part.partNos.join(', ')}`);
+  if(clean(part.partNo))facts.unshift(partNoLabel(part));
+  if(part.subParts?.length)facts.push(`${part.subParts.length} sub-part${part.subParts.length===1?'':'s'}`);
   if(ms.length)facts.push(`${ms.length} measurement${ms.length===1?'':'s'}${msOut?` · ${msOut} out of spec`:''}`);
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
   if(d){
@@ -2252,7 +2481,8 @@ async function buildPptx(raw,notify=()=>{}){
    ppShape(sl.shapes,sl.next++,0.45,2.05,12.4,4.0,ppParas(clipText(desc,1200),{size:20,after:8}),{name:'Description'});
    ppShape(sl.shapes,sl.next++,0.45,6.2,12.4,0.6,ppPara(facts.join('   ·   '),{size:14,color:'5C6B70'}),{name:'Facts'});
   }
-  await partPhotos(part,i,cond,head);
+  await partPhotos(part,String(i+1),cond,head);
+  await pptSubs(part,i,head);
  }
  if(isPackJob(r)){
   const resSt=(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020',fill:'FDE7EA'}:resultStyle(t)==='good'?{bold:true,color:'146C36',fill:'E6F4EA'}:null):null;
@@ -2326,14 +2556,14 @@ async function saveOriginals(){
   const folder=zip.folder(jobName);
   const used=new Set();
   let done=0,fallback=0,missing=0;
-  for(const [pi,part] of parts.entries()){
-   for(let j=0;j<part.photos.length;j++){
-    const m=await get('media',part.photos[j].id);
+  for(const e of photoEntries(parts)){
+   {const pi=e.pi,j=e.j;
+    const m=await get('media',e.ph.id);
     const src=photoSource(m);
     if(!src){missing++;done++;progress(`Skipping a missing photo (${done} of ${total})`,done,total+1);await tick();continue;}
     if(!src.isOriginal)fallback++;
     const ext=fileExt(src.mime,src.name);
-    const fname=`${photoStem(pi,j,parts.length,part.name,part.photos[j].prompt)}.${ext}`;
+    const fname=`${photoStem(pi,j,parts.length,e.name,e.prompt,e.sub)}.${ext}`;
     folder.file(fname,src.blob, {binary:true,compression:'STORE'});
     done++;
     progress(`Adding ${fname} (${done} of ${total})`,done,total+1);
@@ -2366,17 +2596,17 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  if(exported.pack){const keep=[];for(const a of exported.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);exported.pack.appendix=keep;}
  const templates=[];
  if(exported.templateId){const t=await get('settings',exported.templateId).catch(()=>null);if(t&&t.kind==='template'){const shaped=shapeTemplate(t);for(const st of shaped.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,addedDrawings)))st.drawingId='';}if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);shaped.pack.appendix=keep;}templates.push(shaped);}}
- zip.file('report.json',JSON.stringify({format:'stripnote',version:8,company:companyName,report:exported,templates},null,2));
+ zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates},null,2));
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
- for(const [pi,part] of exported.parts.entries()){
-  for(let j=0;j<part.photos.length;j++){
-   const m=await get('media',part.photos[j].id);
+ for(const e of photoEntries(exported.parts)){
+  {const pi=e.pi,j=e.j;
+   const m=await get('media',e.ph.id);
    if(!m?.blob)throw Error('Missing attachment; backup stopped.');
    zip.file(`media/${m.id}`,m.blob,{binary:true});
    if(m.thumb)zip.file(`thumbs/${m.id}`,m.thumb,{binary:true});
    let originalPath='';
-   if(m.original){originalPath=`Photos/${photoStem(pi,j,exported.parts.length,part.name,part.photos[j].prompt)}.${fileExt(m.originalMime||m.original.type,m.originalName)}`;zip.file(originalPath,m.original,{binary:true});}
+   if(m.original){originalPath=`Photos/${photoStem(pi,j,exported.parts.length,e.name,e.prompt,e.sub)}.${fileExt(m.originalMime||m.original.type,m.originalName)}`;zip.file(originalPath,m.original,{binary:true});}
    const meta={id:m.id,kind:m.kind,width:m.width,height:m.height,duration:m.duration,mime:m.blob.type,thumbMime:m.thumb?.type,originalMime:m.originalMime||m.original?.type,originalWidth:m.originalWidth,originalHeight:m.originalHeight,originalName:m.originalName||'',hasOriginal:!!m.original,originalPath};
    zip.file(`metadata/${m.id}.json`,JSON.stringify(meta));
    done++;notify(`Backing up photo ${done} of ${total}`,done,total+1);
@@ -2390,7 +2620,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  }
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
  if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
- zip.file('README.txt',`StripNote v10 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
+ zip.file('README.txt',`StripNote v11 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2 and 03.a.01_O-ring.jpg is the first photo of sub-part 3.a. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging ZIP… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function finishJob(){
@@ -2474,10 +2704,10 @@ async function importBackup(file){
    return;
   }
   const data=JSON.parse(rawText);
-  if(data?.format!=='stripnote'||![1,2,3,4,5,6,7,8].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
+  if(data?.format!=='stripnote'||![1,2,3,4,5,6,7,8,9].includes(data.version)||!data.report||typeof data.report!=='object')throw Error('Not a StripNote backup');
   const shaped=migrateReport(data.report);
   if(shaped.parts.length>5000)throw Error('Too many parts in backup');
-  const total=shaped.parts.reduce((n,p)=>n+p.photos.length+p.audio.length,0);
+  const total=shaped.parts.reduce((n,p)=>n+p.photos.length+p.audio.length+(p.subParts||[]).reduce((m,x)=>m+x.photos.length,0),0);
   if(total>5000)throw Error('Too many attachments in backup');
   shaped.id=uid();
   shaped.backedUpAt='';
@@ -2500,6 +2730,11 @@ async function importBackup(file){
     await tick();
    }
    part.photos=photos;part.audio=audio;
+   for(const sp of part.subParts||[]){
+    sp.id=uid();const sps=[];
+    for(const ph of sp.photos){const id=await restoreAttachment(z,ph.id,'photo',importedIds);sps.push({id,caption:String(ph.caption||'').slice(0,4000),prompt:''});progress(`Restoring attachment ${++done} of ${total}`,done,Math.max(total,1));await tick();}
+    sp.photos=sps;
+   }
    if(part.drawingId){try{part.drawingId=await restoreOnce(part.drawingId);}catch(e){console.warn('Drawing in backup could not be restored',e);part.drawingId='';}}
   }
   if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix){try{keep.push({...a,id:await restoreOnce(a.id)});}catch(e){console.warn('Appendix image skipped',e);}}shaped.pack.appendix=keep;}
@@ -2568,8 +2803,9 @@ async function restoreAttachment(z,old,kind,importedIds){
  return id;
 }
 function on(id,event,fn){$(id).addEventListener(event,e=>{Promise.resolve().then(()=>fn(e)).catch(fail);});}
-function openCamera(prepare,caption){
+function openCamera(prepare,caption,subId){
  if(startingMic||busy)return;
+ photoDest=subId||null;galleryForPart=null;
  listenCaptionForNextPhoto=!!caption;
  captureReady=Promise.resolve().then(()=>prepare());
  $('cameraFile').click();
@@ -2581,6 +2817,8 @@ on('theme','click',()=>{document.body.classList.toggle('light');localStorage.set
 on('persist','click',async()=>{await requestDurable(true);await storageInfo();});
 document.querySelectorAll('[data-job]').forEach(el=>el.addEventListener(el.type==='date'?'change':'input',()=>{if(!current)return;current[el.dataset.job]=el.value;if(el.dataset.job==='investigator')current.engineer=el.value;if(isPackJob(current)){document.querySelectorAll('[data-hfield]').forEach(h=>{if(headerKey(h.dataset.hfield)===el.dataset.job&&h!==el)h.value=el.value;});if(el.dataset.job==='signName')renderEndChecks();}updateHeading();persistReport().catch(()=>{});}));
 on('part','input',()=>{if(!editing)return;editing.name=$('part').value;updateEditorChrome();return persistReport();});
+on('partNo','input',()=>{if(!editing)return;editing.partNo=$('partNo').value.slice(0,120);return persistReport();});
+on('partNo','change',()=>{if(editing)renderEntries();});
 on('description','input',()=>{if(!editing)return;editing.description=$('description').value;return persistReport();});
 on('condition','change',()=>setCondition($('condition').value));
 on('condButtons','click',e=>{const b=e.target.closest('[data-cond]');if(b)return setCondition(b.dataset.cond);});
@@ -2592,58 +2830,105 @@ on('measureList','click',async e=>{const mic=e.target.closest('[data-mmic]');if(
 on('outdoor','click',()=>{const on=!document.body.classList.contains('outdoor');localStorage.setItem('stripnote-outdoor',on?'on':'off');applyOutdoor(on);});
 on('companyName','input',async()=>{companyName=$('companyName').value;await put('settings',{id:'company',name:companyName});});
 on('finishJob','click',()=>finishJob());
-for(const field of ['part','description'])on(field,'pointerdown',async()=>{if(session)await stopRecording();});
+for(const field of ['part','partNo','description'])on(field,'pointerdown',async()=>{if(session)await stopRecording();});
 on('addPart','click',addPart);
 on('rapid','click',()=>openCamera(async()=>{if(session)await stopRecording();await addPart();},false));
 on('camera','click',()=>openCamera(async()=>{},false));
-on('gallery','click',()=>$('galleryFile').click());
+function openGallery(subId,forPart){if(startingMic||busy)return;photoDest=subId||null;galleryForPart=forPart||null;$('galleryFile').click();}
+on('gallery','click',()=>openGallery(null));
 on('cameraFile','change',async e=>{
  const files=Array.from(e.target.files||[]);
  const caption=listenCaptionForNextPhoto;listenCaptionForNextPhoto=false;
- if(!files.length)return;
+ if(!files.length){photoDest=null;return;}
  await captureReady;
  const before=editing?.photos.length||0;
- await addPhotos(files);
- const added=editing&&editing.photos.length>before;
+ const res=await addPhotos(files);
+ const added=!res?.sub&&editing&&editing.photos.length>before;
+ if(res?.sub)return;
  if(caption&&added&&(clean(editing.name)||clean(editing.description)))await startRecording('speech',true,{mode:'caption',photoId:editing.photos[editing.photos.length-1].id});
  else await maybeAutoListen();
 });
-on('galleryFile','change',async e=>{listenCaptionForNextPhoto=false;await addPhotos(Array.from(e.target.files||[]));await maybeAutoListen();});
+on('galleryFile','change',async e=>{
+ listenCaptionForNextPhoto=false;const files=Array.from(e.target.files||[]);e.target.value='';
+ const forPart=galleryForPart;galleryForPart=null;
+ if(!files.length){photoDest=null;return;}
+ if(forPart&&(!editing||editing.id!==forPart)){photoDest=null;await editPart(forPart);if(!editing||editing.id!==forPart){toast('That part could not be opened.');return;}}
+ const res=await addPhotos(files);
+ if(!res?.sub)await maybeAutoListen();
+});
 on('doneEntry','click',finishEntry);
 on('nextPart','click',()=>openCamera(async()=>{await finishEntry();await addPart();},false));
 on('samePart','click',()=>openCamera(async()=>{await stopRecording();},true));
 on('entries','click',async e=>{
  let b=e.target.closest('[data-edit]');if(b)return editPart(b.dataset.edit);
  b=e.target.closest('[data-delete]');if(b)return deletePart(b.dataset.delete);
+ b=e.target.closest('[data-add-photos]');if(b)return openGallery(null,b.dataset.addPhotos);
+ b=e.target.closest('[data-move-to]');if(b)return movePartTo(b.dataset.moveTo,Number(b.dataset.pos));
+ b=e.target.closest('[data-pos-go]');if(b){const inp=$('entries').querySelector(`[data-pos-for="${CSS.escape(b.dataset.posGo)}"]`);const v=parseInt(inp?.value,10);if(!(v>=1&&v<=current.parts.length)){toast(`Type a number from 1 to ${current.parts.length}.`);inp?.focus();return;}return movePartTo(b.dataset.posGo,v);}
  b=e.target.closest('[data-move]');if(b){const i=current.parts.findIndex(p=>p.id===b.dataset.move);if(moveItem(current.parts,i,Number(b.dataset.dir))){await persistReport();renderEntries();if(editing)updateEditorChrome();}return;}
  if(e.target.matches('img[data-media]'))return viewPhoto(e.target.dataset.media);
 });
 on('entries','change',async e=>{const sel=e.target.closest('[data-merge]');if(!sel||!sel.value)return;const target=sel.value,source=sel.dataset.merge;sel.value='';await mergeParts(source,target);});
-on('entries','keydown',e=>{if(['Enter',' '].includes(e.key)&&e.target.matches('img[data-media]')){e.preventDefault();return viewPhoto(e.target.dataset.media);}});
-$('editorPhotos').addEventListener('input',e=>{
+on('entries','keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-pos-for]')){e.preventDefault();e.target.closest('.pos-row')?.querySelector('[data-pos-go]')?.click();return;}if(['Enter',' '].includes(e.key)&&e.target.matches('img[data-media]')){e.preventDefault();return viewPhoto(e.target.dataset.media);}});
+function captionInput(e){
  const input=e.target.closest('[data-caption-for]');if(!input||!editing)return;
- const photo=editing.photos.find(p=>p.id===input.dataset.captionFor);if(!photo)return;
+ const photo=findPhoto(input.dataset.captionFor)?.photo;if(!photo)return;
  photo.caption=input.value;persistReport().catch(()=>{});
-});
+}
+$('editorPhotos').addEventListener('input',captionInput);
 $('editorPhotos').addEventListener('pointerdown',e=>{if(e.target.closest('[data-caption-for]')&&session)stopRecording().catch(fail);});
-on('editorPhotos','click',async e=>{
- let b=e.target.closest('[data-remove-photo]');if(b)return removePhoto(b.dataset.removePhoto);
+async function photoAction(e){
+ let b=e.target.closest('[data-photo-opts]');if(b){const box=b.closest('.photo')?.querySelector('[data-opts-for]');if(!box)return;const open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',String(open));return;}
+ b=e.target.closest('[data-remove-photo]');if(b)return removePhoto(b.dataset.removePhoto);
  b=e.target.closest('[data-caption-mic]');if(b)return dictateCaption(b.dataset.captionMic);
  b=e.target.closest('[data-caption-redo]');if(b)return redoDictation('caption',b.dataset.captionRedo);
+ b=e.target.closest('[data-photo-move],[data-photo-copy]');if(b)return openPhotoPicker(b.dataset.photoMove||b.dataset.photoCopy,b.dataset.photoMove?'move':'copy');
  b=e.target.closest('[data-photo-up],[data-photo-down]');if(b&&editing){
   const id=b.dataset.photoUp||b.dataset.photoDown;
-  const index=editing.photos.findIndex(p=>p.id===id);
-  if(moveItem(editing.photos,index,b.dataset.photoUp?-1:1)){await persistReport();renderEditorMedia();renderEntries();}
+  const f=findPhoto(id);
+  if(f&&moveItem(f.list,f.index,b.dataset.photoUp?-1:1)){await persistReport();renderEditorMedia();renderEntries();}
   return;
  }
  if(e.target.matches('img[data-media]'))return viewPhoto(e.target.dataset.media);
-});
+}
+on('editorPhotos','click',photoAction);
 on('editorPhotos','change',async e=>{
  const lab=e.target.closest('[data-photo-prompt]');if(lab&&editing){const ph=editing.photos.find(p=>p.id===lab.dataset.photoPrompt);if(ph){ph.prompt=lab.value;await persistReport();renderEditorMedia();renderEntries();}return;}
- const sel=e.target.closest('[data-photo-move]');if(!sel||!sel.value)return;
- const photoId=sel.dataset.photoMove,target=sel.value;sel.value='';
- await movePhotoTo(photoId,target);
 });
+on('pickList','click',e=>{const b=e.target.closest('[data-pick-part]');if(!b||!pickState)return;const st=pickState;pickState=null;$('pickDialog').close();return placePhoto(st.photoId,st.mode,b.dataset.pickPart,b.dataset.pickSub||'');});
+on('pickCancel','click',()=>{pickState=null;$('pickDialog').close();});
+$('pickDialog').addEventListener('close',()=>{pickState=null;});
+// ---- v11 sub-parts ----
+function subOf(el){const row=el?.closest?.('[data-sub]');return row&&editing?(editing.subParts||[]).find(x=>x.id===row.dataset.sub):null;}
+$('subList').addEventListener('input',e=>{const inp=e.target.closest('[data-sfield]');if(inp&&editing){const x=subOf(inp);if(!x)return;x[inp.dataset.sfield]=inp.value.slice(0,inp.dataset.sfield==='note'?2000:inp.dataset.sfield==='qty'?40:300);persistReport().catch(()=>{});return;}captionInput(e);});
+$('subList').addEventListener('change',e=>{if(e.target.closest('[data-sfield]')&&editing)renderEntries();});
+$('subList').addEventListener('pointerdown',e=>{if(e.target.closest('input')&&session)stopRecording().catch(fail);});
+on('subList','click',async e=>{
+const x=subOf(e.target);
+let b=e.target.closest('[data-scond]');if(b&&x){x.condition=x.condition===b.dataset.scond?'':b.dataset.scond;const y=window.scrollY;renderSubParts();renderEntries();window.scrollTo(0,y);await persistReport();return;}
+b=e.target.closest('[data-sub-cam]');if(b&&x)return openCamera(async()=>{if(session)await stopRecording();},false,x.id);
+b=e.target.closest('[data-sub-gal]');if(b&&x)return openGallery(x.id);
+b=e.target.closest('[data-sub-up],[data-sub-down]');if(b&&x){const k=editing.subParts.indexOf(x);if(moveItem(editing.subParts,k,b.dataset.subUp?-1:1)){renderSubParts();renderEntries();await persistReport();}return;}
+b=e.target.closest('[data-sub-del]');if(b&&x){
+ if((x.photos.length||clean(x.name)||clean(x.note)||clean(x.partNo))&&!confirm(`Remove sub-part “${x.name||'Sub-part'}”${x.photos.length?` and its ${x.photos.length} photo${x.photos.length===1?'':'s'}`:''}?`))return;
+ await stopRecording();editing.subParts=editing.subParts.filter(o=>o!==x);await persistReport();
+ for(const ph of x.photos){await remove('media',ph.id).catch(()=>{});dropThumb(ph.id);}
+ renderSubParts();renderEntries();return;
+}
+return photoAction(e);
+});
+on('subQuick','click',async e=>{const b=e.target.closest('[data-subadd]');if(!b||!editing)return;const x=asSub({name:b.dataset.subadd});(editing.subParts||(editing.subParts=[])).push(x);renderSubParts();renderEntries();await persistReport();const card=$('subList').querySelector(`[data-sub="${CSS.escape(x.id)}"]`);card?.scrollIntoView({block:'nearest'});if(!x.name)card?.querySelector('[data-sfield="name"]')?.focus();});
+// ---- v11 report details: 4 fields shown, more from + Add field ----
+on('addField','change',async()=>{const v=$('addField').value;$('addField').value='';if(!v||!current)return;let focusId;
+if(v==='__custom'){const label=clean(prompt('Name of the new field (e.g. Pressure test no.):','')||'').slice(0,80);if(!label){renderDetails();return;}const f={id:uid(),label,value:''};current.customFields.push(f);focusId='cf-'+f.id;}
+else{if(!current.shownFields.includes(v))current.shownFields.push(v);focusId=v;}
+renderDetails();await persistReport();$(focusId)?.focus();});
+on('details','click',async e=>{const b=e.target.closest('[data-dremove],[data-cremove]');if(!b||!current)return;e.preventDefault();
+if(b.dataset.dremove){const k=b.dataset.dremove;if(clean(current[k])&&!confirm(`Remove ${OPT_FIELD_LABELS[k]} (“${clean(current[k])}”) from this report?`))return;current[k]='';if(k==='investigator')current.engineer='';current.shownFields=current.shownFields.filter(o=>o!==k);const inp=$(k);if(inp)inp.value='';}
+else{const f=current.customFields.find(o=>o.id===b.dataset.cremove);if(!f)return;if(clean(f.value)&&!confirm(`Remove ${f.label} (“${clean(f.value)}”) from this report?`))return;current.customFields=current.customFields.filter(o=>o!==f);}
+renderDetails();updateHeading();await persistReport();});
+$('customFields').addEventListener('input',e=>{const inp=e.target.closest('[data-custom-input]');if(!inp||!current)return;const f=current.customFields.find(o=>o.id===inp.dataset.customInput);if(!f)return;f.value=inp.value.slice(0,500);persistReport().catch(()=>{});});
+on('sortToggle','click',()=>{localStorage.setItem('stripnote-order',listNewestFirst()?'oldest':'newest');renderEntries();});
 on('audioList','click',async e=>{
  let b=e.target.closest('[data-play-audio]');
  if(b){const m=await get('media',b.dataset.playAudio);if(!m?.blob)return;const url=URL.createObjectURL(m.blob);audioURLs.add(url);const a=document.createElement('audio');a.controls=true;a.src=url;a.style.maxWidth='100%';b.replaceWith(a);a.play().catch(()=>{});return;}
@@ -2653,7 +2938,7 @@ on('audioList','click',async e=>{
 on('deleteReport','click',async()=>{
  if(!confirm('Permanently delete this report and all its photos and voice notes? Export a backup first.'))return;
  await stopRecording();
- const ids=[...new Set(current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...p.audio,...(p.drawingId?[p.drawingId]:[])]).concat(isPackJob(current)?current.pack.appendix.map(a=>a.id):[]))];
+ const ids=[...new Set(current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...(p.subParts||[]).flatMap(x=>x.photos.map(ph=>ph.id)),...p.audio,...(p.drawingId?[p.drawingId]:[])]).concat(isPackJob(current)?current.pack.appendix.map(a=>a.id):[]))];
  await remove('reports',current.id);
  for(const id of ids){await remove('media',id);dropThumb(id);}
  clearThumbs();current=null;editing=null;$('report').hidden=true;$('home').hidden=false;setDock(false);await listReports();
@@ -2675,7 +2960,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&session)st
 window.addEventListener('beforeunload',e=>{if(session||busy||startingMic||hasSaveError){e.preventDefault();e.returnValue='';}});
 
 // ---------- v7: templates and step-by-step jobs ----------
-function newPartObject(extra={}){return Object.assign({id:uid(),name:'',condition:'Not rated',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
+function newPartObject(extra={}){return Object.assign({id:uid(),name:'',partNo:'',subParts:[],condition:'Not rated',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
 function isTemplateJob(r){return !!(r&&(r.templateName||(Array.isArray(r.parts)&&r.parts.some(p=>p&&p.fromTemplate))));}
 function isStepMode(){return !!(current&&editing&&isTemplateJob(current));}
 function promptList(p){return p&&Array.isArray(p.prompts)&&p.prompts.length?p.prompts:[''];}
@@ -2755,7 +3040,7 @@ async function startFromTemplate(id){
  const r=blankReport();
  r.templateId=t.id;r.templateName=t.name;r.equipment=t.name;r.title=`${t.name} strip-down`;
  const dmap=new Map();
- for(const st of t.steps)r.parts.push(newPartObject({name:st.name||'Untitled step',prompts:[...st.prompts],drawingId:await copyDrawingOnce(st.drawingId,dmap),fromTemplate:true,...stepExtras(st,true)}));
+ for(const st of t.steps){const ex=stepExtras(st,true);r.parts.push(newPartObject({name:st.name||'Untitled step',prompts:[...st.prompts],drawingId:await copyDrawingOnce(st.drawingId,dmap),fromTemplate:true,...ex,partNo:ex.partNos.join(', ').slice(0,120)}));}
  if(t.pack){const pk=structuredClone(t.pack);for(const a of pk.appendix)a.id=await copyDrawingOnce(a.id,dmap);pk.appendix=pk.appendix.filter(a=>a.id);r.pack=pk;}
  r.stepIndex=0;current=r;tplEditing=null;
  await persistReport();
@@ -2772,7 +3057,7 @@ async function saveJobAsTemplate(){
  const dmap=new Map();
  for(const p of current.parts){
   const prompts=p.prompts.length?[...p.prompts]:[...new Set(p.photos.map(ph=>ph.prompt).filter(Boolean))];
-  t.steps.push({id:uid(),name:p.name||'Untitled part',prompts,drawingId:await copyDrawingOnce(p.drawingId,dmap),...stepExtras(p,false)});
+  t.steps.push({id:uid(),name:p.name||'Untitled part',prompts,drawingId:await copyDrawingOnce(p.drawingId,dmap),...stepExtras({...p,partNos:clean(p.partNo)?p.partNo.split(/\s*,\s*/).filter(Boolean):p.partNos},false)});
  }
  if(current.pack){const pk=structuredClone(current.pack);for(const a of pk.appendix)a.id=await copyDrawingOnce(a.id,dmap);pk.appendix=pk.appendix.filter(a=>a.id);pk.end.replaceNew.forEach(x=>x.done=false);pk.end.finalChecks.forEach(x=>x.done=false);t.pack=pk;}
  await saveTemplate(t);
@@ -3204,7 +3489,8 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
+ movePartTo,placePhoto,openPhotoPicker,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
+  parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
