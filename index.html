@@ -290,19 +290,34 @@ body.stepmode #checkCard{order:2}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 body.stepmode #nameRow{order:3}
 body.stepmode #subBox{order:4}
+.style-row label{margin-top:4px}
+.style-item{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin:8px 0}
+.style-item .sw{display:inline-flex;gap:3px}
+.style-item .sw i{width:22px;height:22px;border-radius:5px;display:block;border:1px solid #fff4}
+.style-item .nm{flex:1;min-width:0;overflow-wrap:anywhere}
+.style-item img{height:28px;max-width:60px;object-fit:contain;background:#fff;border-radius:4px;padding:2px}
+.style-dialog{max-width:520px;width:calc(100% - 24px)}
+.style-dialog input[type=color]{padding:4px;height:56px}
+.style-preview{border:1px solid #c9d0d4;border-radius:8px;overflow:hidden;background:#fff;color:#1f2a30;margin:8px 0;font-size:14px}
+.sp-band{display:flex;align-items:center;gap:10px;padding:10px;color:#fff;font-weight:700;min-height:56px}
+.sp-logo{background:#fff;border-radius:4px;padding:3px;display:inline-flex}
+.sp-logo img{height:34px;max-width:90px;object-fit:contain}
+.sp-h{font-weight:750;padding:10px 10px 2px}
+.sp-rule{height:2px;margin:0 10px 8px}
+.sp-th{color:#fff;font-weight:700;font-size:12px;padding:6px 10px;margin:0 10px 10px}
 </style></head><body>
-<header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="outdoor" class="small" type="button" aria-pressed="false" aria-label="Outdoor high-contrast mode">☀ Outdoor</button><button id="theme" class="small" type="button" aria-label="Switch dark or light theme">Theme</button></div></div></header>
+<header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="theme" class="small" type="button" aria-label="Display mode: Dark. Tap for Light.">◐ Dark</button></div></div></header>
 <main>
 <section id="home">
 <div class="card hero"><div class="tag">Field record</div><h1>Record the strip-down while the part is in your hands.</h1><p class="lead muted">Photograph a part, dictate the name and the damage, then add more photos of that same part. Word and PDF reports are built on this phone.</p><button id="newReport" class="primary" type="button">New report</button></div>
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
-<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Shown on Word and PDF report headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
+<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
 <p class="ver">StripNote v11</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
-<details class="card" id="details" open><summary>Report details</summary>
+<details class="card" id="details" open><summary>Report details</summary><div class="style-row"><label for="reportStyle">Report style</label><select id="reportStyle" aria-label="Report style: colours and logo used in Word, PDF and Slides"></select></div>
 <div id="packHeader" class="grid" hidden></div>
 <div class="grid" id="detailGrid">
 <div data-dfield="equipment"><label for="equipment">Equipment</label><input id="equipment" data-job="equipment" placeholder="Tool, make, model"></div>
@@ -372,12 +387,12 @@ body.stepmode #subBox{order:4}
 </main>
 <div id="toast" role="status" hidden></div>
 <dialog id="progressDialog"><h2 id="progressTitle">Preparing export</h2><p id="progressText" role="status">Please keep this screen open.</p><progress id="progressBar" value="0" max="100"></progress><p class="muted">Large reports take a moment. Keep the app in the foreground.</p></dialog>
-<dialog id="newJobDialog"><h2>New report</h2><p class="muted">Pick a template to go step by step, or start a free-form report.</p><div id="newJobList"></div><button id="newJobBlank" type="button" style="width:100%;margin-top:8px">Free-form report (no template)</button><button id="newJobCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
+<dialog id="newJobDialog"><h2>New report</h2><label for="newJobStyle" style="margin-top:0">Report style</label><select id="newJobStyle" aria-label="Report style for the new report"></select><p class="muted">Pick a template to go step by step, or start a free-form report.</p><div id="newJobList"></div><button id="newJobBlank" type="button" style="width:100%;margin-top:8px">Free-form report (no template)</button><button id="newJobCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="stepsDialog" class="steps-dialog"><div class="row between"><h2 style="margin:0">Steps</h2><button id="stepsClose" class="small" type="button">Close</button></div><p class="status" id="stepsSummary"></p><div id="stepsList"></div><button id="stepsToReport" type="button" style="width:100%">Go to report</button></dialog>
 <dialog id="skipDialog"><h2>Skip this step?</h2><p class="muted" id="skipStepName"></p><label for="skipReason">Reason (optional)</label><input id="skipReason" placeholder="e.g. Not fitted"><div class="toolbar"><button type="button" class="small" data-skip-reason="Not fitted">Not fitted</button><button type="button" class="small" data-skip-reason="Not stripped">Not stripped</button><button type="button" class="small" data-skip-reason="Seized">Seized</button></div><p class="status">It prints as “Not inspected” with the reason.</p><div class="dialog-actions"><button id="skipCancel" type="button">Cancel</button><button id="skipConfirm" class="primary" type="button">Skip step</button></div></dialog>
 <dialog id="cropDialog"><h2>Crop the drawing</h2><p class="muted">Drag a box round the part, then Use selection. Or use the whole image.</p><div class="crop-wrap"><canvas id="cropCanvas" width="300" height="200"></canvas></div><div class="dialog-actions"><button id="cropWhole" type="button">Whole image</button><button id="cropUse" class="primary" type="button" disabled>Use selection</button></div><button id="cropCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <input id="drawingFile" type="file" accept="image/*" hidden>
-<dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
+<dialog id="styleDialog" class="style-dialog"><h2 id="styleDlgTitle" style="margin-top:0">New report style</h2><label for="styleName">Style name</label><input id="styleName" maxlength="60" placeholder="e.g. Client A" autocomplete="off"><div class="grid"><div><label for="styleAccent">Accent (rule lines)</label><input id="styleAccent" type="color" value="#1f3a44"></div><div><label for="styleHeading">Headings &amp; table heads</label><input id="styleHeading" type="color" value="#1f3a44"></div></div><p class="status" id="styleContrast"></p><div id="stylePreview" class="style-preview" aria-hidden="true"><div class="sp-band"><span class="sp-logo" id="styleLogoBox" hidden><img id="styleLogoImg" alt=""></span><span class="sp-title">Equipment strip-down report</span></div><div class="sp-h">2.1 Part heading</div><div class="sp-rule"></div><div class="sp-th">No. · Part · Condition</div></div><div class="toolbar"><button id="styleLogoPick" type="button">Choose logo</button><button id="styleLogoRemove" class="small danger" type="button" hidden>Remove logo</button></div><input id="styleLogoFile" type="file" accept="image/*" hidden><div class="toolbar"><button id="styleSave" class="primary" type="button" style="flex:1">Save style</button><button id="styleCancel" type="button">Cancel</button></div><button id="styleDelete" class="small danger" type="button" style="width:100%" hidden>Delete this style</button></dialog><dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
 <script>
 /*!
@@ -921,10 +936,11 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:7,templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
+ return {id:String(src.id||uid()),schema:7,styleId:typeof src.styleId==='string'?src.styleId.slice(0,80):'',templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
 }
 function isCurrentReport(r){
  if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
+ if(typeof r.styleId!=='string')return false;
  if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields))return false;
  if(!r.parts.every(p=>typeof p?.partNo==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.photos)&&typeof x.condition==='string')))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
@@ -948,7 +964,7 @@ async function migrateStoredReports(){
  }
 }
 function photoCount(parts){return (parts||[]).reduce((n,p)=>n+(p.photos?.length||0)+(Array.isArray(p.subParts)?p.subParts.reduce((m,x)=>m+(x?.photos?.length||0),0):0),0);}
-function blankReport(){return migrateReport({id:uid(),title:'',equipment:'',reference:'',client:'',site:'',date:day(),investigator:'',revision:'',parts:[],updated:new Date().toISOString()});}
+function blankReport(){return migrateReport({id:uid(),styleId:lastStyleId(),title:'',equipment:'',reference:'',client:'',site:'',date:day(),investigator:'',revision:'',parts:[],updated:new Date().toISOString()});}
 
 async function init(){
  db=await new Promise((resolve,reject)=>{const r=indexedDB.open('stripnote-v1',2);r.onupgradeneeded=()=>{const base=r.result;if(!base.objectStoreNames.contains('reports'))base.createObjectStore('reports',{keyPath:'id'});if(!base.objectStoreNames.contains('media'))base.createObjectStore('media',{keyPath:'id'});if(!base.objectStoreNames.contains('settings'))base.createObjectStore('settings',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
@@ -957,9 +973,9 @@ async function init(){
  await showLogoPreview();
  await listReports();
  await renderTemplateList().catch(console.warn);
+ await renderStyleList().catch(console.warn);
  await storageInfo();
- if(localStorage.getItem('stripnote-theme')==='light')document.body.classList.add('light');
- applyOutdoor(localStorage.getItem('stripnote-outdoor')==='on');
+ applyMode(currentMode());
  requestDurable(false).catch(()=>{});
  if('serviceWorker'in navigator&&location.protocol!=='file:'){
   const hadController=!!navigator.serviceWorker.controller;let reloaded=false;
@@ -989,7 +1005,12 @@ async function requestDurable(tell){
  return ok;
 }
 async function loadCompany(){try{const rec=await get('settings','company');companyName=String(rec?.name||'');}catch(e){companyName='';}const el=$('companyName');if(el)el.value=companyName;}
-function applyOutdoor(on){document.body.classList.toggle('outdoor',!!on);const b=$('outdoor');if(b)b.setAttribute('aria-pressed',String(!!on));const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',on?'#ffffff':(document.body.classList.contains('light')?'#f3f6f6':'#10161a'));}
+// v11b: one display-mode button cycles Dark → Light → Outdoor (high contrast) and remembers the choice.
+const MODES=['dark','light','outdoor'],MODE_LABEL={dark:'◐ Dark',light:'☼ Light',outdoor:'◼ Outdoor'},MODE_NAME={dark:'Dark',light:'Light',outdoor:'Outdoor (high contrast)'};
+function currentMode(){const m=localStorage.getItem('stripnote-mode');if(MODES.includes(m))return m;if(localStorage.getItem('stripnote-outdoor')==='on')return 'outdoor';return localStorage.getItem('stripnote-theme')==='light'?'light':'dark';}
+function applyMode(m){if(!MODES.includes(m))m='dark';document.body.classList.toggle('light',m==='light');document.body.classList.toggle('outdoor',m==='outdoor');const b=$('theme');if(b){b.textContent=MODE_LABEL[m];const nx=MODES[(MODES.indexOf(m)+1)%3];b.setAttribute('aria-label',`Display mode: ${MODE_NAME[m]}. Tap for ${MODE_NAME[nx]}.`);}const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',m==='outdoor'?'#ffffff':m==='light'?'#f3f6f6':'#10161a');}
+function setMode(m){localStorage.setItem('stripnote-mode',m);localStorage.setItem('stripnote-theme',m==='light'?'light':'dark');localStorage.setItem('stripnote-outdoor',m==='outdoor'?'on':'off');applyMode(m);}
+function applyOutdoor(on){setMode(on?'outdoor':(document.body.classList.contains('light')?'light':'dark'));}
 function backupState(r){
  if(!r.backedUpAt)return {ok:false,text:'Not backed up yet'};
  const changed=Date.parse(r.updated||0)-Date.parse(r.backedUpAt)>3000;
@@ -1020,8 +1041,11 @@ async function listReports(){
   return `<button class="report-button" type="button" data-open="${esc(r.id)}"><span><strong>${esc(r.title||r.equipment||'Untitled report')}</strong><br><small>${esc(reportMeta(r))}<br>${esc(r.date||'No date')} · ${parts.length} part${parts.length===1?'':'s'} · ${photos} photo${photos===1?'':'s'}</small>${(()=>{const b=backupState(r);return `<span class="backup-state ${b.ok?'':'bad'}">${b.ok?'✓':'⚠'} ${esc(b.text)}</span>`;})()}</span><span>→</span></button>`;
  }).join(''):'<p class="muted">No reports yet. Start one when the job starts.</p>';
 }
+function styleOptions(sel){const opts=[STANDARD_STYLE,...stylesCache];const v=opts.some(o=>o.id===sel)?sel:'standard';return opts.map(o=>`<option value="${esc(o.id)}" ${o.id===v?'selected':''}>${esc(o.name)}${o.builtIn?' (built in)':''}</option>`).join('');}
 async function newReport(){
- const list=await getTemplates();
+ const list=await getTemplates();await getStyles().catch(()=>[]);
+ $('newJobStyle').innerHTML=styleOptions(lastStyleId());
+ if(!list.length){$('newJobList').innerHTML='';if(stylesCache.length){$('newJobDialog').showModal();return;}}
  if(list.length){$('newJobList').innerHTML=list.map(t=>`<button type="button" class="report-button" data-newjob="${esc(t.id)}"><span><strong>▶ ${esc(t.name)}</strong><small>${t.steps.length} step${t.steps.length===1?'':'s'}, in order</small></span><span>→</span></button>`).join('');$('newJobDialog').showModal();return;}
  await startBlank();
 }
@@ -1124,6 +1148,7 @@ async function movePartTo(id,n){
 function detailVisible(k){return DEFAULT_FIELDS.includes(k)||(current.shownFields||[]).includes(k)||!!clean(current[k]);}
 function renderDetails(){
  if(!current)return;
+ if($('reportStyle'))$('reportStyle').innerHTML=styleOptions(current.styleId||'standard');
  const packKeys=new Set(isPackJob(current)?current.pack.headerFields.map(headerKey).filter(Boolean):[]);
  document.querySelectorAll('#detailGrid [data-dfield]').forEach(el=>{const k=el.dataset.dfield;el.hidden=packKeys.has(k)||!detailVisible(k);});
  $('customFields').innerHTML=(current.customFields||[]).map(f=>`<div data-custom="${esc(f.id)}"><div class="field-head dhead"><label for="cf-${esc(f.id)}">${esc(f.label)}</label><button type="button" class="redo dx" data-cremove="${esc(f.id)}" aria-label="Remove ${esc(f.label)}">✕</button></div><input id="cf-${esc(f.id)}" data-custom-input="${esc(f.id)}" value="${esc(f.value)}"></div>`).join('');
@@ -1375,7 +1400,7 @@ async function saveLogoFile(file){
  toast('Logo saved on this phone. It is not uploaded.');
 }
 async function prepareLogo(max=800){
- const rec=await get('settings','logo');
+ const rec=exportStyle.builtIn?await get('settings','logo'):exportStyle.logo;
  if(!rec?.blob)return null;
  let blob=rec.blob,width=rec.width||0,height=rec.height||0;
  const mime=String(rec.mime||blob.type||'');
@@ -1814,6 +1839,30 @@ function findingText(part){const d=capSentences(part.description);if(d)return d;
 async function exportDrawing(id){if(!id)return null;const m=await get('media',id);if(!m?.blob)return null;return {blob:m.blob,width:m.width||1,height:m.height||1};}
 function progress(label,done,total){$('progressText').textContent=label;$('progressBar').value=total?Math.round(done/total*100):0;}
 const tick=()=>new Promise(r=>setTimeout(r,0));
+// v11b: report styles. "Standard" is built in (the classic look + the Company logo setting).
+// Users add their own on the phone (name, accent, heading/table colour, optional logo); stored in IndexedDB settings only.
+const STYLE_PREFIX='style:';
+const STANDARD_STYLE=Object.freeze({id:'standard',name:'Standard',accent:'1F3A44',heading:'1F3A44',logo:null,builtIn:true});
+let exportStyle=STANDARD_STYLE,stylesCache=[];
+function normHex(h,f){const m=String(h||'').replace('#','').trim();return /^[0-9a-f]{6}$/i.test(m)?m.toUpperCase():f;}
+function shapeStyle(x){const lg=x?.logo;return {id:String(x?.id||''),kind:'reportStyle',name:clean(x?.name).slice(0,60)||'Untitled style',accent:normHex(x?.accent,'1F3A44'),heading:normHex(x?.heading,'1F3A44'),logo:lg&&lg.blob instanceof Blob&&lg.blob.size?{blob:lg.blob,mime:String(lg.mime||lg.blob.type||'image/png'),width:Number(lg.width)||0,height:Number(lg.height)||0,name:String(lg.name||'')}:null,updated:String(x?.updated||'')};}
+async function getStyles(){const all=await getAll('settings');stylesCache=all.filter(x=>x&&x.kind==='reportStyle'&&String(x.id).startsWith(STYLE_PREFIX)).map(shapeStyle).sort((a,b)=>a.name.localeCompare(b.name));return stylesCache;}
+async function styleById(id){if(!id||id==='standard')return STANDARD_STYLE;const x=await get('settings',id).catch(()=>null);return x&&x.kind==='reportStyle'?shapeStyle(x):STANDARD_STYLE;}
+async function useStyle(r){exportStyle=await styleById(r?.styleId);return exportStyle;}
+function lastStyleId(){return localStorage.getItem('stripnote-style-last')||'standard';}
+function rememberStyle(id){localStorage.setItem('stripnote-style-last',id||'standard');}
+function RN(){return exportStyle.heading;}
+function RA(){return exportStyle.accent;}
+const hexRgb=h=>[0,2,4].map(i=>parseInt(String(h).slice(i,i+2),16));
+function RNR(){return hexRgb(RN());}
+function RAR(){return hexRgb(RA());}
+function RC(){return exportStyle.builtIn?'C6B15A':'FFFFFF';}
+function ruleColor(){return exportStyle.builtIn?'C6B15A':RA();}
+function relLum(h){return hexRgb(normHex(h,'000000')).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4;}).reduce((a,v,i)=>a+v*[0.2126,0.7152,0.0722][i],0);}
+function contrastRatio(a,b){const x=relLum(a),y=relLum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);}
+// v11b: photo pairing shared by Word, PDF and Slides – a photo is "portrait" when clearly taller than wide.
+function isPortraitImg(img){return !!img&&img.height>img.width*1.05;}
+function RAR(){return hexRgb(RA());}
 async function exportPhoto(id){
  const m=await get('media',id);
  if(!m?.blob)throw Error('A saved photo is missing; export stopped rather than omitting evidence.');
@@ -1864,6 +1913,7 @@ async function buildDocx(raw,notify=()=>{}){
  const zip=new JSZip();
  const TW=9866, labelW=2500, valueW=TW-labelW;
  const title=reportHeading(r);
+ await useStyle(r);
  const logo=await prepareLogo();
  let logoRel='';
  if(logo){
@@ -1871,31 +1921,31 @@ async function buildDocx(raw,notify=()=>{}){
   logoRel=`<Relationship Id="rIdLogo" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/logo.${logo.ext}"/>`;
  }
  let body='';
- const headInner=(companyName?docxPara(docxRun(companyName.toUpperCase(),{size:16,color:'C6B15A',bold:true}),'<w:spacing w:after="40"/>'):'')+docxPara(docxRun(REPORT_KIND,{size:16,color:'FFFFFF'}),'<w:spacing w:after="60"/>')+docxPara(docxRun(title,{size:36,bold:true,color:'FFFFFF'}),'<w:spacing w:after="0"/>');
+ const headInner=(companyName?docxPara(docxRun(companyName.toUpperCase(),{size:16,color:RC(),bold:true}),'<w:spacing w:after="40"/>'):'')+docxPara(docxRun(REPORT_KIND,{size:16,color:'FFFFFF'}),'<w:spacing w:after="60"/>')+docxPara(docxRun(title,{size:36,bold:true,color:'FFFFFF'}),'<w:spacing w:after="0"/>');
  let titleHead=headInner;
  if(logo){
   const {cx,cy}=fitEmu(logo.width,logo.height,1512000,864000);
   const logoTwips=Math.max(1400,Math.round(cx/635)+200);
   const textTwips=Math.max(4000,TW-logoTwips);
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
-  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'1F3A44',valign:'center'})}${docxCell(headInner,textTwips,{fill:'1F3A44',valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
+  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'FFFFFF',valign:'center'})}${docxCell(headInner,textTwips,{fill:RN(),valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
  }
- let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:'1F3A44',span:2})});
+ let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:RN(),span:2})});
  for(const [k,v] of jobRows(r)){
   titleRows+=docxRow({html:docxCell(docxPara(docxRun(k.toUpperCase(),{size:16,color:'5C6B70',bold:true}),'<w:spacing w:before="40" w:after="40"/>'),labelW,{fill:'F4F7F8'})+docxCell(docxPara(docxRun(v||'—',{size:21,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),valueW)});
  }
- body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',8)}<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${labelW}"/><w:gridCol w:w="${valueW}"/></w:tblGrid>${titleRows}</w:tbl>`;
+ body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),8)}<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${labelW}"/><w:gridCol w:w="${valueW}"/></w:tblGrid>${titleRows}</w:tbl>`;
  body+=docxPara('', '<w:spacing w:before="200" w:after="0"/>');
- const H1=t=>docxPara(docxRun(t,{size:28,bold:true,color:'1F3A44'}),'<w:pStyle w:val="Heading1"/><w:keepNext/><w:spacing w:before="300" w:after="100"/>');
- const H2=t=>docxPara(docxRun(t,{size:22,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="160" w:after="80"/>');
+ const H1=t=>docxPara(docxRun(t,{size:28,bold:true,color:RN()}),'<w:pStyle w:val="Heading1"/><w:keepNext/><w:spacing w:before="300" w:after="100"/>');
+ const H2=t=>docxPara(docxRun(t,{size:22,bold:true,color:RN()}),'<w:keepNext/><w:spacing w:before="160" w:after="80"/>');
  const PARAS=t=>paragraphsOf(t).map(x=>docxPara(docxRun(x,{size:21,color:'1F2A30'}),'<w:spacing w:after="120"/>')).join('');
- const simpleTable=(widths,head,rows,cellStyle=()=>null)=>{let h=docxRow({header:true,html:head.map((t,i)=>docxCell(docxPara(docxRun(t,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),widths[i],{fill:'1F3A44'})).join('')});rows.forEach((row,k)=>{h+=docxRow({html:row.map((t,i)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30',...(cellStyle(t,i)||{})}),'<w:spacing w:before="50" w:after="50"/>'),widths[i],{fill:k%2?'F7F9FA':'FFFFFF'})).join('')});});return `<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${h}</w:tbl>`;};
+ const simpleTable=(widths,head,rows,cellStyle=()=>null)=>{let h=docxRow({header:true,html:head.map((t,i)=>docxCell(docxPara(docxRun(t,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),widths[i],{fill:RN()})).join('')});rows.forEach((row,k)=>{h+=docxRow({html:row.map((t,i)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30',...(cellStyle(t,i)||{})}),'<w:spacing w:before="50" w:after="50"/>'),widths[i],{fill:k%2?'F7F9FA':'FFFFFF'})).join('')});});return `<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${h}</w:tbl>`;};
  let sec=0;
  if(clean(r.scope))body+=H1(`${++sec}. Scope`)+PARAS(r.scope);
  body+=H1(`${++sec}. Summary`)+PARAS(r.summary);
  body+=H2('Condition of parts');
  const cols=[900,6166,1800,1000];
- const summaryHead=[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:'1F3A44'})).join('');
+ const summaryHead=[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
  let summary=docxRow({header:true,html:summaryHead});
  if(!r.parts.length){
   summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:4})});
@@ -1922,18 +1972,31 @@ async function buildDocx(raw,notify=()=>{}){
  let rels='', n=0, dn=0, prevSec='';
  const tj=isTemplateJob(r);
  const docxPhotos=async(part,label)=>{
-  // v9: one large photo per row at full content width; the picture keeps with its caption.
-  for(let j=0;j<part.photos.length;j++){
-   const img=await exportPhoto(part.photos[j].id);
-   n++;
+  // v11b: landscape photos full width; consecutive portraits paired side by side in a borderless 2-column table
+  // (row cannot split, caption in the same cell) so a pair and its captions always stay on one page.
+  const ph=part.photos,imgs=[],ids=[];
+  const capOf=j=>figureCaption(label,j+1,ph[j].caption,part.name,ph[j].prompt);
+  for(let j=0;j<ph.length;j++){
+   const img=await exportPhoto(ph[j].id);n++;ids.push(n);imgs.push(img);
    zip.file(`word/media/photo${n}.jpg`,await img.blob.arrayBuffer());
-   const {cx,cy}=fitEmu(img.width,img.height,6264000,4000000);
    rels+=`<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/photo${n}.jpg"/>`;
-   const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
-   body+=drawingXml(n,cx,cy,cap).replace('<w:pPr><w:jc w:val="center"/><w:spacing w:before="60" w:after="40"/>','<w:pPr><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="160" w:after="40"/>');
+   notify(`Preparing photo ${n} of ${totalPhotos}`,n,totalPhotos+1);await tick();
+  }
+  const half=Math.floor(TW/2),cellMax=(half-180)*635,PMAX=5300000;
+  for(let j=0;j<ph.length;){
+   if(isPortraitImg(imgs[j])){
+    const items=(j+1<ph.length&&isPortraitImg(imgs[j+1]))?[j,j+1]:[j];
+    const cell=k=>{const {cx,cy}=fitEmu(imgs[k].width,imgs[k].height,cellMax,PMAX);return drawingXml(ids[k],cx,cy,capOf(k)).replace('<w:pPr><w:jc w:val="center"/><w:spacing w:before="60" w:after="40"/>','<w:pPr><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="0" w:after="40"/>')+docxPara(docxRun(capOf(k),{size:18,italic:true,color:'5C6B70'}),'<w:keepLines/><w:jc w:val="center"/><w:spacing w:before="20" w:after="60"/>');};
+    const cells=[0,1].map(c=>docxCell(items[c]!==undefined?cell(items[c]):'<w:p/>',c?TW-half:half,{valign:'bottom'})).join('');
+    body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('FFFFFF',0,['none'])}<w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="90" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${half}"/><w:gridCol w:w="${TW-half}"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>${cells}</w:tr></w:tbl>`;
+    body+=docxPara('','<w:spacing w:before="0" w:after="100" w:line="120" w:lineRule="exact"/>');// keeps tables apart (Word merges touching tables)
+    j+=items.length;continue;
+   }
+   const {cx,cy}=fitEmu(imgs[j].width,imgs[j].height,6264000,4000000);
+   const cap=capOf(j);
+   body+=drawingXml(ids[j],cx,cy,cap).replace('<w:pPr><w:jc w:val="center"/><w:spacing w:before="60" w:after="40"/>','<w:pPr><w:keepNext/><w:keepLines/><w:jc w:val="center"/><w:spacing w:before="160" w:after="40"/>');
    body+=docxPara(docxRun(cap,{size:18,italic:true,color:'5C6B70'}),'<w:keepLines/><w:jc w:val="center"/><w:spacing w:before="20" w:after="160"/>');
-   notify(`Preparing photo ${n} of ${totalPhotos}`,n,totalPhotos+1);
-   await tick();
+   j++;
   }
  };
  const docxCondDesc=(part,cond)=>{
@@ -1944,12 +2007,12 @@ async function buildDocx(raw,notify=()=>{}){
    body+=docxPara(docxRun(capSentences(text),{size:21,color:'1F2A30'}),pr);
   });
   const ms=measuresOf(part);
-  if(ms.length){body+=docxPara(docxRun('Measurements',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="60" w:after="60"/>');body+=simpleTable([3066,1300,1400,1300,1300,1500],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020'}:i===5&&t==='In spec'?{bold:true,color:'146C36'}:null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}
+  if(ms.length){body+=docxPara(docxRun('Measurements',{size:18,bold:true,color:RN()}),'<w:keepNext/><w:spacing w:before="60" w:after="60"/>');body+=simpleTable([3066,1300,1400,1300,1300,1500],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),(t,i)=>i===5&&/^OUT/.test(t)?{bold:true,color:'B00020'}:i===5&&t==='In spec'?{bold:true,color:'146C36'}:null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}
  };
  const docxSubs=async(part,i)=>{
   for(const [k,x] of (part.subParts||[]).entries()){
    const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
-   body+=docxPara(docxRun(`${lab}  ${x.name||'Sub-part'}`,{size:23,bold:true,color:'1F3A44'})+(facts?docxRun(`   ·  ${facts}`,{size:19,color:'5C6B70'}):''),`<w:keepNext/><w:keepLines/><w:ind w:left="284"/><w:spacing w:before="220" w:after="40"/><w:pBdr><w:left w:val="single" w:sz="24" w:space="8" w:color="${sc.hex}"/></w:pBdr>`);
+   body+=docxPara(docxRun(`${lab}  ${x.name||'Sub-part'}`,{size:23,bold:true,color:RN()})+(facts?docxRun(`   ·  ${facts}`,{size:19,color:'5C6B70'}):''),`<w:keepNext/><w:keepLines/><w:ind w:left="284"/><w:spacing w:before="220" w:after="40"/><w:pBdr><w:left w:val="single" w:sz="24" w:space="8" w:color="${sc.hex}"/></w:pBdr>`);
    body+=docxPara(docxRun(sc.label,{size:19,bold:true,color:sc.hex})+(clean(x.note)?docxRun(`  –  ${capSentences(clean(x.note))}`,{size:21,color:'1F2A30'}):''),`${x.photos.length?'<w:keepNext/>':''}<w:ind w:left="284"/><w:spacing w:before="20" w:after="100"/>`);
    if(x.photos.length)await docxPhotos(subPseudo(x),lab);
   }
@@ -1957,9 +2020,9 @@ async function buildDocx(raw,notify=()=>{}){
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
-  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;body+=docxPara(docxRun(part.section,{size:26,bold:true,color:'FFFFFF'}),'<w:keepNext/><w:shd w:val="clear" w:color="auto" w:fill="1F3A44"/><w:spacing w:before="360" w:after="60"/>');}
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;body+=docxPara(docxRun(part.section,{size:26,bold:true,color:'FFFFFF'}),'<w:keepNext/><w:shd w:val="clear" w:color="auto" w:fill="'+RN()+'"/><w:spacing w:before="360" w:after="60"/>');}
   const headingPr=`<w:pStyle w:val="Heading1"/><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="40"/><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="1" w:color="${cond.hex}"/></w:pBdr>`;
-  body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:26,bold:true,color:'1F3A44'})+(partNoLabel(part)?docxRun(`   ·  ${partNoLabel(part)}`,{size:20,color:'5C6B70'}):''),headingPr);
+  body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:26,bold:true,color:RN()})+(partNoLabel(part)?docxRun(`   ·  ${partNoLabel(part)}`,{size:20,color:'5C6B70'}):''),headingPr);
   if(!tj){docxCondDesc(part,cond);await docxPhotos(part,String(i+1));await docxSubs(part,i);continue;}
   if(part.skipped){body+=docxPara(docxRun(`Not inspected${part.skipReason?': '+part.skipReason:''}`,{size:21,italic:true,color:'5A6468'}),'<w:spacing w:before="80" w:after="160"/>');await docxSubs(part,i);continue;}
   const d=part.drawingId?await exportDrawing(part.drawingId):null;
@@ -1973,7 +2036,7 @@ async function buildDocx(raw,notify=()=>{}){
   }
   await docxPhotos(part,String(i+1));
   docxCondDesc(part,cond);
-  {const cr=checkTableRows(part,r);if(cr.length){body+=docxPara(docxRun('Check & record',{size:18,bold:true,color:'1F3A44'}),'<w:keepNext/><w:spacing w:before="80" w:after="60"/>');body+=simpleTable([2300,2700,800,1500,1366,1200],['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes'],cr,(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}}
+  {const cr=checkTableRows(part,r);if(cr.length){body+=docxPara(docxRun('Check & record',{size:18,bold:true,color:RN()}),'<w:keepNext/><w:spacing w:before="80" w:after="60"/>');body+=simpleTable([2300,2700,800,1500,1366,1200],['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes'],cr,(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}}
   await docxSubs(part,i);
  }
  if(isPackJob(r)){
@@ -2002,14 +2065,14 @@ async function buildDocx(raw,notify=()=>{}){
   const logoTwips=Math.max(1100,Math.round(cx/635)+160);
   const mid=Math.max(2000,TW-logoTwips-2266);
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
-  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${hdrNs}><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',8,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${mid}"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="${logoTwips}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${logoPara}</w:tc><w:tc><w:tcPr><w:tcW w:w="${mid}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:'1F3A44'}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
+  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${hdrNs}><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${mid}"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="${logoTwips}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${logoPara}</w:tc><w:tc><w:tcPr><w:tcW w:w="${mid}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:RN()}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
   zip.file('word/_rels/header1.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${logoRel}</Relationships>`);
  }else{
-  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',8,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="7600"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="7600" w:type="dxa"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:'1F3A44'}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
+  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="7600"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="7600" w:type="dxa"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:RN()}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
  }
  const pageField=instr=>`<w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/></w:rPr><w:instrText xml:space="preserve"> ${instr} </w:instrText></w:r><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>`;
- const footer=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('1F3A44',8,['top'])}</w:tblPr><w:tblGrid><w:gridCol w:w="6200"/><w:gridCol w:w="3666"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="6200" w:type="dxa"/></w:tcPr>${docxPara(docxRun(footLeft,{size:16,color:'5C6B70'}),'<w:spacing w:before="60" w:after="0"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="3666" w:type="dxa"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="60" w:after="0"/></w:pPr><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:t xml:space="preserve">Page </w:t></w:r>${pageField('PAGE')}<w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:t xml:space="preserve"> of </w:t></w:r>${pageField('NUMPAGES')}</w:p></w:tc></w:tr></w:tbl></w:ftr>`;
- const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr>${FONT_TAG}<w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="1F2A30"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/><w:widowControl/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:rPr>${FONT_TAG}<w:sz w:val="21"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="80"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:sz w:val="32"/><w:color w:val="1F3A44"/>${FONT_TAG}</w:rPr></w:style></w:styles>`;
+ const footer=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['top'])}</w:tblPr><w:tblGrid><w:gridCol w:w="6200"/><w:gridCol w:w="3666"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="6200" w:type="dxa"/></w:tcPr>${docxPara(docxRun(footLeft,{size:16,color:'5C6B70'}),'<w:spacing w:before="60" w:after="0"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="3666" w:type="dxa"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/><w:spacing w:before="60" w:after="0"/></w:pPr><w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:t xml:space="preserve">Page </w:t></w:r>${pageField('PAGE')}<w:r><w:rPr>${FONT_TAG}<w:sz w:val="16"/><w:color w:val="5C6B70"/></w:rPr><w:t xml:space="preserve"> of </w:t></w:r>${pageField('NUMPAGES')}</w:p></w:tc></w:tr></w:tbl></w:ftr>`;
+ const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr>${FONT_TAG}<w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="1F2A30"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="276" w:lineRule="auto"/><w:widowControl/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:rPr>${FONT_TAG}<w:sz w:val="21"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:uiPriority w:val="9"/><w:qFormat/><w:pPr><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="80"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:sz w:val="32"/><w:color w:val="${RN()}"/>${FONT_TAG}</w:rPr></w:style></w:styles>`;
  const settings=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:updateFields w:val="true"/></w:settings>`;
  const core=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${xml(title)}</dc:title><dc:subject>Equipment strip-down investigation report</dc:subject><dc:creator>${xml(companyName||r.investigator||'')}</dc:creator><cp:lastModifiedBy>${xml(r.investigator||'')}</cp:lastModifiedBy></cp:coreProperties>`;
  zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>');
@@ -2044,20 +2107,21 @@ async function buildPDF(raw,notify=()=>{}){
   if(opt.bold)doc.text(String(text),x+0.08,yy,opt.align?{align:opt.align}:{});
  };
  const title=reportHeading(r);
+ await useStyle(r);
  const logo=await prepareLogo();
  let logoData=null;
  if(logo){
   logoData={bytes:new Uint8Array(await logo.blob.arrayBuffer()),width:logo.width,height:logo.height,format:logo.ext==='png'?'PNG':'JPEG'};
  }
  doc.setFontSize(14);
- const titleLines=doc.splitTextToSize(title,Math.max(40,CW-8-(logoData?36:0))).slice(0,3);
+ const titleLines=doc.splitTextToSize(title,Math.max(40,CW-8-(logoData?40:0))).slice(0,3);
  let bandH=14+titleLines.length*6.2;
  let logoBox=null;
  if(logoData){
   const maxW=34,maxH=Math.max(16,bandH-5);
   let h=Math.min(18,maxH),w=h*logoData.width/Math.max(1,logoData.height);
   if(w>maxW){w=maxW;h=w*logoData.height/Math.max(1,logoData.width);}
-  bandH=Math.max(bandH,h+6);
+  bandH=Math.max(bandH,h+9);
   logoBox={w,h};
  }
  const rows=jobRows(r);
@@ -2065,14 +2129,15 @@ async function buildPDF(raw,notify=()=>{}){
  const blockH=bandH+rows.length*rowH;
  need(blockH+6);
  const top=y;
- doc.setFillColor(31,58,68);doc.rect(ML,top,CW,bandH,'F');
+ doc.setFillColor(...RNR());doc.rect(ML,top,CW,bandH,'F');
  let textX=ML+4;
  if(logoBox){
-  const lx=ML+3,ly=top+(bandH-logoBox.h)/2;
+  const lx=ML+4.5,ly=top+(bandH-logoBox.h)/2;
+  doc.setFillColor(255,255,255);doc.roundedRect(lx-2,ly-2,logoBox.w+4,logoBox.h+4,1.2,1.2,'F');
   doc.addImage(logoData.bytes,logoData.format,lx,ly,logoBox.w,logoBox.h,'company-logo','FAST');
-  textX=lx+logoBox.w+3;
+  textX=lx+logoBox.w+5;
  }
- if(companyName)drawText(clipText(companyName,60).toUpperCase(),textX,top+6,{size:8,color:[198,177,90],bold:true});
+ if(companyName)drawText(clipText(companyName,60).toUpperCase(),textX,top+6,{size:8,color:hexRgb(RC()),bold:true});
  drawText(REPORT_KIND,textX,top+11,{size:8,color:[255,255,255]});
  titleLines.forEach((line,i)=>drawText(line,textX,top+17+i*6.2,{size:13,color:[255,255,255],bold:true}));
  rows.forEach((row,i)=>{
@@ -2082,13 +2147,13 @@ async function buildPDF(raw,notify=()=>{}){
   const val=textLines(row[1]||'—',10,CW-50)[0];
   drawText(val,ML+46,ry+4.9,{size:10,color:[31,42,48]});
  });
- doc.setDrawColor(31,58,68);doc.setLineWidth(0.35);doc.rect(ML,top,CW,blockH);
+ doc.setDrawColor(...RAR());doc.setLineWidth(0.35);doc.rect(ML,top,CW,blockH);
  y=top+blockH+8;
- const H1=t=>{need(18);y+=2;drawText(t,ML,y,{size:13,color:[31,58,68],bold:true});y+=2.5;doc.setDrawColor(31,58,68);doc.setLineWidth(0.4);doc.line(ML,y,ML+CW,y);y+=6;};
- const H2=t=>{need(12);drawText(t,ML,y,{size:10.5,color:[31,58,68],bold:true});y+=5;};
+ const H1=t=>{need(18);y+=2;drawText(t,ML,y,{size:13,color:RNR(),bold:true});y+=2.5;doc.setDrawColor(...RAR());doc.setLineWidth(0.4);doc.line(ML,y,ML+CW,y);y+=6;};
+ const H2=t=>{need(12);drawText(t,ML,y,{size:10.5,color:RNR(),bold:true});y+=5;};
  const PARAS=t=>{for(const p of paragraphsOf(t)){for(const line of textLines(p,10.5,CW)){if(y+5>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=5;}y+=2.5;}};
  const table=(widths,head,rows,opt={})=>{
-  const drawHead=()=>{const hh=7;need(hh+8);doc.setFillColor(31,58,68);doc.rect(ML,y,CW,hh,'F');let x=ML;head.forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=widths[i];});y+=hh;};
+  const drawHead=()=>{const hh=7;need(hh+8);doc.setFillColor(...RNR());doc.rect(ML,y,CW,hh,'F');let x=ML;head.forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=widths[i];});y+=hh;};
   drawHead();
   rows.forEach((row,k)=>{
    const cells=row.map((t,i)=>textLines(String(t||''),9,widths[i]-3).slice(0,8));
@@ -2107,7 +2172,7 @@ async function buildPDF(raw,notify=()=>{}){
  const cols=[12,104,36,22];
  const drawSummaryHead=()=>{
   const hh=7;need(hh+6);
-  doc.setFillColor(31,58,68);doc.rect(ML,y,CW,hh,'F');
+  doc.setFillColor(...RNR());doc.rect(ML,y,CW,hh,'F');
   let x=ML;[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos'].forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
   y+=hh;
  };
@@ -2138,26 +2203,43 @@ async function buildPDF(raw,notify=()=>{}){
  H1(`${findNo}. Findings`);
  const total=photoCount(r.parts);let n=0;
  const tj=isTemplateJob(r);
- const maxH=112;let prevSec='';
+ const maxH=112;let prevSec='';let imgNo=0;
  const pdfPhotos=async(part,label)=>{
-  // v9: one large photo per row at full content width; caption always on the same page as its photo.
-  for(let j=0;j<part.photos.length;j++){
-   const img=await exportPhoto(part.photos[j].id);
-   let w=CW,h=w*img.height/Math.max(1,img.width);
-   if(h>maxH){h=maxH;w=h*img.width/Math.max(1,img.height);}
-   const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
-   doc.setFontSize(9);
-   let capLines=doc.splitTextToSize(cap,CW);
-   if(capLines.length>4){capLines=capLines.slice(0,3);capLines.push('…');}
-   n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();
-   const blockH=h+3+capLines.length*4+6;
+  // v11b: landscape photos one per row at full width. Consecutive portrait photos go side by side in pairs filling the
+  // text width; a lone portrait takes the left half. A row (photos + captions) never splits across a page.
+  const ph=part.photos,GAP=6,HW=(CW-GAP)/2,PMAX=150;
+  const capOf=j=>figureCaption(label,j+1,ph[j].caption,part.name,ph[j].prompt);
+  const capLines=(t,w)=>{doc.setFontSize(9);let l=doc.splitTextToSize(t,w);if(l.length>4){l=l.slice(0,3);l.push('…');}return l;};
+  const imgs=[];
+  for(let j=0;j<ph.length;j++){imgs.push(await exportPhoto(ph[j].id));n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();}
+  const put1=async(img,x,yy,w,h,k)=>{doc.addImage(new Uint8Array(await img.blob.arrayBuffer()),'JPEG',x,yy,w,h,'ph'+(++imgNo),'FAST');doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(x,yy,w,h);};
+  for(let j=0;j<ph.length;){
+   const a=imgs[j];
+   if(isPortraitImg(a)){
+    const items=(j+1<ph.length&&isPortraitImg(imgs[j+1]))?[j,j+1]:[j];
+    // each photo fills its half of the text width (height capped so a pair still fits a page);
+    // photos sit on a common baseline so the captions line up
+    const dims=items.map(k=>{let w=HW,h=HW*imgs[k].height/Math.max(1,imgs[k].width);if(h>PMAX){h=PMAX;w=h*imgs[k].width/Math.max(1,imgs[k].height);}return {w,h};});
+    const H=Math.max(...dims.map(d=>d.h));
+    const caps=items.map(k=>capLines(capOf(k),HW));
+    const capH=Math.max(...caps.map(c=>c.length))*4;
+    const blockH=H+3+capH+6;
+    if(y+blockH>bottom&&y>MT+1)newPage();
+    for(const [c,k] of items.entries()){
+     const {w,h}=dims[c],colX=ML+c*(HW+GAP);
+     await put1(imgs[k],colX+(HW-w)/2,y+H-h,w,h,k);
+     let cy=y+H+4.4;caps[c].forEach(line=>{drawText(line,colX+HW/2,cy,{size:9,color:[80,88,92],align:'center'});cy+=4;});
+    }
+    y+=blockH;j+=items.length;continue;
+   }
+   let w=CW,h=w*a.height/Math.max(1,a.width);
+   if(h>maxH){h=maxH;w=h*a.width/Math.max(1,a.height);}
+   const cl=capLines(capOf(j),CW);
+   const blockH=h+3+cl.length*4+6;
    if(y+blockH>bottom&&y>MT+1)newPage();
-   const ix=ML+(CW-w)/2;
-   doc.addImage(new Uint8Array(await img.blob.arrayBuffer()),'JPEG',ix,y,w,h,'img'+n,'FAST');
-   doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(ix,y,w,h);
-   let cy=y+h+4.4;
-   capLines.forEach(line=>{drawText(line,PW/2,cy,{size:9,color:[80,88,92],align:'center'});cy+=4;});
-   y+=blockH;
+   await put1(a,ML+(CW-w)/2,y,w,h,j);
+   let cy=y+h+4.4;cl.forEach(line=>{drawText(line,PW/2,cy,{size:9,color:[80,88,92],align:'center'});cy+=4;});
+   y+=blockH;j++;
   }
  };
  const pdfCondDesc=(part,cond)=>{
@@ -2168,14 +2250,14 @@ async function buildPDF(raw,notify=()=>{}){
   for(const line of descLines){if(y+lh>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=lh;}
   y+=3;
   const ms=measuresOf(part);
-  if(ms.length){need(20);drawText('Measurements',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([CW-(18+22+20+20+26),18,22,20,20,26],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),{cellStyle:(t,i)=>i===5&&/^OUT/.test(String(t))?{bold:true,color:[176,0,32]}:i===5&&t==='In spec'?{bold:true,color:[20,108,54]}:null});y+=5;}
+  if(ms.length){need(20);drawText('Measurements',ML,y+1,{size:9,color:RNR(),bold:true});y+=4;table([CW-(18+22+20+20+26),18,22,20,20,26],['Item','Type','Measured','Min','Max','Result'],ms.map(measureReportRow),{cellStyle:(t,i)=>i===5&&/^OUT/.test(String(t))?{bold:true,color:[176,0,32]}:i===5&&t==='In spec'?{bold:true,color:[20,108,54]}:null});y+=5;}
  };
  const pdfSubs=async(part,i)=>{
   for(const [k,x] of (part.subParts||[]).entries()){
    const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
    // Keep the sub-heading with its note and its first photo (no heading stranded at the foot of a page).
    let need=26+(clean(x.note)?textLines(capSentences(clean(x.note)),10,CW-8).length*4.8:0);
-   if(x.photos.length){const m=await get('media',x.photos[0].id).catch(()=>null);let h=CW*((m?.height||3)/Math.max(1,m?.width||4));if(h>maxH)h=maxH;need+=h+16;}
+   if(x.photos.length){const m=await get('media',x.photos[0].id).catch(()=>null);const im={width:m?.width||4,height:m?.height||3};let h=isPortraitImg(im)?Math.min(150,(CW-6)/2*im.height/im.width):Math.min(maxH,CW*im.height/im.width);need+=h+16;}
    if(y+need>bottom&&y>MT+1)newPage();
    y+=2;
    doc.setFillColor(sc.rgb[0],sc.rgb[1],sc.rgb[2]);doc.rect(ML+4,y-3.8,1.3,5.4,'F');
@@ -2190,7 +2272,7 @@ async function buildPDF(raw,notify=()=>{}){
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
-  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;if(y+60>bottom)newPage();doc.setFillColor(31,58,68);doc.rect(ML,y-1,CW,10,'F');drawText(textLines(part.section,11.5,CW-8)[0],ML+4,y+5.6,{size:11.5,color:[255,255,255],bold:true});y+=16;}
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;if(y+60>bottom)newPage();doc.setFillColor(...RNR());doc.rect(ML,y-1,CW,10,'F');drawText(textLines(part.section,11.5,CW-8)[0],ML+4,y+5.6,{size:11.5,color:[255,255,255],bold:true});y+=16;}
   let drw=null;
   if(tj&&!part.skipped&&part.drawingId){
    const d=await exportDrawing(part.drawingId);
@@ -2214,7 +2296,7 @@ async function buildPDF(raw,notify=()=>{}){
   }
   await pdfPhotos(part,String(i+1));
   pdfCondDesc(part,cond);
-  {const cr=checkTableRows(part,r);if(cr.length){need(24);drawText('Check & record',ML,y+1,{size:9,color:[31,58,68],bold:true});y+=4;table([40,48,14,26,26,20],['Item / Part no','Spec','Qty exp.','Measured/found','Result','Notes'],cr,{cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null});y+=5;}}
+  {const cr=checkTableRows(part,r);if(cr.length){need(24);drawText('Check & record',ML,y+1,{size:9,color:RNR(),bold:true});y+=4;table([40,48,14,26,26,20],['Item / Part no','Spec','Qty exp.','Measured/found','Result','Notes'],cr,{cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null});y+=5;}}
   await pdfSubs(part,i);
   y+=3;
  }
@@ -2252,9 +2334,9 @@ async function buildPDF(raw,notify=()=>{}){
   const maxW=CW-(companyName?Math.min(70,doc.getTextWidth(clipText(companyName,40))+6):4)-(headX-ML);
   let head=title;
   if(doc.getTextWidth(head)>maxW){while(head.length>1&&doc.getTextWidth(head+'…')>maxW)head=head.slice(0,-1);head=head.trim()+'…';}
-  drawText(head,headX,11,{size:8,color:[31,58,68]});
+  drawText(head,headX,11,{size:8,color:RNR()});
   if(companyName)drawText(clipText(companyName,40),PW-MR,11,{size:8,color:[90,100,104],align:'right'});
-  doc.setDrawColor(31,58,68);doc.setLineWidth(0.3);
+  doc.setDrawColor(...RAR());doc.setLineWidth(0.3);
   doc.line(ML,13.5,PW-MR,13.5);
   doc.line(ML,PH-13,PW-MR,PH-13);
   const foot=footerLeft(r);
@@ -2290,7 +2372,7 @@ function ppTable(s,id,x,y,widths,rows,o={}){
  const rowH=o.rowH||0.42;
  const cellXml=(t,i,k)=>{
   const head=k===0;const st=head?{bold:true,color:'FFFFFF'}:(o.cellStyle?.(t,i,k)||{});
-  const fill=head?'1F3A44':(st.fill||(k%2?'FFFFFF':'F4F7F8'));
+  const fill=head?RN():(st.fill||(k%2?'FFFFFF':'F4F7F8'));
   const b=c=>`<a:ln w="6350">${ppFill(c)}</a:ln>`;
   const lnX=['lnL','lnR','lnT','lnB'].map(n=>b('C5D0D4').replace('<a:ln','<a:'+n).replace('</a:ln>','</a:'+n+'>')).join('');
   return `<a:tc><a:txBody><a:bodyPr/><a:lstStyle/>${ppPara(clipText(t,o.clip||90),{size:head?(o.headSize||13):(o.size||14),bold:!!st.bold,color:st.color||(head?'FFFFFF':'1F2A30')})}</a:txBody><a:tcPr marL="${ppE(0.08)}" marR="${ppE(0.08)}" marT="${ppE(0.04)}" marB="${ppE(0.04)}" anchor="ctr">${lnX}${ppFill(fill)}</a:tcPr></a:tc>`;
@@ -2301,7 +2383,7 @@ function ppTable(s,id,x,y,widths,rows,o={}){
 }
 function ppTheme(){
  const c=(n,v)=>`<a:${n}><a:srgbClr val="${v}"/></a:${n}>`;
- return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="StripNote"><a:themeElements><a:clrScheme name="StripNote"><a:dk1><a:srgbClr val="1F2A30"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>${c('dk2','1F3A44')}${c('lt2','F4F7F8')}${c('accent1','1F3A44')}${c('accent2','C6B15A')}${c('accent3','166E3A')}${c('accent4','8C5400')}${c('accent5','A82018')}${c('accent6','5A6468')}${c('hlink','1F5F8B')}${c('folHlink','5A6468')}</a:clrScheme><a:fontScheme name="StripNote"><a:majorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="StripNote"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="12700"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="StripNote"><a:themeElements><a:clrScheme name="StripNote"><a:dk1><a:srgbClr val="1F2A30"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>${c('dk2',RN())}${c('lt2','F4F7F8')}${c('accent1',RN())}${c('accent2','C6B15A')}${c('accent3','166E3A')}${c('accent4','8C5400')}${c('accent5','A82018')}${c('accent6','5A6468')}${c('hlink','1F5F8B')}${c('folHlink','5A6468')}</a:clrScheme><a:fontScheme name="StripNote"><a:majorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="StripNote"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="12700"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
 }
 const PP_TREE_HEAD='<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
 async function buildPptx(raw,notify=()=>{}){
@@ -2309,24 +2391,26 @@ async function buildPptx(raw,notify=()=>{}){
  const zip=new JSZip();
  const tj=isTemplateJob(r);
  const title=reportHeading(r);
+ await useStyle(r);
  const logo=await prepareLogo();
  const slides=[];// {shapes:[], rels:[], bg}
  let media=0;
  const addMedia=async(slide,blob,ext)=>{media++;const name=`image${media}.${ext}`;zip.file(`ppt/media/${name}`,await blob.arrayBuffer());const rel=`rId${slide.rels.length+2}`;slide.rels.push(`<Relationship Id="${rel}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${name}"/>`);return rel;};
  let logoBytes=null;if(logo)logoBytes=logo.blob;
  let logoMediaName='';
- const addLogo=async(slide,bx,by,bw,bh)=>{
+ const addLogo=async(slide,bx,by,bw,bh,left=false)=>{
   if(!logoBytes)return 0;
   if(!logoMediaName){media++;logoMediaName=`image${media}.${logo.ext}`;zip.file(`ppt/media/${logoMediaName}`,await logoBytes.arrayBuffer());}
   const rel=`rId${slide.rels.length+2}`;slide.rels.push(`<Relationship Id="${rel}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${logoMediaName}"/>`);
-  const f=ppFitBox(logo.width,logo.height,bx,by,bw,bh);
-  ppPic(slide.shapes,slide.next++,rel,bx+bw-f.w,f.y,f.w,f.h,'Company logo');return f.w;
+  const f=ppFitBox(logo.width,logo.height,bx,by,bw,bh);const lx=left?bx:bx+bw-f.w,pad=Math.min(0.08,f.h*0.12);
+  ppShape(slide.shapes,slide.next++,lx-pad,f.y-pad,f.w+pad*2,f.h+pad*2,null,{fill:'FFFFFF',geom:'roundRect',name:'Logo plate'});
+  ppPic(slide.shapes,slide.next++,rel,lx,f.y,f.w,f.h,'Company logo');return f.w+pad;
  };
  const newSlide=(bg)=>{const sl={shapes:[],rels:[],bg:bg||'FFFFFF',next:2};slides.push(sl);return sl;};
  // standard content slide frame: dark header bar with title, thin accent, footer set later
  const frame=async(heading,opt={})=>{
   const sl=newSlide('FFFFFF');
-  ppShape(sl.shapes,sl.next++,0,0,PPW,0.78,null,{fill:'1F3A44',name:'Header bar'});
+  ppShape(sl.shapes,sl.next++,0,0,PPW,0.78,null,{fill:RN(),name:'Header bar'});
   if(opt.accent)ppShape(sl.shapes,sl.next++,0,0.78,PPW,0.07,null,{fill:opt.accent,name:'Condition accent'});
   const lw=logo?await addLogo(sl,PPW-2.35,0.12,2.0,0.54):0;
   const rightW=opt.right?3.2:0;
@@ -2339,11 +2423,11 @@ async function buildPptx(raw,notify=()=>{}){
  const total=photoCount(r.parts);let done=0;
  // 1. Title slide
  {
-  const sl=newSlide('1F3A44');
-  ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:'C6B15A',name:'Gold rule'});
-  if(logo)await addLogo(sl,0.6,0.5,3.0,1.2).then(()=>{const p=sl.shapes.pop();sl.shapes.push(p.replace(/<a:off x="\d+"/,`<a:off x="${ppE(0.6)}"`));});
+  const sl=newSlide(RN());
+  ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:ruleColor(),name:'Accent rule'});
+  if(logo)await addLogo(sl,0.6,0.5,3.0,1.2,true);
   let ty=logo?2.0:1.2;
-  if(companyName){ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.5,ppPara(clipText(companyName,70).toUpperCase(),{size:16,bold:true,color:'C6B15A'}),{name:'Company'});ty+=0.5;}
+  if(companyName){ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.5,ppPara(clipText(companyName,70).toUpperCase(),{size:16,bold:true,color:RC()}),{name:'Company'});ty+=0.5;}
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.4,ppPara(REPORT_KIND,{size:13,color:'D9E2E5'}),{name:'Report kind'});ty+=0.45;
   ppShape(sl.shapes,sl.next++,0.6,ty,12.1,1.4,ppPara(clipText(title,120),{size:38,bold:true,color:'FFFFFF'}),{name:'Job title',anchor:'t'});ty+=1.6;
   const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
@@ -2359,7 +2443,7 @@ async function buildPptx(raw,notify=()=>{}){
  {
   const sl=await frame('Summary of findings');
   const sumText=paragraphsOf(r.summary).join('\n')||`${r.parts.length} part${r.parts.length===1?'':'s'} inspected with ${total} photograph${total===1?'':'s'}.`;
-  ppShape(sl.shapes,sl.next++,0.4,1.05,6.9,0.4,ppPara('Overall findings',{size:14,bold:true,color:'1F3A44'}),{name:'Findings label',fit:false});
+  ppShape(sl.shapes,sl.next++,0.4,1.05,6.9,0.4,ppPara('Overall findings',{size:14,bold:true,color:RN()}),{name:'Findings label',fit:false});
   ppShape(sl.shapes,sl.next++,0.4,1.45,6.9,outs.length?2.9:5.5,ppParas(clipText(sumText,outs.length?600:1100),{size:16,after:6}),{name:'Findings'});
   const tiles=[['OK',COND_STYLE.OK.hex],['Wear',COND_STYLE.Wear.hex],['Damaged',COND_STYLE.Damaged.hex],['Replace',COND_STYLE.Replace.hex],['Not rated',COND_STYLE['Not rated'].hex]];
   if(tj)tiles.push(['Not inspected','8A9599']);
@@ -2392,9 +2476,9 @@ async function buildPptx(raw,notify=()=>{}){
   while(j<part.photos.length){
    const a=await exportPhoto(part.photos[j].id);done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();
    let b=null;
-   if(a.height>a.width*1.05&&j+1<part.photos.length){
+   if(isPortraitImg(a)&&j+1<part.photos.length){
     const nb=await exportPhoto(part.photos[j+1].id);
-    if(nb.height>nb.width*1.05){b=nb;done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();}
+    if(isPortraitImg(nb)){b=nb;done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();}
     else{nb.blob=null;}
    }
    const ps=await frame(head,{accent:cond.hex,size:20,right:condRight,rightColor:cond.label==='OK'?'9BE0B4':'FFD3CF'});
@@ -2404,7 +2488,7 @@ async function buildPptx(raw,notify=()=>{}){
     ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt),{line:'C5D0D4'});
     const cap=figureCaption(label,j+1,part.photos[j].caption,part.name,part.photos[j].prompt);
     const m=cap.match(/^(Photo [\d.]+) \u2013 (.*)$/);
-    ppShape(ps.shapes,ps.next++,9.35,1.05,3.65,0.6,ppPara(m?m[1]:cap,{size:22,bold:true,color:'1F3A44'}),{name:'Photo number',fit:false,inset:0.02});
+    ppShape(ps.shapes,ps.next++,9.35,1.05,3.65,0.6,ppPara(m?m[1]:cap,{size:22,bold:true,color:RN()}),{name:'Photo number',fit:false,inset:0.02});
     if(m)ppShape(ps.shapes,ps.next++,9.35,1.65,3.65,1.4,ppPara(clipText(m[2],140),{size:16,color:'1F2A30'}),{name:'Caption',inset:0.02});
     badge(ps,9.35,3.15,2.6,cond,15);
     ppShape(ps.shapes,ps.next++,9.35,3.85,3.65,3.1,ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
@@ -2416,7 +2500,7 @@ async function buildPptx(raw,notify=()=>{}){
      const f=ppFitBox(img.width,img.height,bx,1.0,6.2,5.15);
      const cap=figureCaption(label,j+k+1,ph.caption,part.name,ph.prompt);
      ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,cap,{line:'C5D0D4'});
-     ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:'1F3A44',align:'ctr'}),{name:'Caption',inset:0.02});
+     ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:RN(),align:'ctr'}),{name:'Caption',inset:0.02});
     }
     ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
     j+=2;
@@ -2449,7 +2533,7 @@ async function buildPptx(raw,notify=()=>{}){
  let prevSec='';
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];const cond=condFor(part);
-  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;const ss=newSlide('1F3A44');ss.title=true;ppShape(ss.shapes,ss.next++,0,PPH-0.12,PPW,0.12,null,{fill:'C6B15A',name:'Gold rule'});ppShape(ss.shapes,ss.next++,0.8,2.5,11.7,1.7,ppPara(clipText(part.section,120),{size:36,bold:true,color:'FFFFFF'}),{name:'Section',anchor:'ctr'});const ns=r.parts.filter(p=>p.section===part.section).length;ppShape(ss.shapes,ss.next++,0.8,4.25,11.7,0.6,ppPara(`${ns} step${ns===1?'':'s'}`,{size:16,color:'D9E2E5'}),{name:'Section steps',fit:false});}
+  if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;const ss=newSlide(RN());ss.title=true;ppShape(ss.shapes,ss.next++,0,PPH-0.12,PPW,0.12,null,{fill:ruleColor(),name:'Accent rule'});ppShape(ss.shapes,ss.next++,0.8,2.5,11.7,1.7,ppPara(clipText(part.section,120),{size:36,bold:true,color:'FFFFFF'}),{name:'Section',anchor:'ctr'});const ns=r.parts.filter(p=>p.section===part.section).length;ppShape(ss.shapes,ss.next++,0.8,4.25,11.7,0.6,ppPara(`${ns} step${ns===1?'':'s'}`,{size:16,color:'D9E2E5'}),{name:'Section steps',fit:false});}
   const head=(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`)+(clean(part.partNo)?`  \u00b7  ${clean(part.partNo)}`:'');
   if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,String(i+1),cond,head);await pptSubs(part,i,head);continue;}
   const sl=await frame(head,{accent:cond.hex});
@@ -2491,13 +2575,13 @@ async function buildPptx(raw,notify=()=>{}){
   for(let s=0;s<rec.length;s+=10){const sl=await frame(`Measurements and checks record${rec.length>10?` (${Math.floor(s/10)+1} of ${Math.ceil(rec.length/10)})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.05,[0.9,3.9,4.0,1.8,1.93],[['Step','Item / Part no','Spec','Measured / found','Result']].concat(rec.slice(s,s+10)),{rowH:0.54,size:11,headSize:12,clip:100,cellStyle:resSt});}
   const e=r.pack.end;
   for(let s=0;s<e.replaceNew.length;s+=11){const sl=await frame(`Parts replaced with NEW${e.replaceNew.length>11?` (${Math.floor(s/11)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[7.5,2.0,3.03],[['Part','Part no','Replaced with NEW']].concat(e.replaceNew.slice(s,s+11).map(x=>[x.part,x.part_no,x.done?'Yes':'NOT ticked'])),{rowH:0.48,size:14,clip:90,cellStyle:tickSt(2)});}
-  for(let s=0;s<e.finalChecks.length;s+=6){const chunk=e.finalChecks.slice(s,s+6);const sl=await frame(`Final checks and sign-off${e.finalChecks.length>6?` (${Math.floor(s/6)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[10.5,2.03],[['Check','Done']].concat(chunk.map(x=>[x.text,x.done?'Yes':'NOT ticked'])),{rowH:0.72,size:13,clip:220,cellStyle:tickSt(1)});ppShape(sl.shapes,sl.next++,0.4,1.1+0.72*(chunk.length+1)+0.35,12.5,0.5,ppPara(`Final checks by: ${r.signName||'—'}   ·   ${prettyDate(r.signDate||r.date)||'—'}`,{size:16,bold:true,color:'1F3A44'}),{name:'Sign-off',fit:false});}
+  for(let s=0;s<e.finalChecks.length;s+=6){const chunk=e.finalChecks.slice(s,s+6);const sl=await frame(`Final checks and sign-off${e.finalChecks.length>6?` (${Math.floor(s/6)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[10.5,2.03],[['Check','Done']].concat(chunk.map(x=>[x.text,x.done?'Yes':'NOT ticked'])),{rowH:0.72,size:13,clip:220,cellStyle:tickSt(1)});ppShape(sl.shapes,sl.next++,0.4,1.1+0.72*(chunk.length+1)+0.35,12.5,0.5,ppPara(`Final checks by: ${r.signName||'—'}   ·   ${prettyDate(r.signDate||r.date)||'—'}`,{size:16,bold:true,color:RN()}),{name:'Sign-off',fit:false});}
  }
  // 5. Conclusions and recommendations
  {
   const sl=await frame('Conclusions and recommendations');
   const con=paragraphsOf(r.conclusions).join('\n'),rec=paragraphsOf(r.recommendations).join('\n');
-  const col=(x,w,label,text)=>{ppShape(sl.shapes,sl.next++,x,1.1,w,0.45,ppPara(label,{size:16,bold:true,color:'1F3A44'}),{name:label+' label',fit:false});ppShape(sl.shapes,sl.next++,x,1.6,w,4.4,ppParas(clipText(text||'None recorded.',900),{size:16,after:6,color:text?'1F2A30':'8AA0A6'}),{name:label,line:'DCE3E6',fill:'F8FAFB'});};
+  const col=(x,w,label,text)=>{ppShape(sl.shapes,sl.next++,x,1.1,w,0.45,ppPara(label,{size:16,bold:true,color:RN()}),{name:label+' label',fit:false});ppShape(sl.shapes,sl.next++,x,1.6,w,4.4,ppParas(clipText(text||'None recorded.',900),{size:16,after:6,color:text?'1F2A30':'8AA0A6'}),{name:label,line:'DCE3E6',fill:'F8FAFB'});};
   col(0.4,6.15,'Conclusions',con);col(6.8,6.15,'Recommendations',rec);
   const who=[r.signName||r.investigator||'',prettyDate(r.signDate)].filter(Boolean).join(' · ');
   ppShape(sl.shapes,sl.next++,0.4,6.15,12.55,0.4,ppPara(`Prepared by: ${who||'—'}${clean(r.checkedBy)?`   ·   Checked by: ${r.checkedBy}`:''}   ·   Document ${r.docNumber||'—'} rev ${r.revision||'—'}`,{size:13,color:'1F2A30'}),{name:'Sign-off',fit:false});
@@ -2618,6 +2702,9 @@ async function buildBackup(raw,notify=()=>{},opts={}){
   zip.file('logo/logo',logoRec.blob,{binary:true});
   zip.file('logo/logo.json',JSON.stringify({mime:logoRec.mime||logoRec.blob.type,width:logoRec.width,height:logoRec.height,name:logoRec.name||''}));
  }
+ // v11b: report styles (all of this phone's own styles, with their logos) travel with the job.
+ const styles=await getStyles().catch(()=>[]);
+ if(styles.length){const meta=[];for(const st of styles){const m={id:st.id,name:st.name,accent:st.accent,heading:st.heading,updated:st.updated};if(st.logo){const path=`styles/${safeFileName(st.id.slice(STYLE_PREFIX.length),'style')}`;zip.file(path,st.logo.blob,{binary:true});m.logo={mime:st.logo.mime,width:st.logo.width,height:st.logo.height,name:st.logo.name,path};}meta.push(m);}zip.file('styles.json',JSON.stringify(meta,null,1));}
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
  if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
  zip.file('README.txt',`StripNote v11 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2 and 03.a.01_O-ring.jpg is the first photo of sub-part 3.a. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
@@ -2763,7 +2850,9 @@ async function importBackup(file){
     }
    }
   }catch(e){console.warn('Logo in backup could not be restored',e);}
-  toast('Backup restored as a separate report.'+logoNote+tplNote);
+  let styleNote='';
+  try{const sf=z.file('styles.json');if(sf){const list=JSON.parse(await sf.async('string'));let k=0;for(const m of Array.isArray(list)?list:[]){const id=String(m?.id||'');if(!id.startsWith(STYLE_PREFIX)||await get('settings',id))continue;let logo=null;if(m.logo?.path){const f=z.file(String(m.logo.path));if(f){const b=await f.async('uint8array');const mime=String(m.logo.mime||'image/png');if(b.length<=8*1048576&&mime.startsWith('image/'))logo={blob:new Blob([b],{type:mime}),mime,width:m.logo.width,height:m.logo.height,name:String(m.logo.name||'')};}}const st=shapeStyle({...m,logo});st.updated=String(m.updated||new Date().toISOString());await put('settings',st);k++;}if(k){styleNote=` ${k} report style${k===1?' was':'s were'} restored too.`;await renderStyleList();}}}catch(e){console.warn('Styles in backup could not be restored',e);}
+  toast('Backup restored as a separate report.'+logoNote+tplNote+styleNote);
  }catch(e){
   for(const id of importedIds)await remove('media',id).catch(()=>{});
   throw e;
@@ -2813,7 +2902,7 @@ function openCamera(prepare,caption,subId){
 on('newReport','click',newReport);
 on('reports','click',e=>{const b=e.target.closest('[data-open]');if(b)return openReport(b.dataset.open);});
 on('back','click',async()=>{if(busy||startingMic)return;await stopRecording();await saveQueue;if(current&&current.parts.length&&!backupState(current).ok)toast('Reminder: this job is not backed up. Open it and tap Finish job before you leave site.');clearThumbs();for(const u of drawingURLs.values())URL.revokeObjectURL(u);drawingURLs.clear();current=null;editing=null;$('home').hidden=false;$('report').hidden=true;setDock(false);await listReports();await renderTemplateList();await storageInfo();window.scrollTo(0,0);});
-on('theme','click',()=>{document.body.classList.toggle('light');localStorage.setItem('stripnote-theme',document.body.classList.contains('light')?'light':'dark');const dark=!document.body.classList.contains('light');document.querySelector('meta[name="theme-color"]').setAttribute('content',dark?'#10161a':'#f3f6f6');});
+on('theme','click',()=>{const m=currentMode();setMode(MODES[(MODES.indexOf(m)+1)%3]);toast(`Display: ${MODE_NAME[currentMode()]}.`);});
 on('persist','click',async()=>{await requestDurable(true);await storageInfo();});
 document.querySelectorAll('[data-job]').forEach(el=>el.addEventListener(el.type==='date'?'change':'input',()=>{if(!current)return;current[el.dataset.job]=el.value;if(el.dataset.job==='investigator')current.engineer=el.value;if(isPackJob(current)){document.querySelectorAll('[data-hfield]').forEach(h=>{if(headerKey(h.dataset.hfield)===el.dataset.job&&h!==el)h.value=el.value;});if(el.dataset.job==='signName')renderEndChecks();}updateHeading();persistReport().catch(()=>{});}));
 on('part','input',()=>{if(!editing)return;editing.name=$('part').value;updateEditorChrome();return persistReport();});
@@ -2827,7 +2916,6 @@ $('measureList').addEventListener('input',e=>{const inp=e.target.closest('[data-
 $('measureList').addEventListener('change',e=>{if(e.target.matches('select[data-mfield="type"]'))renderMeasures();});
 on('sayMeasure','click',()=>sayMeasurement(null));
 on('measureList','click',async e=>{const mic=e.target.closest('[data-mmic]');if(mic)return sayMeasurement(mic.dataset.mmic);const b=e.target.closest('[data-mremove]');if(!b||!editing)return;if(session?.mode==='measure'&&session.photoId===b.dataset.mremove)await stopRecording();editing.measurements=editing.measurements.filter(m=>m.id!==b.dataset.mremove);renderMeasures();await persistReport();});
-on('outdoor','click',()=>{const on=!document.body.classList.contains('outdoor');localStorage.setItem('stripnote-outdoor',on?'on':'off');applyOutdoor(on);});
 on('companyName','input',async()=>{companyName=$('companyName').value;await put('settings',{id:'company',name:companyName});});
 on('finishJob','click',()=>finishJob());
 for(const field of ['part','partNo','description'])on(field,'pointerdown',async()=>{if(session)await stopRecording();});
@@ -2951,6 +3039,51 @@ on('saveOriginals','click',()=>saveOriginals());
 on('logoPick','click',()=>$('logoFile').click());
 on('logoFile','change',async e=>{const file=e.target.files?.[0];e.target.value='';if(file)await saveLogoFile(file);});
 on('logoRemove','click',async()=>{if(!confirm('Remove the company logo from this phone? Reports already exported are not changed.'))return;await remove('settings','logo');await showLogoPreview();toast('Logo removed.');});
+// ---- v11b: report styles (home card, editor dialog, pickers) ----
+let styleEdit=null,styleLogoURL=null,styleListURLs=[];
+async function renderStyleList(){
+ const list=await getStyles();
+ styleListURLs.forEach(u=>URL.revokeObjectURL(u));styleListURLs=[];
+ const row=(st,builtIn)=>{let img='';if(st.logo){const u=URL.createObjectURL(st.logo.blob);styleListURLs.push(u);img=`<img src="${u}" alt="">`;}return `<div class="style-item" data-style-row="${esc(st.id)}"><span class="sw"><i style="background:#${st.heading}"></i><i style="background:#${st.accent}"></i></span>${img}<span class="nm"><b>${esc(st.name)}</b>${builtIn?'<br><small>Built in · uses the Company logo</small>':''}</span>${builtIn?'':`<button type="button" class="small" data-style-edit="${esc(st.id)}" aria-label="Edit style ${esc(st.name)}">Edit</button>`}</div>`;};
+ $('styleList').innerHTML=row(STANDARD_STYLE,true)+list.map(x=>row(x,false)).join('');
+ if(current&&$('reportStyle'))$('reportStyle').innerHTML=styleOptions(current.styleId||'standard');
+}
+function paintStylePreview(){
+ const a=normHex($('styleAccent').value,'1F3A44'),h=normHex($('styleHeading').value,'1F3A44');
+ const pv=$('stylePreview');pv.querySelector('.sp-band').style.background='#'+h;pv.querySelector('.sp-th').style.background='#'+h;pv.querySelector('.sp-h').style.color='#'+h;pv.querySelector('.sp-rule').style.background='#'+a;
+ const c=contrastRatio(h,'FFFFFF'),c2=contrastRatio(a,'FFFFFF');
+ $('styleContrast').textContent=c<4.5?`⚠ White text on the heading colour is hard to read (${c.toFixed(1)}:1; aim for 4.5:1 or more). Pick a darker colour.`:`White text on headings: ${c.toFixed(1)}:1 ✓${c2<3?` · The accent is pale on white paper (${c2.toFixed(1)}:1), so rule lines may look faint.`:''}`;
+ $('styleContrast').classList.toggle('bad',c<4.5);
+ const lg=styleEdit?.logo;if(styleLogoURL){URL.revokeObjectURL(styleLogoURL);styleLogoURL=null;}
+ if(lg){styleLogoURL=URL.createObjectURL(lg.blob);$('styleLogoImg').src=styleLogoURL;}
+ $('styleLogoBox').hidden=!lg;$('styleLogoRemove').hidden=!lg;$('styleLogoPick').textContent=lg?'Change logo':'Choose logo (optional)';
+}
+async function openStyleEditor(id){
+ const ex=id?await styleById(id):null;
+ styleEdit=ex&&!ex.builtIn?{...ex}:{id:'',name:'',accent:'1F3A44',heading:'1F3A44',logo:null};
+ $('styleDlgTitle').textContent=styleEdit.id?'Edit report style':'New report style';
+ $('styleName').value=styleEdit.name;$('styleAccent').value='#'+styleEdit.accent.toLowerCase();$('styleHeading').value='#'+styleEdit.heading.toLowerCase();
+ $('styleDelete').hidden=!styleEdit.id;paintStylePreview();$('styleDialog').showModal();
+}
+async function saveStyle(){
+ if(!styleEdit)return;
+ const name=clean($('styleName').value).slice(0,60);if(!name){toast('Give the style a name.');$('styleName').focus();return;}
+ const st={id:styleEdit.id,kind:'reportStyle',name,accent:normHex($('styleAccent').value,'1F3A44'),heading:normHex($('styleHeading').value,'1F3A44'),logo:styleEdit.logo||null,updated:new Date().toISOString()};
+ if(contrastRatio(st.heading,'FFFFFF')<4.5&&!confirm('White text on this heading colour will be hard to read in the report. Save anyway?'))return;
+ if(!st.id)st.id=STYLE_PREFIX+uid();
+ await put('settings',st);$('styleDialog').close();styleEdit=null;await renderStyleList();toast(`Report style “${name}” saved on this phone.`);
+}
+on('styleNew','click',()=>openStyleEditor(null));
+on('styleList','click',e=>{const b=e.target.closest('[data-style-edit]');if(b)return openStyleEditor(b.dataset.styleEdit);});
+['styleAccent','styleHeading'].forEach(k=>$(k).addEventListener('input',paintStylePreview));
+on('styleSave','click',saveStyle);
+on('styleCancel','click',()=>{styleEdit=null;$('styleDialog').close();});
+on('styleLogoPick','click',()=>$('styleLogoFile').click());
+on('styleLogoFile','change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file||!styleEdit)return;if(file.type&&!file.type.startsWith('image/'))throw Error('Choose an image file for the logo.');if(file.size>8*1048576)throw Error('Logo is too large (8 MB limit).');let width=0,height=0;try{({width,height}=await imageSize(file));}catch(err){throw Error('This image format cannot be read. Try a PNG or JPEG.');}styleEdit.logo={blob:file.slice(0,file.size,file.type||'image/png'),mime:file.type||'image/png',width,height,name:String(file.name||'')};paintStylePreview();});
+on('styleLogoRemove','click',()=>{if(styleEdit){styleEdit.logo=null;paintStylePreview();}});
+on('styleDelete','click',async()=>{if(!styleEdit?.id)return;const n=(await getAll('reports')).filter(r=>r.styleId===styleEdit.id).length;if(!confirm(`Delete report style “${styleEdit.name}”?${n?` ${n} report${n===1?' uses':'s use'} it and will then export in Standard.`:''}`))return;await remove('settings',styleEdit.id);if(lastStyleId()===styleEdit.id)rememberStyle('standard');styleEdit=null;$('styleDialog').close();await renderStyleList();toast('Report style deleted.');});
+on('newJobStyle','change',()=>rememberStyle($('newJobStyle').value));
+on('reportStyle','change',async()=>{if(!current)return;const v=$('reportStyle').value;current.styleId=v==='standard'?'':v;rememberStyle(v);await persistReport();const st=await styleById(current.styleId);toast(`Report style: ${st.name}. Word, PDF and Slides use its colours${st.builtIn?' and the Company logo':st.logo?' and logo':''}.`);});
 on('restoreBtn','click',()=>$('restoreFile').click());
 on('restoreFile','change',e=>importBackup(e.target.files?.[0]));
 on('closeViewer','click',()=>$('viewer').close());
@@ -3489,7 +3622,7 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- movePartTo,placePhoto,openPhotoPicker,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
+ movePartTo,placePhoto,openPhotoPicker,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
