@@ -310,6 +310,22 @@ body.stepmode #subBox{order:4}
 .sp-h{font-weight:750;padding:10px 10px 2px}
 .sp-rule{height:2px;margin:0 10px 8px}
 .sp-th{color:#fff;font-weight:700;font-size:12px;padding:6px 10px;margin:0 10px 10px}
+.sp-stripe{height:4px}
+.sp-clean{padding:8px 10px 4px}
+.sp-chead{display:flex;align-items:flex-end;gap:8px;padding-bottom:4px;border-bottom:2px solid}
+.sp-hl{flex:1;min-width:0;font-size:10px;line-height:1.3;color:#5c6b70}.sp-hl b{color:#3c4a50}
+.sp-clogo img{height:26px;max-width:80px;object-fit:contain;display:block}
+.sp-ctitle{font:700 19px Georgia,"Times New Roman",serif;padding:8px 0 3px;border-bottom:1px solid}
+.sp-cid{font-size:12px;font-weight:700;color:#3c4a50;padding:3px 0 6px}
+.sp-grid{display:grid;grid-template-columns:auto 1fr auto 1fr;font-size:11px;border:1px solid}
+.sp-grid span{border:1px solid #8a9599;padding:3px 5px}.sp-grid .l{font-weight:700}.sp-grid .w{grid-column:span 3}
+.style-preview.clean .sp-band,.style-preview.clean .sp-stripe{display:none}
+.style-preview:not(.clean) .sp-clean{display:none}
+.style-dialog.std .std-hide{display:none}
+.hl-in{margin-top:6px}
+.style-now{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 8px}
+.style-now label{margin:0;font-size:15px}.style-now select{flex:1;min-width:150px}
+.style-now .sw{display:inline-flex;gap:3px}.style-now .sw i{width:18px;height:18px;border-radius:4px;display:block;border:1px solid #fff4}
 .photo-opts .reorder{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
 .photo-opts .reorder button{min-height:56px}
 .photo-opts .pos-row{display:grid;grid-template-columns:1fr auto;gap:6px;width:100%}
@@ -350,7 +366,7 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v11</p>
+<p class="ver">StripNote v12</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -388,7 +404,7 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
 </div></details>
-<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
+<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
 <section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
@@ -430,7 +446,7 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <dialog id="skipDialog"><h2>Skip this step?</h2><p class="muted" id="skipStepName"></p><label for="skipReason">Reason (optional)</label><input id="skipReason" placeholder="e.g. Not fitted"><div class="toolbar"><button type="button" class="small" data-skip-reason="Not fitted">Not fitted</button><button type="button" class="small" data-skip-reason="Not stripped">Not stripped</button><button type="button" class="small" data-skip-reason="Seized">Seized</button></div><p class="status">It prints as “Not inspected” with the reason.</p><div class="dialog-actions"><button id="skipCancel" type="button">Cancel</button><button id="skipConfirm" class="primary" type="button">Skip step</button></div></dialog>
 <dialog id="cropDialog"><h2>Crop the drawing</h2><p class="muted">Drag a box round the part, then Use selection. Or use the whole image.</p><div class="crop-wrap"><canvas id="cropCanvas" width="300" height="200"></canvas></div><div class="dialog-actions"><button id="cropWhole" type="button">Whole image</button><button id="cropUse" class="primary" type="button" disabled>Use selection</button></div><button id="cropCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <input id="drawingFile" type="file" accept="image/*" hidden>
-<dialog id="styleDialog" class="style-dialog"><h2 id="styleDlgTitle" style="margin-top:0">New report style</h2><label for="styleName">Style name</label><input id="styleName" maxlength="60" placeholder="e.g. Client A" autocomplete="off"><div class="grid"><div><label for="styleAccentHex">Accent (rule lines)</label><div class="hex-pair"><input id="styleAccent" type="color" value="#1f3a44" aria-label="Pick accent colour"><input id="styleAccentHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div><div><label for="styleHeadingHex">Headings &amp; table heads</label><div class="hex-pair"><input id="styleHeading" type="color" value="#1f3a44" aria-label="Pick heading colour"><input id="styleHeadingHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div></div><p class="hint" id="styleHexHelp">Type a hex code such as #0014DC (3 or 6 digits, # optional), or use the picker.</p><div class="quick-sw" role="group" aria-label="Quick colours (sets headings and accent)"><span>Quick colours:</span><button type="button" data-qcol="1F3A44" aria-label="Slate" title="Slate"><i style="background:#1F3A44"></i></button><button type="button" data-qcol="1B2A6B" aria-label="Navy" title="Navy"><i style="background:#1B2A6B"></i></button><button type="button" data-qcol="0B5CAD" aria-label="Blue" title="Blue"><i style="background:#0B5CAD"></i></button><button type="button" data-qcol="1E6B3A" aria-label="Green" title="Green"><i style="background:#1E6B3A"></i></button><button type="button" data-qcol="7A1F2B" aria-label="Maroon" title="Maroon"><i style="background:#7A1F2B"></i></button><button type="button" data-qcol="333333" aria-label="Charcoal" title="Charcoal"><i style="background:#333333"></i></button></div><p class="status" id="styleContrast"></p><div id="stylePreview" class="style-preview" aria-hidden="true"><div class="sp-band"><span class="sp-logo" id="styleLogoBox" hidden><img id="styleLogoImg" alt=""></span><span class="sp-title">Equipment strip-down report</span></div><div class="sp-h">Part 1 · Part heading</div><div class="sp-rule"></div><div class="sp-th">No. · Part · Condition</div></div><div class="toolbar"><button id="styleLogoPick" type="button">Choose logo</button><button id="styleLogoRemove" class="small danger" type="button" hidden>Remove logo</button></div><input id="styleLogoFile" type="file" accept="image/*" hidden><div class="toolbar"><button id="styleSave" class="primary" type="button" style="flex:1">Save style</button><button id="styleCancel" type="button">Cancel</button></div><button id="styleDelete" class="small danger" type="button" style="width:100%" hidden>Delete this style</button></dialog><dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
+<dialog id="styleDialog" class="style-dialog"><h2 id="styleDlgTitle" style="margin-top:0">New report style</h2><p class="hint" id="styleStdNote" hidden>Standard keeps its built-in colours and the Company logo. You can choose its cover layout and header lines here.</p><div class="std-hide"><label for="styleName">Style name</label><input id="styleName" maxlength="60" placeholder="e.g. Client A" autocomplete="off"></div><label for="styleLayout">Cover &amp; page header layout</label><select id="styleLayout"><option value="banner">Banner – coloured title band</option><option value="clean">Clean – white header, boxed details</option></select><label for="styleHL1">Header lines (optional, Clean layout)</label><p class="hint" style="margin:0">Up to 3 small lines top-left on every page, e.g. company, department, address.</p><input id="styleHL1" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 1"><input id="styleHL2" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 2"><input id="styleHL3" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 3"><div class="std-hide"><div class="grid"><div><label for="styleAccentHex">Accent (rule lines)</label><div class="hex-pair"><input id="styleAccent" type="color" value="#1f3a44" aria-label="Pick accent colour"><input id="styleAccentHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div><div><label for="styleHeadingHex">Headings &amp; table heads</label><div class="hex-pair"><input id="styleHeading" type="color" value="#1f3a44" aria-label="Pick heading colour"><input id="styleHeadingHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div></div><p class="hint" id="styleHexHelp">Type a hex code such as #0014DC (3 or 6 digits, # optional), or use the picker.</p><div class="quick-sw" role="group" aria-label="Quick colours (sets headings and accent)"><span>Quick colours:</span><button type="button" data-qcol="1F3A44" aria-label="Slate" title="Slate"><i style="background:#1F3A44"></i></button><button type="button" data-qcol="1B2A6B" aria-label="Navy" title="Navy"><i style="background:#1B2A6B"></i></button><button type="button" data-qcol="0B5CAD" aria-label="Blue" title="Blue"><i style="background:#0B5CAD"></i></button><button type="button" data-qcol="1E6B3A" aria-label="Green" title="Green"><i style="background:#1E6B3A"></i></button><button type="button" data-qcol="7A1F2B" aria-label="Maroon" title="Maroon"><i style="background:#7A1F2B"></i></button><button type="button" data-qcol="333333" aria-label="Charcoal" title="Charcoal"><i style="background:#333333"></i></button></div><p class="status" id="styleContrast"></p></div><div id="stylePreview" class="style-preview" aria-hidden="true"><div class="sp-clean"><div class="sp-chead"><div class="sp-hl" id="spHL"></div><span class="sp-clogo" id="spCLogo" hidden><img id="spCLogoImg" alt=""></span></div><div class="sp-ctitle">Workshop Strip-down Report</div><div class="sp-cid">Equipment · Serial no.</div><div class="sp-grid"><span class="l">Report title:</span><span class="w">Workshop Strip-down Report</span><span class="l">Client:</span><span>…</span><span class="l">Site:</span><span>…</span></div></div><div class="sp-band"><span class="sp-logo" id="styleLogoBox" hidden><img id="styleLogoImg" alt=""></span><span class="sp-title">Equipment strip-down report</span></div><div class="sp-stripe"></div><div class="sp-h">Part 1 · Part heading</div><div class="sp-rule"></div><div class="sp-th">No. · Part · Condition</div></div><div class="toolbar std-hide"><button id="styleLogoPick" type="button">Choose logo</button><button id="styleLogoRemove" class="small danger" type="button" hidden>Remove logo</button></div><input id="styleLogoFile" type="file" accept="image/*" hidden><div class="toolbar"><button id="styleSave" class="primary" type="button" style="flex:1">Save style</button><button id="styleCancel" type="button">Cancel</button></div><button id="styleDelete" class="small danger" type="button" style="width:100%" hidden>Delete this style</button></dialog><dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="markup" aria-label="Mark up photo"><div class="mk-top"><button type="button" id="mkCancel">Cancel</button><span id="mkTitle">Mark up</span><button type="button" id="mkClear">Clear all</button><button type="button" id="mkSave" class="primary">Save</button></div><div class="mk-stage" id="mkStage"><canvas id="mkCanvas" aria-label="Photo – draw with your finger"></canvas><div id="mkTextBox" hidden><input id="mkText" maxlength="120" enterkeyhint="done" autocomplete="off" placeholder="Label text" aria-label="Label text"><div class="mk-row"><button type="button" id="mkTextMic">🎙 Speak</button><button type="button" id="mkTextCancel">Cancel</button><button type="button" id="mkTextOk" class="primary">Add</button></div></div></div><div class="mk-bar" role="group" aria-label="Tool"><button type="button" data-mk-tool="arrow" aria-pressed="true">↗<small>Arrow</small></button><button type="button" data-mk-tool="ellipse" aria-pressed="false">◯<small>Circle</small></button><button type="button" data-mk-tool="box" aria-pressed="false">▭<small>Box</small></button><button type="button" data-mk-tool="pen" aria-pressed="false">✎<small>Pen</small></button><button type="button" data-mk-tool="text" aria-pressed="false">T<small>Text</small></button></div><div class="mk-bar" role="group" aria-label="Colour"><button type="button" data-mk-color="red" aria-pressed="true" aria-label="Red"><i style="background:#E8202A"></i></button><button type="button" data-mk-color="yellow" aria-pressed="false" aria-label="Yellow"><i style="background:#FFD60A"></i></button><button type="button" data-mk-color="white" aria-pressed="false" aria-label="White"><i style="background:#FFFFFF"></i></button><button type="button" data-mk-color="black" aria-pressed="false" aria-label="Black"><i style="background:#111111"></i></button><button type="button" data-mk-color="blue" aria-pressed="false" aria-label="Blue"><i style="background:#1E6BFF"></i></button></div><div class="mk-bar" role="group" aria-label="Line and history"><button type="button" data-mk-w="1" aria-pressed="false" aria-label="Thin line"><b style="height:2px"></b><small>Thin</small></button><button type="button" data-mk-w="2" aria-pressed="true" aria-label="Medium line"><b style="height:5px"></b><small>Medium</small></button><button type="button" data-mk-w="3" aria-pressed="false" aria-label="Thick line"><b style="height:9px"></b><small>Thick</small></button><button type="button" id="mkUndo" disabled>↶<small>Undo</small></button><button type="button" id="mkRedo" disabled>↷<small>Redo</small></button></div></dialog>
 <dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
 <script>
@@ -1220,7 +1236,7 @@ async function movePartTo(id,n){
 function detailVisible(k){return DEFAULT_FIELDS.includes(k)||(current.shownFields||[]).includes(k)||!!clean(current[k]);}
 function renderDetails(){
  if(!current)return;
- if($('reportStyle'))$('reportStyle').innerHTML=styleOptions(current.styleId||'standard');
+ syncStylePickers();
  const packKeys=new Set(isPackJob(current)?current.pack.headerFields.map(headerKey).filter(Boolean):[]);
  document.querySelectorAll('#detailGrid [data-dfield]').forEach(el=>{const k=el.dataset.dfield;el.hidden=packKeys.has(k)||!detailVisible(k);});
  $('customFields').innerHTML=(current.customFields||[]).map(f=>`<div data-custom="${esc(f.id)}"><div class="field-head dhead"><label for="cf-${esc(f.id)}">${esc(f.label)}</label><button type="button" class="redo dx" data-cremove="${esc(f.id)}" aria-label="Remove ${esc(f.label)}">✕</button></div><input id="cf-${esc(f.id)}" data-custom-input="${esc(f.id)}" value="${esc(f.value)}"></div>`).join('');
@@ -1499,9 +1515,8 @@ async function prepareLogo(max=800){
  }
  return {blob,width,height,ext:isPng?'png':'jpg',mime:isPng?'image/png':'image/jpeg'};
 }
-function logoDrawingXml(cx,cy,rel,descr){
- const n=9000;
- return `<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="40" w:after="40"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${n}" name="Company logo" descr="${xml(descr)}"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="${n}" name="logo"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rel}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
+function logoDrawingXml(cx,cy,rel,descr,align='center',n=9000){
+ return `<w:p><w:pPr><w:jc w:val="${align}"/><w:spacing w:before="40" w:after="40"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="${n}" name="Company logo" descr="${xml(descr)}"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="${n}" name="logo"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="${rel}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
 }
 async function imageBlob(blob,max=1600,quality=.8){
  const url=URL.createObjectURL(blob);
@@ -2004,10 +2019,20 @@ const STYLE_PREFIX='style:';
 const STANDARD_STYLE=Object.freeze({id:'standard',name:'Standard',accent:'1F3A44',heading:'1F3A44',logo:null,builtIn:true});
 let exportStyle=STANDARD_STYLE,stylesCache=[];
 function normHex(h,f){let m=String(h||'').trim().replace(/^#/,'');if(/^[0-9a-f]{3}$/i.test(m))m=m.replace(/./g,c=>c+c);return /^[0-9a-f]{6}$/i.test(m)?m.toUpperCase():f;}
-function shapeStyle(x){const lg=x?.logo;return {id:String(x?.id||''),kind:'reportStyle',name:clean(x?.name).slice(0,60)||'Untitled style',accent:normHex(x?.accent,'1F3A44'),heading:normHex(x?.heading,'1F3A44'),logo:lg&&lg.blob instanceof Blob&&lg.blob.size?{blob:lg.blob,mime:String(lg.mime||lg.blob.type||'image/png'),width:Number(lg.width)||0,height:Number(lg.height)||0,name:String(lg.name||'')}:null,updated:String(x?.updated||'')};}
+// v13: optional cover/header layout ('banner' default | 'clean') and up to 3 small header lines – additive fields.
+function shapeLayout(v){return v==='clean'?'clean':'banner';}
+function shapeHeadLines(a){return (Array.isArray(a)?a:[]).slice(0,3).map(t=>clean(t).slice(0,90));}
+function shapeStyle(x){const lg=x?.logo;return {id:String(x?.id||''),kind:'reportStyle',name:clean(x?.name).slice(0,60)||'Untitled style',accent:normHex(x?.accent,'1F3A44'),heading:normHex(x?.heading,'1F3A44'),layout:shapeLayout(x?.layout),headerLines:shapeHeadLines(x?.headerLines),logo:lg&&lg.blob instanceof Blob&&lg.blob.size?{blob:lg.blob,mime:String(lg.mime||lg.blob.type||'image/png'),width:Number(lg.width)||0,height:Number(lg.height)||0,name:String(lg.name||'')}:null,updated:String(x?.updated||'')};}
 async function getStyles(){const all=await getAll('settings');stylesCache=all.filter(x=>x&&x.kind==='reportStyle'&&String(x.id).startsWith(STYLE_PREFIX)).map(shapeStyle).sort((a,b)=>a.name.localeCompare(b.name));return stylesCache;}
-async function styleById(id){if(!id||id==='standard')return STANDARD_STYLE;const x=await get('settings',id).catch(()=>null);return x&&x.kind==='reportStyle'?shapeStyle(x):STANDARD_STYLE;}
+// v13: the built-in Standard style keeps its colours; only its layout and header lines can be set (settings 'standardStyle').
+async function standardStyle(){const x=await get('settings','standardStyle').catch(()=>null);return {...STANDARD_STYLE,layout:shapeLayout(x?.layout),headerLines:shapeHeadLines(x?.headerLines)};}
+async function styleById(id){if(!id||id==='standard')return standardStyle();const x=await get('settings',id).catch(()=>null);return x&&x.kind==='reportStyle'?shapeStyle(x):standardStyle();}
 async function useStyle(r){exportStyle=await styleById(r?.styleId);return exportStyle;}
+function isClean(){return exportStyle.layout==='clean';}
+// Clean layout running-header lines: the style's header lines, else company name and the report heading.
+function headLines(title){const l=(exportStyle.headerLines||[]).filter(Boolean);return l.length?l:[companyName,title].map(clean).filter(Boolean).slice(0,2);}
+// Clean cover grid: Report title full width, then the job details two pairs per row.
+function cleanGrid(r){return {full:['Report title',reportTitle(r)],pairs:coverRows(r)};}
 function lastStyleId(){return localStorage.getItem('stripnote-style-last')||'standard';}
 function rememberStyle(id){localStorage.setItem('stripnote-style-last',id||'standard');}
 function RN(){return exportStyle.heading;}
@@ -2036,7 +2061,7 @@ function fitEmu(w,h,maxW=2880000,maxH=2300000){const scale=Math.min(maxW/Math.ma
 const DOCX_FONT='DejaVu Sans';
 const FONT_TAG=`<w:rFonts w:ascii="${DOCX_FONT}" w:hAnsi="${DOCX_FONT}" w:cs="${DOCX_FONT}"/>`;
 function docxRun(text,opt={}){
- const pr=[FONT_TAG];
+ const pr=[opt.font?`<w:rFonts w:ascii="${opt.font}" w:hAnsi="${opt.font}" w:cs="${opt.font}"/>`:FONT_TAG];
  if(opt.bold)pr.push('<w:b/>');
  if(opt.italic)pr.push('<w:i/>');
  const size=opt.size||21;
@@ -2093,6 +2118,17 @@ async function buildDocx(raw,notify=()=>{}){
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
   titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'FFFFFF',valign:'center'})}${docxCell(headInner,textTwips,{fill:RN(),valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
  }
+ if(isClean()){
+  // v13 Clean cover: serif title in the heading colour over a thin rule, equipment · serial, bordered 4-column label/value grid.
+  body+=docxPara(docxRun(reportTitle(r),{size:48,bold:true,color:RN(),font:'Georgia'}),`<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="${RN()}"/></w:pBdr><w:spacing w:before="120" w:after="120"/>`);
+  if(idLine)body+=docxPara(docxRun(idLine,{size:26,bold:true,color:'3C4A50'}),'<w:spacing w:before="0" w:after="200"/>');
+  const g=cleanGrid(r),LW=1900,VW=(TW-2*LW)/2,tintC=hexMix(RN(),'FFFFFF',.94);
+  const lab=t=>docxCell(docxPara(docxRun(t+':',{size:18,bold:true,color:'1F2A30'}),'<w:spacing w:before="50" w:after="50"/>'),LW,{fill:tintC});
+  const val=(t,w,span)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30'}),'<w:spacing w:before="50" w:after="50"/>'),w,span?{span}:{});
+  let gr=docxRow({html:lab(g.full[0])+val(g.full[1],TW-LW,3)});
+  for(let i=0;i<g.pairs.length;i+=2){const a=g.pairs[i],b=g.pairs[i+1];gr+=docxRow({html:b?lab(a[0])+val(a[1],VW)+lab(b[0])+val(b[1],VW):lab(a[0])+val(a[1],TW-LW,3)});}
+  body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('8A9599',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${LW}"/><w:gridCol w:w="${VW}"/><w:gridCol w:w="${LW}"/><w:gridCol w:w="${VW}"/></w:tblGrid>${gr}</w:tbl>`;
+ }else{
  let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:RN(),span:2})});
  titleRows+=docxRow({html:docxCell(docxPara('','<w:spacing w:before="0" w:after="0" w:line="80" w:lineRule="exact"/>'),TW,{fill:ruleColor(),span:2})});
  const tint=hexMix(RN(),'FFFFFF',.92);
@@ -2100,6 +2136,7 @@ async function buildDocx(raw,notify=()=>{}){
   titleRows+=docxRow({html:docxCell(docxPara(docxRun(k.toUpperCase(),{size:16,color:RN(),bold:true}),'<w:spacing w:before="40" w:after="40"/>'),labelW,{fill:tint})+docxCell(docxPara(docxRun(v,{size:21,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),valueW,{fill:i%2?'FFFFFF':hexMix(RN(),'FFFFFF',.97)})});
  });
  body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),8)}<w:tblCellMar><w:top w:w="60" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${labelW}"/><w:gridCol w:w="${valueW}"/></w:tblGrid>${titleRows}</w:tbl>`;
+ }
  body+=docxPara('', '<w:spacing w:before="200" w:after="0"/>');
  const H1=t=>docxPara(docxRun(t,{size:28,bold:true,color:RN()}),'<w:pStyle w:val="Heading1"/><w:keepNext/><w:spacing w:before="300" w:after="100"/>');
  const H2=t=>docxPara(docxRun(t,{size:22,bold:true,color:RN()}),'<w:keepNext/><w:spacing w:before="160" w:after="80"/>');
@@ -2227,7 +2264,16 @@ async function buildDocx(raw,notify=()=>{}){
  const footLeft=footerLeft(r);
  const hdrNs='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
  let header;
- if(logo){
+ const HLW=isClean()?headLines(title):[];
+ if(isClean()){
+  // v13 Clean running header: small grey lines left, small logo right, thin heading-colour rule.
+  const logoW=logo?2600:0,leftW=TW-logoW;
+  const lines=HLW.map((t,j)=>docxPara(docxRun(clipText(t,90),{size:15,bold:j===0,color:j===0?'3C4A50':'5C6B70'}),'<w:spacing w:before="0" w:after="0" w:line="220" w:lineRule="exact"/>')).join('')||docxPara('');
+  let right='';
+  if(logo){const {cx,cy}=fitEmu(logo.width,logo.height,1440000,540000);right=`<w:tc><w:tcPr><w:tcW w:w="${logoW}" w:type="dxa"/><w:vAlign w:val="bottom"/></w:tcPr>${logoDrawingXml(cx,cy,'rIdLogo','Company logo','right')}</w:tc>`;}
+  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${hdrNs}><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),8,['bottom'])}<w:tblCellMar><w:left w:w="0" w:type="dxa"/><w:right w:w="0" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${leftW}"/>${logo?`<w:gridCol w:w="${logoW}"/>`:''}</w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="${leftW}" w:type="dxa"/><w:vAlign w:val="bottom"/></w:tcPr>${lines}</w:tc>${right}</w:tr></w:tbl>${docxPara('','<w:spacing w:before="0" w:after="0" w:line="40" w:lineRule="exact"/>')}</w:hdr>`;
+  if(logo)zip.file('word/_rels/header1.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${logoRel}</Relationships>`);
+ }else if(logo){
   const {cx,cy}=fitEmu(logo.width,logo.height,1260000,648000);
   const logoTwips=Math.max(1100,Math.round(cx/635)+160);
   const mid=Math.max(2000,TW-logoTwips-2266);
@@ -2245,7 +2291,7 @@ async function buildDocx(raw,notify=()=>{}){
  zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpg" ContentType="image/jpeg"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>');
  zip.file('_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rIdCore" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>');
  zip.file('word/_rels/document.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rIdSettings" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rIdHeader" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>${logoRel}${rels}</Relationships>`);
- zip.file('word/document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>${body}<w:sectPr><w:headerReference w:type="default" r:id="rIdHeader"/><w:footerReference w:type="default" r:id="rIdFooter"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="${logo?1400:1020}" w:right="1020" w:bottom="1020" w:left="1020" w:header="${logo?800:500}" w:footer="500" w:gutter="0"/></w:sectPr></w:body></w:document>`);
+ zip.file('word/document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>${body}<w:sectPr><w:headerReference w:type="default" r:id="rIdHeader"/><w:footerReference w:type="default" r:id="rIdFooter"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="${isClean()?Math.max(1300,(logo?1500:900)+HLW.length*150):logo?1400:1020}" w:right="1020" w:bottom="1020" w:left="1020" w:header="${isClean()?500:logo?800:500}" w:footer="500" w:gutter="0"/></w:sectPr></w:body></w:document>`);
  zip.file('word/styles.xml',styles);
  zip.file('word/header1.xml',header);
  zip.file('word/footer1.xml',footer);
@@ -2262,7 +2308,12 @@ async function buildPDF(raw,notify=()=>{}){
  doc.addFont('StripNoteSans.ttf','StripNoteSans','normal');
  doc.setFont('StripNoteSans','normal');
  try{doc.setProperties({title:reportHeading(r),subject:'Equipment strip-down investigation report',creator:companyName||r.investigator||'',author:r.investigator||''});}catch(e){}
- const ML=18,MR=18,MT=18,MB=18,PW=210,PH=297,CW=PW-ML-MR,bottom=PH-MB;
+ await useStyle(r);
+ const ML=18,MR=18,MB=18,PW=210,PH=297,CW=PW-ML-MR,bottom=PH-MB;
+ // v13: Clean layout has a taller white running header (up to 3 small lines, logo right, rule).
+ const HL=isClean()?headLines(reportHeading(r)):[];
+ const HRULE=isClean()?Math.max(13.5,5.6+Math.max(1,HL.length)*3.4+1.6):13.5;
+ const MT=isClean()?HRULE+6:18;
  let y=MT;
  const newPage=()=>{doc.addPage();doc.setFont('StripNoteSans','normal');y=MT;};
  const need=(h)=>{if(y+h>bottom)newPage();};
@@ -2281,6 +2332,43 @@ async function buildPDF(raw,notify=()=>{}){
   logoData={bytes:new Uint8Array(await logo.blob.arrayBuffer()),width:logo.width,height:logo.height,format:logo.ext==='png'?'PNG':'JPEG'};
  }
  const idLine=reportIdLine(r);
+ const SERIF_OK=t=>/^[\x20-\x7E\u00A0-\u00FF\u2013\u2014\u2018\u2019\u201C\u201D\u2022\u2026]*$/.test(t);
+ const drawCleanCover=()=>{
+  // v13 Clean cover: big title in the heading colour, thin rule, equipment · serial, then a bordered label/value grid.
+  const t=reportTitle(r),serif=SERIF_OK(t);
+  if(serif){doc.setFont('times','bold');doc.setFontSize(24);}else{doc.setFont('StripNoteSans','normal');doc.setFontSize(22);}
+  const tl=doc.splitTextToSize(t,CW).slice(0,2);
+  setInk(RNR());
+  tl.forEach(line=>{y+=8.6;doc.text(line,ML,y);if(!serif)doc.text(line,ML+0.1,y);y+=1.2;});
+  doc.setFont('StripNoteSans','normal');
+  y+=2.4;doc.setDrawColor(...RNR());doc.setLineWidth(0.45);doc.line(ML,y,ML+CW,y);y+=1;
+  if(idLine){textLines(idLine,12.5,CW).slice(0,2).forEach(line=>{y+=6;drawText(line,ML,y,{size:12.5,color:[60,74,80],bold:true});});}
+  y+=6;
+  const g=cleanGrid(r),LW=32,VW=CW/2-LW,tint=hexRgb(hexMix(RN(),'FFFFFF',.94));
+  const cellLines=(v,w)=>textLines(v||' ',9,w-3).slice(0,3);
+  const rowsOut=[[g.full]];for(let i=0;i<g.pairs.length;i+=2)rowsOut.push(g.pairs.slice(i,i+2));
+  const top=y;
+  doc.setLineWidth(0.25);
+  rowsOut.forEach((row,ri)=>{
+   const full=ri===0||row.length===1;
+   const segs=full?[[row[0],CW-LW]]:row.map(c=>[c,VW]);
+   const lines=segs.map(([c,w])=>cellLines(c[1],w));
+   const rh=Math.max(7.4,Math.max(...lines.map(l=>l.length))*4+3.4);
+   if(y+rh>bottom)newPage();
+   let x=ML;
+   segs.forEach(([c,w],k)=>{
+    doc.setFillColor(...tint);doc.rect(x,y,LW,rh,'F');
+    doc.setDrawColor(138,149,153);doc.rect(x,y,LW,rh);doc.rect(x+LW,y,w,rh);
+    textLines(c[0]+':',8.5,LW-3).slice(0,2).forEach((line,j)=>drawText(line,x+1.6,y+4.8+j*3.8,{size:8.5,color:[31,42,48],bold:true}));
+    lines[k].forEach((line,j)=>drawText(line,x+LW+1.6,y+4.8+j*4,{size:9,color:[31,42,48]}));
+    x+=LW+w;
+   });
+   y+=rh;
+  });
+  doc.setDrawColor(...RNR());doc.setLineWidth(0.4);if(y>top)doc.rect(ML,top,CW,y-top);
+  y+=8;
+ };
+ if(isClean())drawCleanCover();else{
  const textW=Math.max(40,CW-10-(logoData?40:0));
  const titleLines=textLines(reportTitle(r),21,textW).slice(0,2);
  const idLines=idLine?textLines(idLine,14,textW).slice(0,2):[];
@@ -2322,6 +2410,7 @@ async function buildPDF(raw,notify=()=>{}){
  });
  doc.setDrawColor(...RAR());doc.setLineWidth(0.35);doc.rect(ML,top,CW,blockH);
  y=top+blockH+8;
+ }
  const H1=t=>{need(18);y+=2;drawText(t,ML,y,{size:13,color:RNR(),bold:true});y+=2.5;doc.setDrawColor(...RAR());doc.setLineWidth(0.4);doc.line(ML,y,ML+CW,y);y+=6;};
  const H2=t=>{need(12);drawText(t,ML,y,{size:10.5,color:RNR(),bold:true});y+=5;};
  const PARAS=t=>{for(const p of paragraphsOf(t)){for(const line of textLines(p,10.5,CW)){if(y+5>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=5;}y+=2.5;}};
@@ -2517,6 +2606,18 @@ async function buildPDF(raw,notify=()=>{}){
  for(let i=1;i<=pages;i++){
   doc.setPage(i);doc.setFont('StripNoteSans','normal');
   doc.setFontSize(8);
+  if(isClean()){
+   // v13 Clean running header: small grey lines left, small logo right, thin heading-colour rule.
+   let lw=0;
+   if(logoData){let lh=Math.min(10,HRULE-6.6),lW=lh*logoData.width/Math.max(1,logoData.height);if(lW>40){lW=40;lh=lW*logoData.height/Math.max(1,logoData.width);}lw=lW+4;doc.addImage(logoData.bytes,logoData.format,PW-MR-lW,HRULE-1.6-lh,lW,lh,'company-logo','FAST');}
+   HL.forEach((t,j)=>{let line=clipText(t,90);doc.setFontSize(7.5);while(line.length>1&&doc.getTextWidth(line)>CW-lw-2)line=line.slice(0,-2).trim()+'…';drawText(line,ML,8.4+j*3.4,{size:7.5,color:j===0?[60,74,80]:[90,100,104],bold:j===0});});
+   doc.setDrawColor(...RNR());doc.setLineWidth(0.4);doc.line(ML,HRULE,PW-MR,HRULE);
+   doc.setDrawColor(...RAR());doc.setLineWidth(0.3);doc.line(ML,PH-13,PW-MR,PH-13);
+   const foot=footerLeft(r);
+   if(foot)drawText(clipText(foot,60),ML,PH-8.5,{size:8,color:[90,100,104]});
+   drawText(`Page ${i} of ${pages}`,PW-MR,PH-8.5,{size:8,color:[90,100,104],align:'right'});
+   continue;
+  }
   let headX=ML;
   if(logoData){
    let logoH=8,logoW=logoH*logoData.width/Math.max(1,logoData.height);
@@ -2547,7 +2648,7 @@ const PPW=13.333,PPH=7.5;
 const ppE=v=>Math.max(0,Math.round(v*914400));
 const ppXfrm=(x,y,w,h)=>`<a:xfrm><a:off x="${ppE(x)}" y="${ppE(y)}"/><a:ext cx="${Math.max(1,ppE(w))}" cy="${Math.max(1,ppE(h))}"/></a:xfrm>`;
 const ppFill=c=>c?`<a:solidFill><a:srgbClr val="${c}"/></a:solidFill>`:'<a:noFill/>';
-function ppRun(text,o={}){return `<a:r><a:rPr lang="en-GB" sz="${Math.round((o.size||16)*100)}"${o.bold?' b="1"':''}${o.italic?' i="1"':''} dirty="0">${ppFill(o.color||'1F2A30')}<a:latin typeface="${PP_FONT}"/><a:cs typeface="${PP_FONT}"/></a:rPr><a:t>${xml(text)}</a:t></a:r>`;}
+function ppRun(text,o={}){return `<a:r><a:rPr lang="en-GB" sz="${Math.round((o.size||16)*100)}"${o.bold?' b="1"':''}${o.italic?' i="1"':''} dirty="0">${ppFill(o.color||'1F2A30')}<a:latin typeface="${o.font||PP_FONT}"/><a:cs typeface="${o.font||PP_FONT}"/></a:rPr><a:t>${xml(text)}</a:t></a:r>`;}
 function ppPara(text,o={}){const sp=o.after!=null?`<a:spcAft><a:spcPts val="${Math.round(o.after*100)}"/></a:spcAft>`:'';const runs=Array.isArray(text)?text.map(t=>ppRun(t.text,{...o,...t})).join(''):(String(text??'')?ppRun(text,o):'');return `<a:p><a:pPr algn="${o.align||'l'}">${sp}</a:pPr>${runs}<a:endParaRPr lang="en-GB" sz="${Math.round((o.size||16)*100)}" dirty="0"/></a:p>`;}
 function ppParas(text,o={}){const list=String(text||'').split(/\n+/).map(clean).filter(Boolean);return (list.length?list:['']).map(t=>ppPara(t,o)).join('');}
 function ppShape(s,id,x,y,w,h,paras,o={}){
@@ -2576,7 +2677,7 @@ function ppTable(s,id,x,y,widths,rows,o={}){
 }
 function ppTheme(){
  const c=(n,v)=>`<a:${n}><a:srgbClr val="${v}"/></a:${n}>`;
- return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="StripNote"><a:themeElements><a:clrScheme name="StripNote"><a:dk1><a:srgbClr val="1F2A30"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>${c('dk2',RN())}${c('lt2','F4F7F8')}${c('accent1',RN())}${c('accent2','C6B15A')}${c('accent3','166E3A')}${c('accent4','8C5400')}${c('accent5','A82018')}${c('accent6','5A6468')}${c('hlink','1F5F8B')}${c('folHlink','5A6468')}</a:clrScheme><a:fontScheme name="StripNote"><a:majorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="StripNote"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="12700"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="StripNote"><a:themeElements><a:clrScheme name="StripNote"><a:dk1><a:srgbClr val="1F2A30"/></a:dk1><a:lt1><a:srgbClr val="FFFFFF"/></a:lt1>${c('dk2',RN())}${c('lt2','F4F7F8')}${c('accent1',RN())}${c('accent2',ruleColor())}${c('accent3','166E3A')}${c('accent4','8C5400')}${c('accent5','A82018')}${c('accent6','5A6468')}${c('hlink','1F5F8B')}${c('folHlink','5A6468')}</a:clrScheme><a:fontScheme name="StripNote"><a:majorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="${PP_FONT}"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="StripNote"><a:fillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:fillStyleLst><a:lnStyleLst><a:ln w="9525"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="12700"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln><a:ln w="19050"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:ln></a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:solidFill><a:schemeClr val="phClr"/></a:solidFill></a:bgFillStyleLst></a:fmtScheme></a:themeElements><a:objectDefaults/><a:extraClrSchemeLst/></a:theme>`;
 }
 const PP_TREE_HEAD='<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
 async function buildPptx(raw,notify=()=>{}){
@@ -2615,7 +2716,24 @@ async function buildPptx(raw,notify=()=>{}){
  const condFor=part=>tj&&part.skipped?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(part.condition)];
  const total=photoCount(r.parts);let done=0;
  // 1. Title slide
- {
+ if(isClean()){
+  // v13 Clean title slide: white, header lines top-left, logo top-right, heading-colour rules, boxed label/value grid.
+  const sl=newSlide('FFFFFF');
+  const HLs=headLines(title);
+  HLs.forEach((t,j)=>ppShape(sl.shapes,sl.next++,0.5,0.28+j*0.3,8.6,0.3,ppPara(clipText(t,90),{size:12,bold:j===0,color:j===0?'3C4A50':'5C6B70'}),{name:'Header line '+(j+1),inset:0,fit:false,anchor:'ctr'}));
+  const hb=Math.max(1.0,0.28+HLs.length*0.3+0.12);
+  if(logo)await addLogo(sl,PPW-3.3,0.25,2.8,hb-0.35);
+  ppShape(sl.shapes,sl.next++,0.5,hb+0.05,PPW-1.0,0.03,null,{fill:RN(),name:'Header rule'});
+  let ty=hb+0.3;
+  ppShape(sl.shapes,sl.next++,0.5,ty,PPW-1.0,1.05,ppPara(clipText(reportTitle(r),80),{size:36,bold:true,color:RN(),font:'Georgia'}),{name:'Report title',anchor:'b',inset:0.02});ty+=1.1;
+  ppShape(sl.shapes,sl.next++,0.5,ty,PPW-1.0,0.015,null,{fill:RN(),name:'Title rule'});ty+=0.1;
+  if(reportIdLine(r)){ppShape(sl.shapes,sl.next++,0.5,ty,PPW-1.0,0.55,ppPara(clipText(reportIdLine(r),80),{size:20,bold:true,color:'3C4A50'}),{name:'Equipment and serial',inset:0.02,fit:false});ty+=0.6;}
+  ty+=0.2;
+  const g=cleanGrid(r),LW=2.0,VW=(PPW-1.0-2*LW)/2,rowH=0.46,tintP=hexMix(RN(),'FFFFFF',.94);
+  const rowsP=[[g.full]];for(let i=0;i<g.pairs.length;i+=2)rowsP.push(g.pairs.slice(i,i+2));
+  rowsP.forEach((row,ri)=>{const cy=ty+ri*rowH;if(cy+rowH>PPH-0.25)return;const full=row.length===1;let x=0.5;row.forEach(([k,v])=>{const w=full?PPW-1.0-LW:VW;ppShape(sl.shapes,sl.next++,x,cy,LW,rowH,ppPara(k+':',{size:12,bold:true,color:'1F2A30'}),{fill:tintP,line:'8A9599',lineW:0.75,anchor:'ctr',name:k+' label',inset:0.06,fit:false});ppShape(sl.shapes,sl.next++,x+LW,cy,w,rowH,ppPara(clipText(v,full?110:48),{size:13,color:'1F2A30'}),{fill:'FFFFFF',line:'8A9599',lineW:0.75,anchor:'ctr',name:k,inset:0.06,fit:false});x+=LW+w;});});
+  sl.title=true;
+ }else{
   const sl=newSlide(RN());
   ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:ruleColor(),name:'Accent rule'});
   if(logo)await addLogo(sl,0.6,0.5,3.0,1.2,true);
@@ -2628,7 +2746,7 @@ async function buildPptx(raw,notify=()=>{}){
   const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
   const rows=coverRows(r).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
   const colW=6.0,rowH=0.62;
-  rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:'9FB3B9'})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
+  rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:hexMix(RN(),'FFFFFF',.62)})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
   sl.title=true;
  }
  // 2. Summary slide
@@ -2905,7 +3023,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  }
  // v11b: report styles (all of this phone's own styles, with their logos) travel with the job.
  const styles=await getStyles().catch(()=>[]);
- if(styles.length){const meta=[];for(const st of styles){const m={id:st.id,name:st.name,accent:st.accent,heading:st.heading,updated:st.updated};if(st.logo){const path=`styles/${safeFileName(st.id.slice(STYLE_PREFIX.length),'style')}`;zip.file(path,st.logo.blob,{binary:true});m.logo={mime:st.logo.mime,width:st.logo.width,height:st.logo.height,name:st.logo.name,path};}meta.push(m);}zip.file('styles.json',JSON.stringify(meta,null,1));}
+ if(styles.length){const meta=[];for(const st of styles){const m={id:st.id,name:st.name,accent:st.accent,heading:st.heading,layout:st.layout,headerLines:st.headerLines,updated:st.updated};if(st.logo){const path=`styles/${safeFileName(st.id.slice(STYLE_PREFIX.length),'style')}`;zip.file(path,st.logo.blob,{binary:true});m.logo={mime:st.logo.mime,width:st.logo.width,height:st.logo.height,name:st.logo.name,path};}meta.push(m);}zip.file('styles.json',JSON.stringify(meta,null,1));}
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
  if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
  zip.file('README.txt',`StripNote v11 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2 and 03.a.01_O-ring.jpg is the first photo of sub-part 3.a. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
@@ -3367,9 +3485,20 @@ let styleEdit=null,styleLogoURL=null,styleListURLs=[];
 async function renderStyleList(){
  const list=await getStyles();
  styleListURLs.forEach(u=>URL.revokeObjectURL(u));styleListURLs=[];
- const row=(st,builtIn)=>{let img='';if(st.logo){const u=URL.createObjectURL(st.logo.blob);styleListURLs.push(u);img=`<img src="${u}" alt="">`;}return `<div class="style-item" data-style-row="${esc(st.id)}"><span class="sw"><i style="background:#${st.heading}"></i><i style="background:#${st.accent}"></i></span>${img}<span class="nm"><b>${esc(st.name)}</b>${builtIn?'<br><small>Built in · uses the Company logo</small>':''}</span>${builtIn?'':`<button type="button" class="small" data-style-edit="${esc(st.id)}" aria-label="Edit style ${esc(st.name)}">Edit</button>`}</div>`;};
- $('styleList').innerHTML=row(STANDARD_STYLE,true)+list.map(x=>row(x,false)).join('');
- if(current&&$('reportStyle'))$('reportStyle').innerHTML=styleOptions(current.styleId||'standard');
+ const row=(st,builtIn)=>{let img='';if(st.logo){const u=URL.createObjectURL(st.logo.blob);styleListURLs.push(u);img=`<img src="${u}" alt="">`;}return `<div class="style-item" data-style-row="${esc(st.id)}"><span class="sw"><i style="background:#${st.heading}"></i><i style="background:#${st.accent}"></i></span>${img}<span class="nm"><b>${esc(st.name)}</b>${builtIn?'<br><small>Built in · uses the Company logo</small>':''}<br><small>${st.layout==='clean'?'Clean layout':'Banner layout'}</small></span>${builtIn?`<button type="button" class="small" data-style-edit="standard" aria-label="Standard style layout">Layout</button>`:`<button type="button" class="small" data-style-edit="${esc(st.id)}" aria-label="Edit style ${esc(st.name)}">Edit</button>`}</div>`;};
+ $('styleList').innerHTML=row(await standardStyle(),true)+list.map(x=>row(x,false)).join('');
+ if(current)syncStylePickers();
+}
+// v13: the job's style is also shown beside Finish job / exports, so it is clear which style a report will use.
+function syncStylePickers(){
+ if(!current)return;
+ const id=current.styleId||'standard',known=id==='standard'||stylesCache.some(x=>x.id===id);
+ for(const k of ['reportStyle','reportStyleQuick'])if($(k))$(k).innerHTML=styleOptions(id);
+ const st=stylesCache.find(x=>x.id===id)||STANDARD_STYLE;
+ const sw=$('styleNowSw');if(sw){const [a,b]=sw.querySelectorAll('i');a.style.background='#'+st.heading;b.style.background='#'+st.accent;}
+ const h=$('styleNowHint');if(!h)return;
+ const msg=!known?'The style this report used is no longer on this phone, so it exports in Standard. Pick a style.':(id==='standard'&&stylesCache.length)?'Standard uses the built-in slate and gold colours with the Company logo. Pick your own style here to use its colours.':'';
+ h.textContent=msg;h.hidden=!msg;
 }
 // v12: hex text box beside each picker (Android pickers have no hex field). Kept in sync both ways.
 const HEX_PAIRS=[['styleAccent','styleAccentHex'],['styleHeading','styleHeadingHex']];
@@ -3378,29 +3507,43 @@ function onHexText(k){const t=$(k+'Hex');const v=t.value.trim();const h=normHex(
 function badHex(){return HEX_PAIRS.filter(([k,t])=>!normHex($(t).value,''));}
 function paintStylePreview(){
  const a=normHex($('styleAccent').value,'1F3A44'),h=normHex($('styleHeading').value,'1F3A44');
- const pv=$('stylePreview');pv.querySelector('.sp-band').style.background='#'+h;pv.querySelector('.sp-th').style.background='#'+h;pv.querySelector('.sp-h').style.color='#'+h;pv.querySelector('.sp-rule').style.background='#'+a;
+ const pv=$('stylePreview');pv.classList.toggle('clean',$('styleLayout').value==='clean');pv.querySelector('.sp-stripe').style.background='#'+a;
+ pv.querySelector('.sp-chead').style.borderColor='#'+h;pv.querySelector('.sp-ctitle').style.color='#'+h;pv.querySelector('.sp-ctitle').style.borderColor='#'+h;pv.querySelector('.sp-grid').style.borderColor='#'+h;
+ const tint='#'+hexMix(h,'FFFFFF',.94);pv.querySelectorAll('.sp-grid .l').forEach(e=>e.style.background=tint);
+ const hl=[1,2,3].map(i=>clean($('styleHL'+i).value)).filter(Boolean);$('spHL').innerHTML=(hl.length?hl:['Header line 1','Header line 2']).map((t,i)=>i?esc(t):`<b>${esc(t)}</b>`).join('<br>');
+ pv.querySelector('.sp-band').style.background='#'+h;pv.querySelector('.sp-th').style.background='#'+h;pv.querySelector('.sp-h').style.color='#'+h;pv.querySelector('.sp-rule').style.background='#'+a;
  const c=contrastRatio(h,'FFFFFF'),c2=contrastRatio(a,'FFFFFF');
  $('styleContrast').textContent=c<4.5?`⚠ White text on the heading colour is hard to read (${c.toFixed(1)}:1; aim for 4.5:1 or more). Pick a darker colour.`:`White text on headings: ${c.toFixed(1)}:1 ✓${c2<3?` · The accent is pale on white paper (${c2.toFixed(1)}:1), so rule lines may look faint.`:''}`;
  $('styleContrast').classList.toggle('bad',c<4.5);
  const lg=styleEdit?.logo;if(styleLogoURL){URL.revokeObjectURL(styleLogoURL);styleLogoURL=null;}
- if(lg){styleLogoURL=URL.createObjectURL(lg.blob);$('styleLogoImg').src=styleLogoURL;}
+ if(lg){styleLogoURL=URL.createObjectURL(lg.blob);$('styleLogoImg').src=styleLogoURL;$('spCLogoImg').src=styleLogoURL;}
+ $('spCLogo').hidden=!lg;
  $('styleLogoBox').hidden=!lg;$('styleLogoRemove').hidden=!lg;$('styleLogoPick').textContent=lg?'Change logo':'Choose logo (optional)';
 }
 async function openStyleEditor(id){
  const ex=id?await styleById(id):null;
- styleEdit=ex&&!ex.builtIn?{...ex}:{id:'',name:'',accent:'1F3A44',heading:'1F3A44',logo:null};
- $('styleDlgTitle').textContent=styleEdit.id?'Edit report style':'New report style';
+ const std=!!ex?.builtIn&&id==='standard';
+ styleEdit=std?{...ex,logo:null}:ex&&!ex.builtIn?{...ex}:{id:'',name:'',accent:'1F3A44',heading:'1F3A44',logo:null,layout:'banner',headerLines:[]};
+ if(std){const c=await get('settings','logo').catch(()=>null);if(c?.blob)styleEdit.logo=c;}
+ $('styleDialog').classList.toggle('std',std);$('styleStdNote').hidden=!std;
+ $('styleLayout').value=styleEdit.layout||'banner';[1,2,3].forEach(i=>$('styleHL'+i).value=(styleEdit.headerLines||[])[i-1]||'');
+ $('styleDlgTitle').textContent=std?'Standard style layout':styleEdit.id?'Edit report style':'New report style';
  $('styleName').value=styleEdit.name;setStyleColour('styleAccent',styleEdit.accent);setStyleColour('styleHeading',styleEdit.heading);
- $('styleDelete').hidden=!styleEdit.id;paintStylePreview();$('styleDialog').showModal();
+ $('styleDelete').hidden=!styleEdit.id||std;paintStylePreview();$('styleDialog').showModal();
 }
 async function saveStyle(){
  if(!styleEdit)return;
+ const layout=shapeLayout($('styleLayout').value),headerLines=shapeHeadLines([1,2,3].map(i=>$('styleHL'+i).value));
+ if(styleEdit.builtIn){await put('settings',{id:'standardStyle',layout,headerLines,updated:new Date().toISOString()});$('styleDialog').close();styleEdit=null;await renderStyleList();toast(`Standard style: ${layout==='clean'?'Clean':'Banner'} layout saved.`);return;}
  const name=clean($('styleName').value).slice(0,60);if(!name){toast('Give the style a name.');$('styleName').focus();return;}
  const bh=badHex();if(bh.length){const t=$(bh[0][1]);t.classList.add('bad');t.setAttribute('aria-invalid','true');toast('Fix the colour code: use 3 or 6 hex digits, e.g. #0014DC.');t.focus();return;}
- const st={id:styleEdit.id,kind:'reportStyle',name,accent:normHex($('styleAccent').value,'1F3A44'),heading:normHex($('styleHeading').value,'1F3A44'),logo:styleEdit.logo||null,updated:new Date().toISOString()};
+ const st={id:styleEdit.id,kind:'reportStyle',name,accent:normHex($('styleAccent').value,'1F3A44'),heading:normHex($('styleHeading').value,'1F3A44'),logo:styleEdit.logo||null,layout,headerLines,updated:new Date().toISOString()};
  if(contrastRatio(st.heading,'FFFFFF')<4.5&&!confirm('White text on this heading colour will be hard to read in the report. Save anyway?'))return;
- if(!st.id)st.id=STYLE_PREFIX+uid();
- await put('settings',st);$('styleDialog').close();styleEdit=null;await renderStyleList();toast(`Report style “${name}” saved on this phone.`);
+ const isNew=!st.id;if(isNew)st.id=STYLE_PREFIX+uid();
+ await put('settings',st);$('styleDialog').close();styleEdit=null;
+ // v13: a new style becomes the default for new reports; reports already started keep their own choice (shown beside Finish job).
+ if(isNew)rememberStyle(st.id);
+ await renderStyleList();toast(isNew?`Report style “${name}” saved. New reports use it. For a report you already started, pick it beside Finish job.`:`Report style “${name}” saved. Reports using it pick up the change on their next export.`);
 }
 on('styleNew','click',()=>openStyleEditor(null));
 // v12: Edit report – the same Report details, Report text and Sign-off cards shown on their own (no copies of the data).
@@ -3424,13 +3567,15 @@ on('styleList','click',e=>{const b=e.target.closest('[data-style-edit]');if(b)re
 ['styleAccent','styleHeading'].forEach(k=>{$(k).addEventListener('input',()=>{setStyleColour(k,$(k).value);paintStylePreview();});$(k+'Hex').addEventListener('input',()=>onHexText(k));$(k+'Hex').addEventListener('blur',()=>{const h=normHex($(k+'Hex').value,'');if(h)setStyleColour(k,h);});});
 $('styleDialog').addEventListener('click',e=>{const b=e.target.closest('[data-qcol]');if(!b)return;setStyleColour('styleAccent',b.dataset.qcol);setStyleColour('styleHeading',b.dataset.qcol);paintStylePreview();});
 on('styleSave','click',saveStyle);
+['styleLayout','styleHL1','styleHL2','styleHL3'].forEach(k=>$(k).addEventListener(k==='styleLayout'?'change':'input',paintStylePreview));
 on('styleCancel','click',()=>{styleEdit=null;$('styleDialog').close();});
 on('styleLogoPick','click',()=>$('styleLogoFile').click());
 on('styleLogoFile','change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file||!styleEdit)return;if(file.type&&!file.type.startsWith('image/'))throw Error('Choose an image file for the logo.');if(file.size>8*1048576)throw Error('Logo is too large (8 MB limit).');let width=0,height=0;try{({width,height}=await imageSize(file));}catch(err){throw Error('This image format cannot be read. Try a PNG or JPEG.');}styleEdit.logo={blob:file.slice(0,file.size,file.type||'image/png'),mime:file.type||'image/png',width,height,name:String(file.name||'')};paintStylePreview();});
 on('styleLogoRemove','click',()=>{if(styleEdit){styleEdit.logo=null;paintStylePreview();}});
 on('styleDelete','click',async()=>{if(!styleEdit?.id)return;const n=(await getAll('reports')).filter(r=>r.styleId===styleEdit.id).length;if(!confirm(`Delete report style “${styleEdit.name}”?${n?` ${n} report${n===1?' uses':'s use'} it and will then export in Standard.`:''}`))return;await remove('settings',styleEdit.id);if(lastStyleId()===styleEdit.id)rememberStyle('standard');styleEdit=null;$('styleDialog').close();await renderStyleList();toast('Report style deleted.');});
 on('newJobStyle','change',()=>rememberStyle($('newJobStyle').value));
-on('reportStyle','change',async()=>{if(!current)return;const v=$('reportStyle').value;current.styleId=v==='standard'?'':v;rememberStyle(v);await persistReport();const st=await styleById(current.styleId);toast(`Report style: ${st.name}. Word, PDF and Slides use its colours${st.builtIn?' and the Company logo':st.logo?' and logo':''}.`);});
+async function pickReportStyle(v){if(!current)return;current.styleId=v==='standard'?'':v;rememberStyle(v);await persistReport();syncStylePickers();const st=await styleById(current.styleId);toast(`Report style: ${st.name}. Word, PDF and Slides use its colours${st.builtIn?' and the Company logo':st.logo?' and logo':''}.`);}
+on('reportStyle','change',()=>pickReportStyle($('reportStyle').value));on('reportStyleQuick','change',()=>pickReportStyle($('reportStyleQuick').value));
 on('restoreBtn','click',()=>$('restoreFile').click());
 on('restoreFile','change',e=>importBackup(e.target.files?.[0]));
 on('closeViewer','click',()=>$('viewer').close());
