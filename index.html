@@ -172,7 +172,7 @@ body.stepmode #editor{display:flex;flex-direction:column}
 body.stepmode #editor>*{order:10}
 body.stepmode #stepHead{order:1}
 body.stepmode #editorPhotos,body.stepmode #noPhotos,body.stepmode #editorTools{order:2}
-body.stepmode #condLabel,body.stepmode #condButtons,body.stepmode #condHint{order:3}
+body.stepmode #condLabel,body.stepmode #condButtons,body.stepmode #condHint,body.stepmode #dispRow{order:3}
 body.stepmode #descHead,body.stepmode #description{order:4}
 body.stepmode #micStatus{order:5}
 body.stepmode #editorHeadRow,body.stepmode #camera,body.stepmode #samePart,body.stepmode #nextPart,body.stepmode #doneEntry{display:none!important}
@@ -435,6 +435,35 @@ dialog#markup[open]{display:flex;flex-direction:column}
  input:hover,textarea:hover,select:hover{border-color:var(--muted)}
 }
 .mk-keys{display:none}
+
+/* v15: tool history / build paperwork + part action (disposition) */
+.th-count{font-weight:600;color:var(--muted)}
+.th-doc{border:1px solid var(--line);border-left:5px solid #6f8f9a;border-radius:12px;padding:8px;margin:8px 0;background:var(--panel)}
+.th-doc.missing{border-left-color:#e0574b}
+.th-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 8px;align-items:center}
+.th-no{min-width:26px;text-align:center;font-size:16px}
+.th-head .th-date{grid-column:2}
+.th-meta{font-size:13px;color:var(--muted);margin:6px 0;overflow-wrap:anywhere}
+.th-meta.bad{color:var(--danger)}
+.th-tools{display:flex;gap:6px}
+.th-tools button{flex:1;min-height:48px;padding:6px}
+.th-tools button.th-view{flex:2}
+#thAdd{min-height:56px}
+#thCount{white-space:nowrap}
+/* Optional extras can be hidden in Settings; anything already filled in stays visible. */
+body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val),body.no-extras .sub-disp:not(.has-val){display:none!important}
+.th-viewer{width:min(900px,96vw)}
+.thv-pages{max-height:70vh;overflow:auto;background:#5b6366;border-radius:10px;padding:6px}
+.thv-page{margin:0 0 8px}
+.thv-page img{display:block;width:100%;height:auto;background:#fff}
+.thv-page figcaption{font-size:13px;color:#eef2f3;text-align:center;padding:3px 0}
+.disp-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;margin:4px 0 12px}
+.disp-row label{margin:0}
+.disp-row select{min-height:56px;font-size:16px}
+.disp-row select.set{outline:2px solid var(--mark);outline-offset:-2px}
+.sub-disp{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;align-items:center;margin-top:6px}
+.sub-disp select{min-height:48px}
+.disp-line{font-size:14px;font-weight:600;margin-top:2px}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="theme" class="small" type="button" aria-label="Display mode: Dark. Tap for Light.">◐ Dark</button></div></div></header>
 <main>
@@ -443,7 +472,7 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2 id="savedHead">On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v14</p>
+<p class="ver">StripNote v15</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -481,6 +510,12 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
 </div></details>
+<details class="card er-keep" id="toolHistory"><summary>Tool history / build paperwork <span class="th-count" id="thCount"></span></summary>
+<p class="note" style="margin:8px 0">PDFs that came with the tool: build sheet, previous run history. Kept on this device with the job. The report lists them, and the PDF and Word reports add their pages at the end (Appendix). Backups and Finish job include the original files.</p>
+<div id="thList"></div><p class="status" id="thStatus" role="status"></p>
+<button id="thAdd" type="button" style="width:100%">📄 Add PDF files</button><p class="hint desk-only" style="margin:6px 0 0">Or drag PDF files from this computer onto this box.</p>
+<input id="thFile" type="file" accept="application/pdf,.pdf" multiple hidden>
+</details>
 <div class="card" id="reportCard"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div></div>
 <div class="pane pane-main" id="paneMain"><section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
@@ -492,12 +527,12 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div id="micStatus" class="status" role="status"></div>
 <div class="name-row" id="nameRow"><div class="name-col"><div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing"></div><div class="pn-col"><div class="field-head"><label for="partNo">Part no.</label></div><input id="partNo" placeholder="e.g. 1234-56" autocomplete="off" autocapitalize="characters" spellcheck="false"></div></div>
 <div id="checkCard" class="check-card" hidden></div>
-<label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p>
+<label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p><div class="disp-row" id="dispRow"><label for="disposition">Action</label><select id="disposition" aria-label="Action for this part: what happens to it next (optional)"><option value="">— Not set —</option><option value="reuse">Reuse</option><option value="nif">No issues found – reuse</option><option value="inspect">Inspect</option><option value="redress">Redress</option><option value="replace">Replace</option><option value="scrap">Scrap</option><option value="quarantine">Quarantine</option></select></div>
 <div class="field-head" id="descHead"><label for="description">Description</label><button id="descMic" class="redo" type="button" aria-label="Speak the description">🎙 Speak</button><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
 <div id="subBox" class="subbox"><div class="row between"><h3 style="margin:0">Sub-parts</h3><span class="status" id="subCount"></span></div><p class="note" style="margin:4px 0 8px">O-rings, screws, seals… Each gets its own heading in the report (e.g. 3.a, 3.b), with its own photos if you add them.</p><div id="subList"></div><div class="sub-quick" id="subQuick" role="group" aria-label="Add a sub-part"><button type="button" data-subadd="O-ring">+ O-ring</button><button type="button" data-subadd="Seal">+ Seal</button><button type="button" data-subadd="Screw">+ Screw</button><button type="button" data-subadd="Bolt">+ Bolt</button><button type="button" data-subadd="">+ Other</button></div></div>
 <label>Measurements (optional)</label><p class="note" style="margin:2px 0 6px">Size or Quantity, then what you measured with its Min and Max. Outside Min–Max is flagged OUT.</p><div id="measureList"></div><div class="measure-tools"><button id="sayMeasure" type="button">🎙 Say measurement</button><button id="addMeasure" type="button">+ Type measurement</button></div><p class="note" style="margin:4px 0 0">Say it like: “pin OD 101.2 min 101 max 101.5” or “quantity bolts 7 min 8 max 8”.</p>
 <p class="note">Voice not working? Tap a box above and press the 🎙 on your phone keyboard to type by voice.</p>
-<label class="row" style="font-weight:500;font-size:15px"><input id="autoListen" type="checkbox" checked style="width:22px;min-height:22px"> Start listening automatically after each photo</label>
+<label class="row" style="font-weight:500;font-size:15px"><input id="autoListen" type="checkbox" checked style="width:22px;min-height:22px"> Start listening automatically after each photo</label><label class="row" style="font-weight:500;font-size:15px"><input id="showExtras" type="checkbox" checked style="width:22px;min-height:22px"> Show the optional Tool history section and Action picker</label>
 <div id="audioList"></div>
 <p class="muted">Autosaved on this phone. Use the buttons along the bottom for another photo of this part, or the next part.</p>
 </section>
@@ -518,6 +553,7 @@ dialog#markup[open]{display:flex;flex-direction:column}
 </section>
 </main>
 <div id="toast" role="status" hidden></div>
+<dialog id="thViewer" class="th-viewer" aria-label="View PDF"><div class="row between"><h2 id="thvTitle" style="margin:0;font-size:18px;overflow-wrap:anywhere">PDF</h2><button id="thvClose" type="button" class="small">✕ Close</button></div><p class="status" id="thvStatus" role="status"></p><div id="thvPages" class="thv-pages"></div><div class="dialog-actions"><button id="thvShare" type="button">⇪ Open / save the original PDF</button><button id="thvDone" class="primary" type="button">Close</button></div></dialog>
 <dialog id="progressDialog"><h2 id="progressTitle">Preparing export</h2><p id="progressText" role="status">Please keep this screen open.</p><progress id="progressBar" value="0" max="100"></progress><p class="muted">Large reports take a moment. Keep the app in the foreground.</p></dialog>
 <dialog id="newJobDialog"><h2>New report</h2><label for="newJobStyle" style="margin-top:0">Report style</label><select id="newJobStyle" aria-label="Report style for the new report"></select><p class="muted">Pick a template to go step by step, or start a free-form report.</p><div id="newJobList"></div><button id="newJobBlank" type="button" style="width:100%;margin-top:8px">Free-form report (no template)</button><button id="newJobCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="stepsDialog" class="steps-dialog"><div class="row between"><h2 style="margin:0">Steps</h2><button id="stepsClose" class="small" type="button">Close</button></div><p class="status" id="stepsSummary"></p><div id="stepsList"></div><button id="stepsToReport" type="button" style="width:100%">Go to report</button></dialog>
@@ -1067,13 +1103,24 @@ function migratePart(e){
  // v11: part number (prefilled from a template's part_nos) and sub-parts (O-rings, screws, seals…) with their own photos.
  out.partNo=typeof src.partNo==='string'?src.partNo.slice(0,120):out.partNos.join(', ').slice(0,120);
  out.subParts=(Array.isArray(src.subParts)?src.subParts:[]).slice(0,200).map(asSub).filter(Boolean);
+  out.disposition=dispOf(src.disposition);
  return out;
 }
 const SUB_CONDS=['OK','Damaged','Replace'];
+// v15: optional Action (disposition) per part and sub-part – what happens to it next. Stored as a short code, '' = not set.
+const DISPOSITIONS=[['reuse','Reuse'],['nif','No issues found \u2013 reuse'],['inspect','Inspect'],['redress','Redress'],['replace','Replace'],['scrap','Scrap'],['quarantine','Quarantine']];
+const DISP_LABEL=Object.fromEntries(DISPOSITIONS);
+function dispOf(v){if(typeof v!=='string'||!v)return '';if(DISP_LABEL[v])return v;const t=v.trim().toLowerCase().replace(/[\u2013\u2014-]/g,'-');const hit=DISPOSITIONS.find(([c,l])=>l.toLowerCase().replace(/[\u2013\u2014-]/g,'-')===t);return hit?hit[0]:'';}
+function dispLabel(v){return DISP_LABEL[v]||'';}
+const DISP_HEX={reuse:'166E3A',nif:'166E3A',inspect:'8C5400',redress:'8C5400',replace:'A82018',scrap:'7A141C',quarantine:'5B3A8E'};
+function dispHex(v){return DISP_HEX[v]||'5A6468';}
+function dispOptions(sel){return `<option value="">\u2014 Not set \u2014</option>${DISPOSITIONS.map(([c,l])=>`<option value="${c}" ${c===sel?'selected':''}>${esc(l)}</option>`).join('')}`;}
+// v15: tool history / build paperwork – PDFs received with the tool, kept on the device (media store, kind 'pdf').
+function shapeToolDocs(a){return (Array.isArray(a)?a:[]).slice(0,60).map(x=>x&&typeof x==='object'&&typeof x.id==='string'&&/^[A-Za-z0-9-]{1,80}$/.test(x.id)?{id:x.id,title:String(x.title??'').slice(0,200),date:/^\d{4}-\d{2}-\d{2}$/.test(String(x.date||''))?String(x.date):'',name:String(x.name??'').slice(0,200),size:Number.isFinite(+x.size)&&+x.size>0?Math.round(+x.size):0,pages:Number.isInteger(x.pages)&&x.pages>0?x.pages:0}:null).filter(Boolean);}
 function asSub(x){
  if(typeof x==='string')x={name:x};
  if(!x||typeof x!=='object')return null;
- return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
+ return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',disposition:dispOf(x.disposition),note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
 }
 function subLetter(k){let t='';k++;while(k>0){const m=(k-1)%26;t=String.fromCharCode(97+m)+t;k=Math.floor((k-1)/26);}return t;}
 function partRef(i){return String(i+1);}// the part's printed number = its current position
@@ -1081,7 +1128,7 @@ function partTitle(r,i,p){return `${isTemplateJob(r)?'Step':'Part'} ${partRef(i)
 function subLabel(i,k){return `${partRef(i)}.${subLetter(k)}`;}
 function subCond(x){return SUB_CONDS.includes(x?.condition)?x.condition:'Not rated';}
 function subFacts(x){return [clean(x.partNo)?`Part no. ${clean(x.partNo)}`:'',clean(x.qty)?`Qty ${clean(x.qty)}`:''].filter(Boolean).join(' · ');}
-function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
+function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),disposition:x.disposition||'',description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
 function partNoLabel(p){const v=clean(p?.partNo);return v?`Part no. ${v}`:'';}
 // Every photo of a job in report order: part photos, then each sub-part's photos.
 function photoEntries(parts){const out=[];(parts||[]).forEach((p,pi)=>{(p.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:p.name,prompt:ph.prompt,sub:-1}));(p.subParts||[]).forEach((x,k)=>(x.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:x.name||'Sub-part',prompt:'',sub:k})));});return out;}
@@ -1097,7 +1144,7 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:7,styleId:typeof src.styleId==='string'?src.styleId.slice(0,80):'',templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
+ return {id:String(src.id||uid()),schema:7,styleId:typeof src.styleId==='string'?src.styleId.slice(0,80):'',templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),toolDocs:shapeToolDocs(src.toolDocs),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
 }
 function isCurrentReport(r){
  if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
@@ -1111,6 +1158,7 @@ function isCurrentReport(r){
  if(!JOB_TEXT.every(k=>typeof r[k]==='string')||typeof r.backedUpAt!=='string')return false;
  if(!r.parts.every(p=>Array.isArray(p?.measurements)&&p.measurements.every(m=>m&&typeof m.type==='string'&&typeof m.min==='string'&&typeof m.max==='string'&&typeof m.spec==='string')&&typeof p.severityAuto==='boolean'))return false;
  if(!r.header||typeof r.header!=='object'||!('pack' in r))return false;
+ if(!Array.isArray(r.toolDocs)||!r.parts.every(p=>typeof p?.disposition==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>typeof x?.disposition==='string')))return false;
  if(!r.parts.every(p=>Array.isArray(p?.checks)&&Array.isArray(p.warnings)&&Array.isArray(p.partNos)&&typeof p.section==='string'&&typeof p.hint==='string'&&typeof p.drawingCaption==='string'&&typeof p.drawingRef==='string'))return false;
  return r.parts.every(p=>p&&typeof p.id==='string'&&typeof p.name==='string'&&typeof p.description==='string'&&CONDITIONS.includes(p.condition)&&Array.isArray(p.audio)&&p.audio.every(a=>typeof a==='string')&&Array.isArray(p.photos)&&p.photos.every(ph=>ph&&typeof ph.id==='string'&&typeof ph.caption==='string'));
 }
@@ -1223,7 +1271,7 @@ function setDock(editingOpen){
 function showReport(){
  current=migrateReport(current);$('report').classList.remove('edit-report');
  $('home').hidden=true;$('tplEditor').hidden=true;$('report').hidden=false;$('editor').hidden=true;editing=null;setDock(false);
- document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});syncTitlePreset();renderPackHeader();renderEndChecks();renderDetails();
+ document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});syncTitlePreset();renderPackHeader();renderEndChecks();renderDetails();if($('toolHistory').dataset.job!==current.id){$('toolHistory').dataset.job=current.id;$('toolHistory').open=false;}renderToolDocs();
  renderEntries();
  window.scrollTo(0,0);
  if(isDesk()){$('paneRight').scrollTop=0;$('paneSide').scrollTop=0;requestAnimationFrame(deskLayout);}
@@ -1294,8 +1342,8 @@ function renderEntries(){
   const mergeOpts=parts.filter(o=>o.id!==p.id).map(o=>`<option value="${esc(o.id)}">${esc(o.name||'Untitled part')}</option>`).join('');
   const secHead=!rev&&p.section&&p.section!==(parts[i-1]?.section||'')?`<div class="sec-head">${esc(p.section)}</div>`:'';
   const subs=p.subParts||[];const subPh=subs.reduce((n,x)=>n+x.photos.length,0);
-  const subsLine=subs.length?`<div class="subs-line"><b>Sub-parts:</b> ${subs.map((x,k)=>`${subLabel(i,k)} ${esc(x.name||'Sub-part')}${clean(x.qty)?' ×'+esc(clean(x.qty)):''}${x.condition?` (${esc(x.condition)})`:''}`).join(' · ')}</div>`:'';
-  const pn=clean(p.partNo)?`<div class="pn">Part no. ${esc(clean(p.partNo))}</div>`:'';
+  const subsLine=subs.length?`<div class="subs-line"><b>Sub-parts:</b> ${subs.map((x,k)=>`${subLabel(i,k)} ${esc(x.name||'Sub-part')}${clean(x.qty)?' ×'+esc(clean(x.qty)):''}${x.condition||x.disposition?` (${esc([x.condition,dispLabel(x.disposition)].filter(Boolean).join(' \u2192 '))})`:''}`).join(' · ')}</div>`:'';
+  const pn=(clean(p.partNo)?`<div class="pn">Part no. ${esc(clean(p.partNo))}</div>`:'')+(p.disposition?`<div class="disp-line">Action: ${esc(dispLabel(p.disposition))}</div>`:'');
   const id=esc(p.id),n=parts.length,up=rev?1:-1;
   return secHead+`<article class="card entry" data-part="${id}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div>${pn}<div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${subPh?` + ${subPh} in sub-parts`:''}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div>${subsLine}<p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${id}" style="flex:1">Edit part</button><button type="button" data-add-photos="${id}" aria-label="Add photos to part ${i+1} from the gallery or files">🖼 Add photos</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${id}" data-dir="${up}" aria-label="Move part ${i+1} up the list" ${pos===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${id}" data-dir="${-up}" aria-label="Move part ${i+1} down the list" ${pos===order.length-1?'disabled':''}>↓ Down</button><button class="small" type="button" data-move-to="${id}" data-pos="1" ${i===0?'disabled':''}>⤒ To top (no. 1)</button><button class="small" type="button" data-move-to="${id}" data-pos="${n}" ${i===n-1?'disabled':''}>⤓ To bottom (no. ${n})</button><div class="pos-row"><span>Move to no.</span><input class="compact" type="number" inputmode="numeric" min="1" max="${n}" data-pos-for="${id}" placeholder="1–${n}" aria-label="New number for part ${i+1}"><button class="small" type="button" data-pos-go="${id}">Go</button></div><select class="compact" data-merge="${id}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${id}">Delete part</button></div></details></article>`;
  }).join(''):'<div class="empty">No parts yet. Use Photo → new part, say the part name, pause, then describe the damage.</div>';
@@ -1335,6 +1383,7 @@ function updateEditorChrome(){
  $('editorPhotos').querySelectorAll('[data-fig]').forEach(el=>{const ph=editing.photos[Number(el.dataset.fig)];el.textContent=`Photo ${Math.max(1,n+1)}.${Number(el.dataset.fig)+1}${ph?.prompt?' · '+promptLabel(ph.prompt):''}`;});
 }
 function paintEditorBadge(){if(!editing)return;const cond=conditionOf(editing.condition);const badge=$('conditionBadge');badge.className='badge '+condClass(cond);badge.textContent=cond;$('condition').value=cond;
+ {const ds=$('disposition');ds.value=dispOf(editing.disposition);ds.classList.toggle('set',!!ds.value);$('dispRow').classList.toggle('has-val',!!ds.value);}
  document.querySelectorAll('#condButtons [data-cond]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cond===cond)));
  $('condHint').textContent=editing.severityManual?'Set by you.':editing.severityAuto?`Suggested from your words: ${cond}. Tap another to change it.`:cond==='Not rated'?'Not rated yet. It is suggested from the damage words, or tap one.':'';}
 async function setCondition(c){if(!editing||!CONDITIONS.includes(c))return;editing.condition=c;editing.severityManual=true;editing.severityAuto=false;paintEditorBadge();renderEntries();paintStep();await persistReport();}
@@ -1389,7 +1438,7 @@ function photoCardHTML(ph,i,label,ctx){
 function subCardHTML(x,k,i){
  const id=esc(x.id),lab=subLabel(i,k),cond=x.condition;
  const photos=x.photos.map((ph,j)=>photoCardHTML(ph,j,`${lab}.${j+1}`,{main:false,count:x.photos.length})).join('');
- return `<div class="sub ${esc(cond)}" data-sub="${id}"><div class="sub-head"><b class="sub-no" data-sub-no="${k}">${lab}</b><input class="compact" data-sfield="name" value="${esc(x.name)}" placeholder="Sub-part name, e.g. O-ring" aria-label="Sub-part ${lab} name"></div><div class="sub-grid"><label class="m-f"><span>Part no.</span><input class="compact" data-sfield="partNo" value="${esc(x.partNo)}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Sub-part ${lab} part number"></label><label class="m-f qty"><span>Qty</span><input class="compact" data-sfield="qty" value="${esc(x.qty)}" inputmode="numeric" aria-label="Sub-part ${lab} quantity"></label></div><div class="sub-cond" role="group" aria-label="Sub-part ${lab} condition">${SUB_CONDS.map(c=>`<button type="button" data-scond="${c}" aria-pressed="${cond===c}">${c}</button>`).join('')}</div><input class="compact chk-note" data-sfield="note" value="${esc(x.note)}" placeholder="Note, e.g. cut, flattened, missing" aria-label="Sub-part ${lab} note">${photos?`<div class="photos">${photos}</div>`:''}<div class="sub-tools"><button type="button" data-sub-cam="${id}" aria-label="Take a photo of sub-part ${lab}">📷 Photo</button><button type="button" data-sub-gal="${id}" aria-label="Add photos of sub-part ${lab} from the gallery">🖼 Gallery</button><button type="button" data-sub-up="${id}" ${k===0?'disabled':''} aria-label="Move sub-part ${lab} up">↑</button><button type="button" data-sub-down="${id}" ${k===editing.subParts.length-1?'disabled':''} aria-label="Move sub-part ${lab} down">↓</button><button type="button" class="danger" data-sub-del="${id}" aria-label="Remove sub-part ${lab}">✕ Remove</button></div></div>`;
+ return `<div class="sub ${esc(cond)}" data-sub="${id}"><div class="sub-head"><b class="sub-no" data-sub-no="${k}">${lab}</b><input class="compact" data-sfield="name" value="${esc(x.name)}" placeholder="Sub-part name, e.g. O-ring" aria-label="Sub-part ${lab} name"></div><div class="sub-grid"><label class="m-f"><span>Part no.</span><input class="compact" data-sfield="partNo" value="${esc(x.partNo)}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Sub-part ${lab} part number"></label><label class="m-f qty"><span>Qty</span><input class="compact" data-sfield="qty" value="${esc(x.qty)}" inputmode="numeric" aria-label="Sub-part ${lab} quantity"></label></div><div class="sub-cond" role="group" aria-label="Sub-part ${lab} condition">${SUB_CONDS.map(c=>`<button type="button" data-scond="${c}" aria-pressed="${cond===c}">${c}</button>`).join('')}</div><label class="m-f sub-disp${x.disposition?' has-val':''}"><span>Action</span><select class="compact${x.disposition?' set':''}" data-sdisp aria-label="Sub-part ${lab} action">${dispOptions(dispOf(x.disposition))}</select></label><input class="compact chk-note" data-sfield="note" value="${esc(x.note)}" placeholder="Note, e.g. cut, flattened, missing" aria-label="Sub-part ${lab} note">${photos?`<div class="photos">${photos}</div>`:''}<div class="sub-tools"><button type="button" data-sub-cam="${id}" aria-label="Take a photo of sub-part ${lab}">📷 Photo</button><button type="button" data-sub-gal="${id}" aria-label="Add photos of sub-part ${lab} from the gallery">🖼 Gallery</button><button type="button" data-sub-up="${id}" ${k===0?'disabled':''} aria-label="Move sub-part ${lab} up">↑</button><button type="button" data-sub-down="${id}" ${k===editing.subParts.length-1?'disabled':''} aria-label="Move sub-part ${lab} down">↓</button><button type="button" class="danger" data-sub-del="${id}" aria-label="Remove sub-part ${lab}">✕ Remove</button></div></div>`;
 }
 function renderSubParts(){
  if(!editing)return;const i=Math.max(0,current.parts.indexOf(editing));
@@ -2019,6 +2068,7 @@ document.addEventListener('focusin',()=>setTimeout(kbUpdate,50));document.addEve
 on('redoPart','click',()=>redoDictation('name'));
 on('redoDescription','click',()=>redoDictation('description'));
 $('howTo').open=localStorage.getItem('stripnote-howto')==='open';$('howTo').addEventListener('toggle',()=>localStorage.setItem('stripnote-howto',$('howTo').open?'open':'closed'));
+$('showExtras').checked=localStorage.getItem('stripnote-extras')!=='off';document.body.classList.toggle('no-extras',!$('showExtras').checked);$('showExtras').addEventListener('change',()=>{localStorage.setItem('stripnote-extras',$('showExtras').checked?'on':'off');document.body.classList.toggle('no-extras',!$('showExtras').checked);});
 $('autoListen').checked=localStorage.getItem('stripnote-autolisten')!=='off';$('autoListen').addEventListener('change',()=>localStorage.setItem('stripnote-autolisten',$('autoListen').checked?'on':'off'));
 
 async function maybeAutoListen(){
@@ -2076,7 +2126,10 @@ function jobRows(r){
  for(const [k,l] of DETAIL_ROWS){if(used.has(k))continue;const v=val(k);if(clean(v))rows.push([l,v]);}
  return rows.concat(custom);}
 // Condition-of-parts rows, with each part's sub-parts (3.a, 3.b) under it.
-function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true}));});return rows;}
+function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false,disp:dispLabel(p.disposition),dispCode:p.disposition||''});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true,disp:dispLabel(x.disposition),dispCode:x.disposition||''}));});return rows;}
+// v15: the Action column is only printed when at least one part or sub-part has an action set.
+function hasDisp(r){return (r.parts||[]).some(p=>p.disposition||(p.subParts||[]).some(x=>x.disposition));}
+function dispCountText(r){const c={};let none=0;for(const p of r.parts||[])for(const v of [p.disposition,...(p.subParts||[]).map(x=>x.disposition)]){if(v)c[v]=(c[v]||0)+1;else none++;}const bits=DISPOSITIONS.filter(([k])=>c[k]).map(([k,l])=>`${l} ${c[k]}`);if(none)bits.push(`not set ${none}`);return `Action (parts and sub-parts): ${bits.join(' \u00b7 ')}`;}
 const COND_KEY='Condition key: OK – serviceable as found. Wear – normal wear; monitor or plan renewal. Damaged – defect found; repair or assess. Replace – not fit for further service. Not rated – not assessed.';
 const paragraphsOf=t=>String(t||'').split(/\n+/).map(x=>capSentences(clean(x))).filter(Boolean);
 const measuresOf=p=>(p.measurements||[]).filter(m=>clean(m.item)||clean(m.measured)||clean(m.min)||clean(m.max)||clean(m.spec));
@@ -2179,6 +2232,7 @@ function leadSplit(text){
 }
 async function buildDocx(raw,notify=()=>{}){
  const r=migrateReport(raw);
+ const TH=r.toolDocs.length?await toolDocsForExport(r,notify):[];
  const zip=new JSZip();
  const TW=9866, labelW=2500, valueW=TW-labelW;
  const title=reportHeading(r);
@@ -2226,13 +2280,14 @@ async function buildDocx(raw,notify=()=>{}){
  const simpleTable=(widths,head,rows,cellStyle=()=>null)=>{let h=docxRow({header:true,html:head.map((t,i)=>docxCell(docxPara(docxRun(t,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),widths[i],{fill:RN()})).join('')});rows.forEach((row,k)=>{h+=docxRow({html:row.map((t,i)=>docxCell(docxPara(docxRun(t||'',{size:19,color:'1F2A30',...(cellStyle(t,i)||{})}),'<w:spacing w:before="50" w:after="50"/>'),widths[i],{fill:k%2?'F7F9FA':'FFFFFF'})).join('')});});return `<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${h}</w:tbl>`;};
  let sec=0;
  if(clean(r.scope))body+=H1(`${++sec}. Scope`)+PARAS(r.scope);
+ if(TH.length){body+=H1(`${++sec}. Tool history / build paperwork`);body+=simpleTable([700,4366,1500,900,2400],['No.','Document','Date','Pages','Note'],TH.map(d=>[String(d.no),d.label,prettyDate(d.date),d.pages?String(d.pages):'\u2014',toolDocNote(d)||(d.pages?'Pages in the appendix':'')]),(t,i)=>i===4&&/not|missing/i.test(t)?{color:'B00020'}:null);body+=docxPara(docxRun('Copies of these documents, as received, are reproduced page by page in the appendix at the end of this report. The original PDF files are kept with the job backup.',{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="80" w:after="160"/>');}
  body+=H1(`${++sec}. Summary`)+PARAS(r.summary);
  body+=H2('Condition of parts');
- const cols=[900,6166,1800,1000];
- const summaryHead=[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
+ const HD=hasDisp(r);const cols=HD?[800,4666,1700,1900,800]:[900,6166,1800,1000];
+ const summaryHead=(HD?[isTemplateJob(r)?'Step':'No.','Part','Condition','Action','Photos']:[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos']).map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
  let summary=docxRow({header:true,html:summaryHead});
  if(!r.parts.length){
-  summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:4})});
+  summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:cols.length})});
  }else{
   summaryRows(r).forEach((row,i)=>{
    const cond=row.cond;
@@ -2241,7 +2296,8 @@ async function buildDocx(raw,notify=()=>{}){
     docxCell(docxPara(docxRun(row.no,{size:row.sub?18:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[0],{fill}),
     docxCell(docxPara(docxRun(row.name,{size:row.sub?18:20,color:row.sub?'3C4A50':'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[1],{fill}),
     docxCell(docxPara(docxRun(cond.label,{size:18,bold:true,color:cond.hex}),'<w:spacing w:before="40" w:after="40"/>'),cols[2],{fill}),
-    docxCell(docxPara(docxRun(row.photos,{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[3],{fill})
+    ...(HD?[docxCell(docxPara(docxRun(row.disp||'',{size:18,bold:true,color:dispHex(row.dispCode)}),'<w:spacing w:before="40" w:after="40"/>'),cols[3],{fill})]:[]),
+     docxCell(docxPara(docxRun(row.photos,{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[cols.length-1],{fill})
    ].join('');
    summary+=docxRow({html:cells});
   });
@@ -2249,6 +2305,7 @@ async function buildDocx(raw,notify=()=>{}){
  body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('C5D0D4',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${cols.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid>${summary}</w:tbl>`;
  const totalPhotos=photoCount(r.parts);
  body+=docxPara(docxRun(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${totalPhotos} photograph${totalPhotos===1?'':'s'}`,{size:18,color:'5C6B70'}),'<w:spacing w:before="80" w:after="60"/>');
+ if(HD)body+=docxPara(docxRun(dispCountText(r),{size:18,color:'5C6B70'}),'<w:spacing w:before="0" w:after="60"/>');
  body+=docxPara(docxRun(COND_KEY,{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="0" w:after="200"/>');
  if(isPackJob(r)&&r.pack.tools.length){body+=H1(`${++sec}. Tools`);body+=simpleTable([3600,2200,4066],['Tool','Size','Use'],r.pack.tools.map(t=>[t.tool,t.size,t.use]));}
  const findNo=++sec;
@@ -2284,7 +2341,7 @@ async function buildDocx(raw,notify=()=>{}){
   }
  };
  const docxCondDesc=(part,cond)=>{
-  body+=docxPara(docxRun(tj?`Condition: ${cond.label}`:cond.label,{size:20,bold:true,color:cond.hex}),`<w:keepNext/><w:spacing w:before="${tj?120:60}" w:after="80"/>`);
+  body+=docxPara(docxRun(tj?`Condition: ${cond.label}`:cond.label,{size:20,bold:true,color:cond.hex})+(part.disposition?docxRun(`   \u00b7   Action: ${dispLabel(part.disposition)}`,{size:20,bold:true,color:dispHex(part.disposition)}):''),`<w:keepNext/><w:spacing w:before="${tj?120:60}" w:after="80"/>`);
   const paras=leadSplit(tj?findingText(part):part.description);
   // v11c: in a free-form part the description keeps with the first photo row (heading + text never stranded)
   const kn=!tj&&((part.photos||[]).length||(part.subParts||[]).length)?'<w:keepNext/>':'';
@@ -2299,7 +2356,7 @@ async function buildDocx(raw,notify=()=>{}){
   for(const [k,x] of (part.subParts||[]).entries()){
    const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
    body+=docxPara(docxRun(`${lab}  ${x.name||'Sub-part'}`,{size:27,bold:true,color:RN()})+(facts?docxRun(`   ·  ${facts}`,{size:20,color:'5C6B70'}):''),`<w:keepNext/><w:keepLines/><w:ind w:left="284"/><w:spacing w:before="220" w:after="40"/><w:pBdr><w:left w:val="single" w:sz="24" w:space="8" w:color="${sc.hex}"/></w:pBdr>`);
-   body+=docxPara(docxRun(sc.label,{size:19,bold:true,color:sc.hex})+(clean(x.note)?docxRun(`  –  ${capSentences(clean(x.note))}`,{size:21,color:'1F2A30'}):''),`${x.photos.length?'<w:keepNext/>':''}<w:ind w:left="284"/><w:spacing w:before="20" w:after="100"/>`);
+   body+=docxPara(docxRun(sc.label,{size:19,bold:true,color:sc.hex})+(x.disposition?docxRun(`  \u00b7  Action: ${dispLabel(x.disposition)}`,{size:19,bold:true,color:dispHex(x.disposition)}):'')+(clean(x.note)?docxRun(`  –  ${capSentences(clean(x.note))}`,{size:21,color:'1F2A30'}):''),`${x.photos.length?'<w:keepNext/>':''}<w:ind w:left="284"/><w:spacing w:before="20" w:after="100"/>`);
    if(x.photos.length)await docxPhotos(subPseudo(x),lab);
   }
  };
@@ -2342,6 +2399,28 @@ async function buildDocx(raw,notify=()=>{}){
  body+=docxPara(docxRun(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,{size:17,color:'5C6B70'}),'<w:spacing w:before="120" w:after="0"/>');
  body+=docxPara(docxRun(photoNote(),{size:16,italic:true,color:'8AA0A6'}),'<w:spacing w:before="200" w:after="0"/>');
  if(isPackJob(r)&&r.pack.appendix.length){let first=true;for(const a of r.pack.appendix){const d=await exportDrawing(a.id);if(!d)continue;dn++;zip.file(`word/media/drawing${dn}.jpg`,await d.blob.arrayBuffer());rels+=`<Relationship Id="rIdD${dn}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/drawing${dn}.jpg"/>`;const {cx,cy}=fitEmu(d.width,d.height,6264000,first?7900000:8500000);body+='<w:p><w:r><w:br w:type="page"/></w:r></w:p>';if(first){body+=H1('Appendix – parts list');first=false;}body+=drawingXml(100000+dn,cx,cy,`Appendix: ${a.name}`,`rIdD${dn}`);}}
+ // v15 appendix: each received page as an image (pdf.js, one page at a time), labelled "n. Title · date · Page x of y".
+ if(TH.some(d=>d.pages&&d.mode==='raster')){
+  const topTw=isClean()?Math.max(1300,(logo?1500:900)+headLines(title).length*150):logo?1400:1020;
+  const usable=16838-topTw-1020;let first=true,tn=0;
+  for(const d of TH){
+   if(!d.pages||d.mode!=='raster')continue;
+   let pj;try{pj=await openPdfJs(new Uint8Array(await d.blob.arrayBuffer()));}catch(e){console.warn(e);continue;}
+   try{for(let p=1;p<=d.pages;p++){
+    notify(`Tool history: ${clipText(d.label,40)} \u2013 page ${p} of ${d.pages}`,p,d.pages);
+    let room=usable-560,brk='<w:pageBreakBefore/>';
+    if(first){body+=H1('Appendix \u2013 Tool history / build paperwork').replace('<w:keepNext/>','<w:keepNext/><w:pageBreakBefore/>');first=false;room-=800;brk='';}
+    body+=docxPara(docxRun(`${d.no}. ${d.label}${d.date?' \u00b7 '+prettyDate(d.date):''}`,{size:19,bold:true,color:RN()})+docxRun(`   \u00b7   Page ${p} of ${d.pages}`,{size:18,color:'5C6B70'}),`<w:keepNext/>${brk}<w:spacing w:before="0" w:after="40"/>`);
+    let img=null;try{img=await renderPdfPage(pj,p,1400,2000,.8);}catch(e){console.warn(e);}
+    if(!img){body+=docxPara(docxRun('This page could not be turned into an image on this device. The original PDF is kept with the job.',{size:19,italic:true,color:'B00020'}));continue;}
+    tn++;zip.file(`word/media/toolhistory${tn}.jpg`,await img.blob.arrayBuffer());
+    rels+=`<Relationship Id="rIdT${tn}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/toolhistory${tn}.jpg"/>`;
+    const {cx,cy}=fitEmu(img.width,img.height,6264000,Math.max(2000000,room*635));
+    body+=drawingXml(300000+tn,cx,cy,`Tool history ${d.no}, page ${p} of ${d.pages}`,`rIdT${tn}`).replace('<w:spacing w:before="60" w:after="40"/>','<w:spacing w:before="0" w:after="0"/>');
+    await tick();
+   }}finally{await closePdf(pj);}
+  }
+ }
  const headerTitle=clipText(title,90);
  const footLeft=footerLeft(r);
  const hdrNs='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
@@ -2385,6 +2464,7 @@ async function buildDocx(raw,notify=()=>{}){
 function clipText(s,n){s=clean(s);return s.length>n?s.slice(0,n-1).trim()+'…':s;}
 async function buildPDF(raw,notify=()=>{}){
  const r=migrateReport(raw);
+ const TH=r.toolDocs.length?await toolDocsForExport(r,notify,{vector:true}):[];const thRefs=[],thPlace=[];
  const doc=new jspdf.jsPDF({unit:'mm',format:'a4',compress:true,putOnlyUsedFonts:true});
  doc.addFileToVFS('StripNoteSans.ttf',PDF_FONT);
  doc.addFont('StripNoteSans.ttf','StripNoteSans','normal');
@@ -2503,6 +2583,7 @@ async function buildPDF(raw,notify=()=>{}){
    const cells=row.map((t,i)=>textLines(String(t||''),9,widths[i]-3).slice(0,8));
    const rh=Math.max(opt.minRow||7,Math.max(...cells.map(c=>c.length))*4+3);
    if(y+rh>bottom){newPage();drawHead();}
+   opt.rowCb?.(k,doc.getNumberOfPages(),y);
    if(k%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
    let x=ML;cells.forEach((c,i)=>{const st=opt.cellStyle?.(row[i],i)||{};c.forEach((line,j)=>drawText(line,x+1.6,y+4.8+j*4,{size:9,color:st.color||[31,42,48],bold:!!st.bold}));x+=widths[i];});
@@ -2511,13 +2592,19 @@ async function buildPDF(raw,notify=()=>{}){
  };
  let sec=0;
  if(clean(r.scope)){H1(`${++sec}. Scope`);PARAS(r.scope);}
+ if(TH.length){
+  // v15: list of the received documents; "In this report" is filled in once the appendix page numbers are known.
+  H1(`${++sec}. Tool history / build paperwork`);
+  table([12,70,24,16,52],['No.','Document','Date','Pages','In this report'],TH.map(d=>[String(d.no),d.label,prettyDate(d.date),d.pages?String(d.pages):'\u2014',toolDocNote(d)]),{rowCb:(k,pg,yy)=>{thRefs[k]={pg,y:yy};},cellStyle:(t,i)=>i===4&&t?{color:[176,0,32]}:null});
+  y+=4;for(const line of textLines('Copies of these documents, as received, are reproduced page by page in the appendix at the end of this report. The original PDF files are kept with the job backup.',8.5,CW)){need(4.5);drawText(line,ML,y,{size:8.5,color:[90,100,104]});y+=3.9;}y+=4;
+ }
  H1(`${++sec}. Summary`);PARAS(r.summary);
  H2('Condition of parts');
- const cols=[12,104,36,22];
+ const HD=hasDisp(r);const cols=HD?[12,80,28,38,16]:[12,104,36,22];
  const drawSummaryHead=()=>{
   const hh=7;need(hh+6);
   doc.setFillColor(...RNR());doc.rect(ML,y,CW,hh,'F');
-  let x=ML;[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos'].forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
+  let x=ML;(HD?[isTemplateJob(r)?'Step':'No.','Part','Condition','Action','Photos']:[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos']).forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
   y+=hh;
  };
  drawSummaryHead();
@@ -2525,7 +2612,8 @@ async function buildPDF(raw,notify=()=>{}){
  else{
   summaryRows(r).forEach((row,i)=>{
    const nameLines=textLines(row.name,row.sub?8.5:9,cols[1]-3).slice(0,4);
-   const rh=Math.max(7,nameLines.length*4+2.5);
+   const dl=HD&&row.disp?textLines(row.disp,8,cols[3]-3).slice(0,2):[];
+    const rh=Math.max(7,nameLines.length*4+2.5,dl.length*3.6+3.4);
    if(y+rh>bottom){newPage();drawSummaryHead();}
    if(i%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
@@ -2533,12 +2621,14 @@ async function buildPDF(raw,notify=()=>{}){
    nameLines.forEach((line,k)=>drawText(line,ML+cols[0]+1.6,y+4.6+k*4,{size:9,color:[31,42,48]}));
    const cond=row.cond;
    drawText(cond.label,ML+cols[0]+cols[1]+1.6,y+4.6,{size:8,color:cond.rgb,bold:true});
-   drawText(row.photos,ML+cols[0]+cols[1]+cols[2]+1.6,y+4.6,{size:9,color:[31,42,48]});
+   if(HD)dl.forEach((line,k)=>drawText(line,ML+cols[0]+cols[1]+cols[2]+1.6,y+4.6+k*3.6,{size:8,color:hexRgb(dispHex(row.dispCode)),bold:true}));
+    drawText(row.photos,ML+cols.slice(0,-1).reduce((a,b)=>a+b,0)+1.6,y+4.6,{size:9,color:[31,42,48]});
    y+=rh;
   });
  }
  y+=4;
  drawText(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${photoCount(r.parts)} photograph${photoCount(r.parts)===1?'':'s'}`,ML,y+3,{size:8,color:[90,100,104]});
+ if(HD){for(const line of textLines(dispCountText(r),8,CW)){y+=3.9;drawText(line,ML,y+3,{size:8,color:[90,100,104]});}}
  y+=6;
  for(const line of textLines(COND_KEY,8,CW)){need(4);drawText(line,ML,y,{size:8,color:[90,100,104]});y+=3.6;}
  y+=3;
@@ -2601,7 +2691,7 @@ async function buildPDF(raw,notify=()=>{}){
  };
  const pdfCondDesc=(part,cond)=>{
   if(tj)need(16);
-  drawText(tj?`Condition: ${cond.label}`:cond.label,ML,y,{size:9,color:cond.rgb,bold:true});y+=5;
+  {const ct=tj?`Condition: ${cond.label}`:cond.label;drawText(ct,ML,y,{size:9,color:cond.rgb,bold:true});if(part.disposition){doc.setFontSize(9);drawText(`\u00b7  Action: ${dispLabel(part.disposition)}`,ML+doc.getTextWidth(ct)+3,y,{size:9,color:hexRgb(dispHex(part.disposition)),bold:true});}y+=5;}
   const descLines=textLines(tj?findingText(part):(capSentences(part.description)||'No description recorded.'),10.5,CW);
   const lh=5;
   for(const line of descLines){if(y+lh>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=lh;}
@@ -2620,7 +2710,7 @@ async function buildPDF(raw,notify=()=>{}){
    doc.setFillColor(sc.rgb[0],sc.rgb[1],sc.rgb[2]);doc.rect(ML+4,y-4.3,1.4,6,'F');
    for(const line of textLines(`${lab}  ${x.name||'Sub-part'}`,SUB_PT,CW-12)){drawText(line,ML+8,y,{size:SUB_PT,color:[31,42,48],bold:true});y+=SUB_LH;}
    if(facts){drawText(clipText(facts,120),ML+8,y,{size:9,color:[90,100,104]});y+=4.8;}
-   drawText(sc.label,ML+8,y+0.4,{size:9,color:sc.rgb,bold:true});y+=5;
+   drawText(sc.label,ML+8,y+0.4,{size:9,color:sc.rgb,bold:true});if(x.disposition){doc.setFontSize(9);drawText(`\u00b7  Action: ${dispLabel(x.disposition)}`,ML+8+doc.getTextWidth(sc.label)+3,y+0.4,{size:9,color:hexRgb(dispHex(x.disposition)),bold:true});}y+=5;
    if(clean(x.note))for(const line of textLines(capSentences(clean(x.note)),10,CW-8)){if(y+5>bottom)newPage();drawText(line,ML+8,y,{size:10,color:[31,42,48]});y+=4.8;}
    y+=2.5;
    if(x.photos.length)await pdfPhotos(subPseudo(x),lab);
@@ -2684,6 +2774,35 @@ async function buildPDF(raw,notify=()=>{}){
  const note=textLines(photoNote(),8,CW);
  note.forEach(line=>{if(y+4>bottom)newPage();drawText(line,ML,y,{size:8,color:[120,128,132]});y+=3.6;});
  if(isPackJob(r)&&r.pack.appendix.length){let first=true;for(const a of r.pack.appendix){const d=await exportDrawing(a.id);if(!d)continue;newPage();if(first){H1('Appendix – parts list');first=false;}const room=bottom-y-2;let w=CW,h=w*d.height/Math.max(1,d.width);if(h>room){h=room;w=h*d.width/Math.max(1,d.height);}doc.addImage(new Uint8Array(await d.blob.arrayBuffer()),'JPEG',ML+(CW-w)/2,y,w,h,'appx'+a.id,'FAST');y+=h+2;}}
+ // v15 appendix: one page per received page, labelled "n. Title · date" and "Page x of y". Readable PDFs are copied in
+ // afterwards by pdf-lib (vector, crisp); others are drawn here as page images from pdf.js, one page at a time.
+ if(TH.some(d=>d.pages&&(d.mode==='vector'||d.mode==='raster'))){
+  let first=true;
+  for(const d of TH){
+   if(!d.pages||!(d.mode==='vector'||d.mode==='raster'))continue;
+   let pj=null;
+   if(d.mode==='raster'){try{pj=await openPdfJs(new Uint8Array(await d.blob.arrayBuffer()));}catch(e){console.warn(e);d.mode='unreadable';continue;}}
+   try{
+    for(let p=1;p<=d.pages;p++){
+     newPage();
+     if(first){H1('Appendix \u2013 Tool history / build paperwork');first=false;}
+     if(p===1)d.startPage=doc.getNumberOfPages();
+     doc.setFontSize(9.5);let lt=`${d.no}. ${d.label}${d.date?' \u00b7 '+prettyDate(d.date):''}`;while(lt.length>4&&doc.getTextWidth(lt)>CW-34)lt=lt.slice(0,-2).trim()+'\u2026';
+     drawText(lt,ML,y,{size:9.5,color:RNR(),bold:true});drawText(`Page ${p} of ${d.pages}`,PW-MR,y,{size:9,color:[90,100,104],align:'right'});
+     y+=3;
+     const box={x:ML,y,w:CW,h:bottom-y-1};
+     notify(`Tool history: ${clipText(d.label,40)} \u2013 page ${p} of ${d.pages}`,p,d.pages);
+     if(pj){
+      let img=null;try{img=await renderPdfPage(pj,p,1400,2000,.8);}catch(e){console.warn(e);}
+      if(img){let w=box.w,h=w*img.height/Math.max(1,img.width);if(h>box.h){h=box.h;w=h*img.width/Math.max(1,img.height);}const ix=box.x+(box.w-w)/2;doc.addImage(new Uint8Array(await img.blob.arrayBuffer()),'JPEG',ix,box.y,w,h,`th${d.no}p${p}`,'FAST');doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(ix,box.y,w,h);}
+      else drawText('This page could not be drawn on this device. The original PDF is kept with the job.',ML,box.y+8,{size:10,color:[176,0,32]});
+     }else thPlace.push({d,p,page:doc.getNumberOfPages(),box});
+     await tick();
+    }
+    d.endPage=doc.getNumberOfPages();
+   }finally{if(pj)await closePdf(pj);}
+  }
+ }
  const pages=doc.getNumberOfPages();
  for(let i=1;i<=pages;i++){
   doc.setPage(i);doc.setFont('StripNoteSans','normal');
@@ -2719,7 +2838,9 @@ async function buildPDF(raw,notify=()=>{}){
   if(foot)drawText(clipText(foot,60),ML,PH-8.5,{size:8,color:[90,100,104]});
   drawText(`Page ${i} of ${pages}`,PW-MR,PH-8.5,{size:8,color:[90,100,104],align:'right'});
  }
+ TH.forEach((d,k)=>{const ref=thRefs[k];if(!ref)return;const txt=d.startPage?(d.startPage===d.endPage?`Appendix, page ${d.startPage}`:`Appendix, pages ${d.startPage}\u2013${d.endPage}`):toolDocNote(d)?'':'Could not be read \u2013 original kept with the job';if(!txt)return;doc.setPage(ref.pg);drawText(txt,ML+12+70+24+16+1.6,ref.y+4.8,{size:9,color:d.startPage?[31,42,48]:[176,0,32]});});
  notify('Packaging PDF…',total,total+1);
+ if(thPlace.length){const out=await stampToolPages(doc.output('arraybuffer'),thPlace,notify);return new Blob([out],{type:'application/pdf'});}
  return doc.output('blob');
 }
 
@@ -2856,12 +2977,14 @@ async function buildPptx(raw,notify=()=>{}){
    const per=11;const all=summaryRows(r);
    for(let s=0;s<all.length;s+=per){
     const sl=await frame(all.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(all.length/per)})`:'Condition of parts');
-    const rows=[[tj?'Step':'No.','Part','Condition','Photos']];
+    const HD=hasDisp(r);const rows=[HD?[tj?'Step':'No.','Part','Condition','Action','Photos']:[tj?'Step':'No.','Part','Condition','Photos']];
     const chunk=all.slice(s,s+per);
-    chunk.forEach(x=>rows.push([x.no,x.name,x.cond.label,x.photos]));
-    ppTable(sl.shapes,sl.next++,0.4,1.1,[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:chunk[k-1].cond.hex}:null});
+    chunk.forEach(x=>rows.push(HD?[x.no,x.name,x.cond.label,x.disp,x.photos]:[x.no,x.name,x.cond.label,x.photos]));
+    ppTable(sl.shapes,sl.next++,0.4,1.1,HD?[1.1,5.83,2.2,2.4,1.0]:[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:chunk[k-1].cond.hex}:HD&&i===3?{bold:true,color:dispHex(chunk[k-1].dispCode)}:null});
    }
   }
+ // v15: one light slide listing the tool history documents (the pages themselves are in the PDF and Word reports).
+ if((r.toolDocs||[]).length){const TD=r.toolDocs;for(let s=0;s<TD.length;s+=9){const sl=await frame(TD.length>9?`Tool history / build paperwork (${Math.floor(s/9)+1} of ${Math.ceil(TD.length/9)})`:'Tool history / build paperwork');const chunk=TD.slice(s,s+9);ppTable(sl.shapes,sl.next++,0.4,1.1,[0.8,6.0,1.7,1.1,2.93],[['No.','Document','Date','Pages','File']].concat(chunk.map((d,k)=>[String(s+k+1),toolDocLabel(d,s+k),prettyDate(d.date),d.pages?String(d.pages):'\u2014',d.name])),{rowH:0.5,size:14,clip:80});ppShape(sl.shapes,sl.next++,0.4,6.3,12.5,0.5,ppPara('Full pages are in the PDF and Word reports (Appendix). The original PDF files are in the backup and Finish job ZIP, folder \u201cTool history\u201d.',{size:12,italic:true,color:'5C6B70'}),{name:'Tool history note',fit:false});}}
  const partPhotos=async(part,label,cond,head)=>{
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
   const ms=measuresOf(part);
@@ -2886,7 +3009,8 @@ async function buildPptx(raw,notify=()=>{}){
     ppShape(ps.shapes,ps.next++,9.35,1.05,3.65,0.6,ppPara(m?m[1]:cap,{size:22,bold:true,color:RN()}),{name:'Photo number',fit:false,inset:0.02});
     if(m)ppShape(ps.shapes,ps.next++,9.35,1.65,3.65,1.4,ppPara(clipText(m[2],140),{size:16,bold:true,color:'1F2A30'}),{name:'Caption',inset:0.02});
     badge(ps,9.35,3.15,2.6,cond,15);
-    ppShape(ps.shapes,ps.next++,9.35,3.85,3.65,3.1,ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
+    if(part.disposition)ppShape(ps.shapes,ps.next++,9.35,3.78,3.65,0.42,ppPara(`Action: ${dispLabel(part.disposition)}`,{size:14,bold:true,color:dispHex(part.disposition)}),{name:'Action',fit:false,inset:0.02});
+    ppShape(ps.shapes,ps.next++,9.35,part.disposition?4.25:3.85,3.65,part.disposition?2.65:3.1,ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
     j++;
    }else{
     for(const [k,img] of [[0,a],[1,b]]){
@@ -2897,7 +3021,7 @@ async function buildPptx(raw,notify=()=>{}){
      ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,cap,{line:'C5D0D4'});
      ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:RN(),align:'ctr'}),{name:'Caption',inset:0.02});
     }
-    ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
+    ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label}${part.disposition?' \u00b7 Action: '+dispLabel(part.disposition):''} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
     j+=2;
    }
   }
@@ -2919,8 +3043,8 @@ async function buildPptx(raw,notify=()=>{}){
   for(let s=0;s<subs.length;s+=8){
    const sl=await frame(`${head} · Sub-parts${subs.length>8?` (${Math.floor(s/8)+1})`:''}`,{size:20});
    const chunk=subs.slice(s,s+8);
-   const rows=[['No.','Sub-part','Part no.','Qty','Condition','Note']].concat(chunk.map((x,k)=>[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,x.note]));
-   ppTable(sl.shapes,sl.next++,0.4,1.1,[1.0,3.4,2.0,0.9,1.9,3.33],rows,{rowH:0.62,size:13,headSize:12,clip:110,cellStyle:(t,c,k)=>c===4?{bold:true,color:COND_STYLE[subCond(chunk[k-1])].hex}:null});
+   const HDs=hasDisp(r);const rows=[HDs?['No.','Sub-part','Part no.','Qty','Condition','Action','Note']:['No.','Sub-part','Part no.','Qty','Condition','Note']].concat(chunk.map((x,k)=>HDs?[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,dispLabel(x.disposition),x.note]:[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,x.note]));
+   ppTable(sl.shapes,sl.next++,0.4,1.1,HDs?[0.9,3.0,1.8,0.8,1.7,1.9,2.43]:[1.0,3.4,2.0,0.9,1.9,3.33],rows,{rowH:0.62,size:13,headSize:12,clip:110,cellStyle:(t,c,k)=>c===4?{bold:true,color:COND_STYLE[subCond(chunk[k-1])].hex}:HDs&&c===5?{bold:true,color:dispHex(chunk[k-1].disposition)}:null});
   }
   for(const [k,x] of subs.entries()){if(!x.photos.length)continue;const lab=subLabel(i,k);await partPhotos(subPseudo(x),lab,COND_STYLE[subCond(x)],`${lab}  ${x.name||'Sub-part'}${subFacts(x)?`  ·  ${subFacts(x)}`:''}`);}
  };
@@ -2942,6 +3066,7 @@ async function buildPptx(raw,notify=()=>{}){
   const ms=measuresOf(part);const msOut=ms.filter(m=>/^OUT/i.test(measureResult(m)||'')).length;
   const facts=[`${part.photos.length} photo${part.photos.length===1?'':'s'}`];
   if(clean(part.partNo))facts.unshift(partNoLabel(part));
+  if(part.disposition)facts.unshift(`Action: ${dispLabel(part.disposition)}`);
   if(part.subParts?.length)facts.push(`${part.subParts.length} sub-part${part.subParts.length===1?'':'s'}`);
   if(ms.length)facts.push(`${ms.length} measurement${ms.length===1?'':'s'}${msOut?` · ${msOut} out of spec`:''}`);
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
@@ -3055,7 +3180,8 @@ async function saveOriginals(){
    }
   }
   if(done===missing)throw Error('None of the photos could be read.');
-  progress('Packaging ZIP…',total,total+1);
+  for(const [k,d] of (current.toolDocs||[]).entries()){const m=await get('media',d.id).catch(()=>null);if(m?.blob)folder.file(`Tool history/${String(k+1).padStart(2,'0')}_${safeFileName(toolDocLabel(d,k),'Document').slice(0,80)}.pdf`,m.blob,{binary:true,compression:'STORE'});}
+   progress('Packaging ZIP…',total,total+1);
   const blob=await zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{
    if(meta?.percent!=null)progress(`Packaging ZIP… ${Math.round(meta.percent)}%`,total+meta.percent/100,total+1);
   });
@@ -3080,6 +3206,14 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  if(exported.pack){const keep=[];for(const a of exported.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);exported.pack.appendix=keep;}
  const templates=[];
  if(exported.templateId){const t=await get('settings',exported.templateId).catch(()=>null);if(t&&t.kind==='template'){const shaped=shapeTemplate(t);for(const st of shaped.steps){if(st.drawingId&&!(await addDrawingTo(zip,st.drawingId,addedDrawings)))st.drawingId='';}if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix)if(await addDrawingTo(zip,a.id,addedDrawings))keep.push(a);shaped.pack.appendix=keep;}templates.push(shaped);}}
+  // v15: tool history PDFs go in as the original files, folder "Tool history", referenced from report.json by path.
+ {const thUsed=new Set();for(const [k,d] of (exported.toolDocs||[]).entries()){
+  const m=await get('media',d.id).catch(()=>null);
+  if(!m?.blob)throw Error(`Tool history PDF \u201c${toolDocLabel(d,k)}\u201d is missing on this device; backup stopped. Delete it from Tool history (or add it again) and try again.`);
+  const base=`${String(k+1).padStart(2,'0')}_${safeFileName(toolDocLabel(d,k),'Document')}`.slice(0,90);let path=`Tool history/${base}.pdf`,n=2;while(thUsed.has(path.toLowerCase()))path=`Tool history/${base}-${n++}.pdf`;thUsed.add(path.toLowerCase());
+  zip.file(path,m.blob,{binary:true});d.path=path;
+  notify(`Backing up tool history ${k+1} of ${exported.toolDocs.length}`,k+1,exported.toolDocs.length);await tick();
+ }}
  zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates},null,2));
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
@@ -3108,7 +3242,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
  if(styles.length){const meta=[];for(const st of styles){const m={id:st.id,name:st.name,accent:st.accent,heading:st.heading,layout:st.layout,headerLines:st.headerLines,updated:st.updated};if(st.logo){const path=`styles/${safeFileName(st.id.slice(STYLE_PREFIX.length),'style')}`;zip.file(path,st.logo.blob,{binary:true});m.logo={mime:st.logo.mime,width:st.logo.width,height:st.logo.height,name:st.logo.name,path};}meta.push(m);}zip.file('styles.json',JSON.stringify(meta,null,1));}
  if(opts.pdf)zip.file('Report.pdf',opts.pdf,{binary:true});
  if(opts.pptx)zip.file('Presentation.pptx',opts.pptx,{binary:true});
- zip.file('README.txt',`StripNote v11 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2 and 03.a.01_O-ring.jpg is the first photo of sub-part 3.a. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
+ zip.file('README.txt',`StripNote v11 job file.${templates.length?' It also holds the template this job was started from, with its part drawings – these may come from confidential manuals, so keep this file private.':''}${opts.pdf?' Report.pdf is the client report.':''}${opts.pptx?' Presentation.pptx is the same job as slides for PowerPoint or Google Slides.':''} The Photos folder holds the full-size photos, named by step (or part) and photo number, e.g. 01.02_Top-Sub_after.jpg is photo 1.2 and 03.a.01_O-ring.jpg is the first photo of sub-part 3.a. To restore this job on a phone, open StripNote and tap Import backup ZIP on the home screen. report.json is the job; media holds the reduced photos used in reports, thumbs are previews, and logo is the company logo if one was set. ${exported.toolDocs?.length?' The Tool history folder holds the tool history / build paperwork PDFs exactly as they were added.':''} Older v3 to v6 backups still import. Keep this file secure and keep a copy off the phone.`);
  return zip.generateAsync({type:'blob',compression:'STORE',streamFiles:true},meta=>{if(meta?.percent!=null)notify(`Packaging ZIP… ${Math.round(meta.percent)}%`,1,1);});
 }
 async function finishJob(){
@@ -3145,7 +3279,7 @@ async function finishJob(){
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
  const durable=await requestDurable(false);
  await checkStorage(false);
- toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the slides, the backup and the full-size photos. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}`);
+ toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the slides, the backup and the full-size photos${current.toolDocs?.length?', plus the tool history PDFs':''}. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}`);
 }
 async function deliver(blob,name){
  const file=new File([blob],name,{type:blob.type});
@@ -3226,6 +3360,20 @@ async function importBackup(file){
    if(part.drawingId){try{part.drawingId=await restoreOnce(part.drawingId);}catch(e){console.warn('Drawing in backup could not be restored',e);part.drawingId='';}}
   }
   if(shaped.pack){const keep=[];for(const a of shaped.pack.appendix){try{keep.push({...a,id:await restoreOnce(a.id)});}catch(e){console.warn('Appendix image skipped',e);}}shaped.pack.appendix=keep;}
+  let thNote='';
+  {const rawDocs=Array.isArray(data.report.toolDocs)?data.report.toolDocs:[];const keep=[];let missed=0;
+   for(const [k,d] of shaped.toolDocs.entries()){
+    const raw=rawDocs.find(x=>x&&x.id===d.id)||{};
+    const pth=typeof raw.path==='string'&&/^Tool history\/[^/\\]+\.pdf$/i.test(raw.path)&&!raw.path.includes('..')?raw.path:'';
+    const f=pth?z.file(pth):null;
+    if(!f||f._data?.uncompressedSize>TH_MAX_BYTES){missed++;continue;}
+    const bytes=await f.async('uint8array');
+    if(bytes.length>TH_MAX_BYTES||!new TextDecoder('latin1').decode(bytes.subarray(0,1024)).includes('%PDF')){missed++;continue;}
+    const id=uid();await put('media',{id,kind:'pdf',blob:new Blob([bytes],{type:'application/pdf'}),name:d.name||pth.split('/').pop(),size:bytes.length,pages:d.pages});importedIds.push(id);
+    keep.push({...d,id,size:bytes.length});
+    progress(`Restoring tool history ${k+1} of ${shaped.toolDocs.length}`,k+1,shaped.toolDocs.length);await tick();
+   }
+   shaped.toolDocs=keep;if(missed)thNote=` ${missed} tool history PDF${missed===1?' was':'s were'} missing from the backup.`;else if(keep.length)thNote=` ${keep.length} tool history PDF${keep.length===1?'':'s'} restored.`;}
   let tplNote='';
   if(Array.isArray(data.templates)&&data.templates.length){const nt=await importTemplates(z,data.templates,importedIds);if(nt){tplNote=` Its template was restored too.`;await renderTemplateList();}}
   shaped.updated=new Date().toISOString();
@@ -3253,7 +3401,7 @@ async function importBackup(file){
   }catch(e){console.warn('Logo in backup could not be restored',e);}
   let styleNote='';
   try{const sf=z.file('styles.json');if(sf){const list=JSON.parse(await sf.async('string'));let k=0;for(const m of Array.isArray(list)?list:[]){const id=String(m?.id||'');if(!id.startsWith(STYLE_PREFIX)||await get('settings',id))continue;let logo=null;if(m.logo?.path){const f=z.file(String(m.logo.path));if(f){const b=await f.async('uint8array');const mime=String(m.logo.mime||'image/png');if(b.length<=8*1048576&&mime.startsWith('image/'))logo={blob:new Blob([b],{type:mime}),mime,width:m.logo.width,height:m.logo.height,name:String(m.logo.name||'')};}}const st=shapeStyle({...m,logo});st.updated=String(m.updated||new Date().toISOString());await put('settings',st);k++;}if(k){styleNote=` ${k} report style${k===1?' was':'s were'} restored too.`;await renderStyleList();}}}catch(e){console.warn('Styles in backup could not be restored',e);}
-  toast('Backup restored as a separate report.'+logoNote+tplNote+styleNote);
+  toast('Backup restored as a separate report.'+thNote+logoNote+tplNote+styleNote);
  }catch(e){
   for(const id of importedIds)await remove('media',id).catch(()=>{});
   throw e;
@@ -3513,7 +3661,7 @@ $('pickDialog').addEventListener('close',()=>{pickState=null;});
 // ---- v11 sub-parts ----
 function subOf(el){const row=el?.closest?.('[data-sub]');return row&&editing?(editing.subParts||[]).find(x=>x.id===row.dataset.sub):null;}
 $('subList').addEventListener('input',e=>{const inp=e.target.closest('[data-sfield]');if(inp&&editing){const x=subOf(inp);if(!x)return;x[inp.dataset.sfield]=inp.value.slice(0,inp.dataset.sfield==='note'?2000:inp.dataset.sfield==='qty'?40:300);persistReport().catch(()=>{});return;}captionInput(e);});
-$('subList').addEventListener('change',e=>{if(e.target.closest('[data-sfield]')&&editing)renderEntries();});
+$('subList').addEventListener('change',e=>{const sd=e.target.closest('[data-sdisp]');if(sd&&editing){const x=subOf(sd);if(!x)return;x.disposition=dispOf(sd.value);sd.classList.toggle('set',!!x.disposition);sd.closest('.sub-disp')?.classList.toggle('has-val',!!x.disposition);renderEntries();persistReport().catch(()=>{});return;}if(e.target.closest('[data-sfield]')&&editing)renderEntries();});
 $('subList').addEventListener('pointerdown',e=>{if(e.target.closest('input')&&session)stopRecording().catch(fail);});
 on('subList','click',async e=>{
 const x=subOf(e.target);
@@ -3548,9 +3696,9 @@ on('audioList','click',async e=>{
  if(b&&editing&&confirm('Delete this voice note?')){editing.audio=editing.audio.filter(id=>id!==b.dataset.removeAudio);await persistReport();await remove('media',b.dataset.removeAudio);renderEditorMedia();renderEntries();}
 });
 on('deleteReport','click',async()=>{
- if(!confirm('Permanently delete this report and all its photos and voice notes? Export a backup first.'))return;
+ if(!confirm(`Permanently delete this report and all its photos${current.toolDocs?.length?`, tool history PDFs`:''} and voice notes? Export a backup first.`))return;
  await stopRecording();
- const ids=[...new Set(current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...(p.subParts||[]).flatMap(x=>x.photos.map(ph=>ph.id)),...p.audio,...(p.drawingId?[p.drawingId]:[])]).concat(isPackJob(current)?current.pack.appendix.map(a=>a.id):[]))];
+ const ids=[...new Set(current.parts.flatMap(p=>[...p.photos.map(ph=>ph.id),...(p.subParts||[]).flatMap(x=>x.photos.map(ph=>ph.id)),...p.audio,...(p.drawingId?[p.drawingId]:[])]).concat(isPackJob(current)?current.pack.appendix.map(a=>a.id):[]).concat((current.toolDocs||[]).map(d=>d.id)))];
  await remove('reports',current.id);
  for(const id of ids){await remove('media',id);dropThumb(id);}
  clearThumbs();current=null;editing=null;$('report').hidden=true;$('home').hidden=false;setDock(false);await listReports();
@@ -3668,7 +3816,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&session)st
 window.addEventListener('beforeunload',e=>{if(session||busy||startingMic||hasSaveError){e.preventDefault();e.returnValue='';}});
 
 // ---------- v7: templates and step-by-step jobs ----------
-function newPartObject(extra={}){return Object.assign({id:uid(),name:'',partNo:'',subParts:[],condition:'Not rated',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
+function newPartObject(extra={}){return Object.assign({id:uid(),name:'',partNo:'',subParts:[],condition:'Not rated',disposition:'',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
 function isTemplateJob(r){return !!(r&&(r.templateName||(Array.isArray(r.parts)&&r.parts.some(p=>p&&p.fromTemplate))));}
 function isStepMode(){return !!(current&&editing&&isTemplateJob(current));}
 function promptList(p){return p&&Array.isArray(p.prompts)&&p.prompts.length?p.prompts:[''];}
@@ -4225,6 +4373,7 @@ function dropMark(el){if(dropEl===el)return;dropEl?.classList.remove('drop-on');
 function dropTarget(e){
  const t=e.target instanceof Element?e.target:null;
  if(!$('home').hidden)return $('home');
+ if(!$('report').hidden&&current&&t?.closest('#toolHistory'))return $('toolHistory');
  if($('report').hidden||!current||$('report').classList.contains('edit-report')||!t)return null;
  const ent=t.closest('#entries .entry[data-part]');if(ent)return ent;
  const ed=t.closest('#editor');if(ed&&!ed.hidden&&editing)return ed;
@@ -4238,6 +4387,8 @@ async function handleDrop(t,files){
  if(!t||!files.length)return;
  if(t===$('home')){const z=files.find(f=>/\.zip$/i.test(f.name)||/zip/i.test(f.type));if(!z){toast('Drop a StripNote backup ZIP here to import it.');return;}return importBackup(z);}
  if(busy||startingMic){toast('Busy – try again in a moment.');return;}
+ const isPdf=f=>/pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||'');
+ if(t===$('toolHistory')||(!files.some(f=>/^image\//i.test(f.type||'')||IMG_EXT.test(f.name||''))&&files.some(isPdf))){if(t!==$('toolHistory'))toast('PDF files go in Tool history / build paperwork.');return addToolDocs(files.filter(isPdf));}
  const imgs=files.filter(f=>/^image\//i.test(f.type||'')||IMG_EXT.test(f.name||''));
  if(!imgs.length){toast('Only photo files can be dropped on a part (JPEG or PNG).');return;}
  if(t.matches('.entry')){const id=t.dataset.part;if(editing?.id!==id)await editPart(id);if(editing?.id!==id){toast('That part could not be opened.');return;}}
@@ -4304,6 +4455,170 @@ DESK.addEventListener('change',deskWords);deskWords();
 $('cameraFile').multiple=isDesk();
 probeCam();
 
+// ---- v15: Tool history / build paperwork (PDF files attached to the job) ----
+// pdf.js (page images, viewer) and pdf-lib (copies original pages into the PDF report, crisp) are loaded only when needed.
+const PDFJS_URL='./lib/pdfjs/pdf.min.js',PDFJS_WORKER='./lib/pdfjs/pdf.worker.min.js',PDFLIB_URL='./lib/pdf-lib.min.js';
+const TH_MAX_BYTES=150*1048576;
+let pdfjsP=null,pdfLibP=null;
+const absURL=u=>new URL(u,location.href).href;
+const LIB_FAIL='The PDF tools could not be loaded. Open StripNote once with internet so they are kept for offline use, then try again.';
+function loadPdfJs(){if(!pdfjsP)pdfjsP=import(absURL(PDFJS_URL)).then(m=>{m.GlobalWorkerOptions.workerSrc=absURL(PDFJS_WORKER);return m;}).catch(e=>{pdfjsP=null;console.warn(e);throw Error(LIB_FAIL);});return pdfjsP;}
+function loadPdfLib(){if(!pdfLibP)pdfLibP=new Promise((resolve,reject)=>{if(window.PDFLib)return resolve(window.PDFLib);const sc=document.createElement('script');sc.src=PDFLIB_URL;sc.onload=()=>window.PDFLib?resolve(window.PDFLib):reject(Error(LIB_FAIL));sc.onerror=()=>reject(Error(LIB_FAIL));document.head.append(sc);}).catch(e=>{pdfLibP=null;throw e;});return pdfLibP;}
+async function openPdfJs(bytes){const lib=await loadPdfJs();return lib.getDocument({data:bytes.slice(0),wasmUrl:absURL('./lib/pdfjs/wasm/'),standardFontDataUrl:absURL('./lib/pdfjs/standard_fonts/'),isEvalSupported:false,enableXfa:false,disableAutoFetch:true,disableStream:true,stopAtErrors:false}).promise;}
+// One page as a JPEG at most maxW × maxH pixels (white background). Canvas memory is released straight away.
+async function renderPdfPage(pdf,no,maxW=1400,maxH=2000,q=.82){
+ const page=await pdf.getPage(no);
+ try{
+  const v1=page.getViewport({scale:1});
+  const sc=Math.max(.1,Math.min(maxW/v1.width,maxH/v1.height,5));
+  const vp=page.getViewport({scale:sc});
+  const c=document.createElement('canvas');c.width=Math.max(1,Math.floor(vp.width));c.height=Math.max(1,Math.floor(vp.height));
+  const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#ffffff';ctx.fillRect(0,0,c.width,c.height);
+  await page.render({canvasContext:ctx,viewport:vp,background:'#ffffff'}).promise;
+  const blob=await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(Error('A PDF page could not be turned into an image (low memory?).')),'image/jpeg',q));
+  const out={blob,width:c.width,height:c.height};
+  c.width=1;c.height=1;
+  return out;
+ }finally{page.cleanup();}
+}
+const closePdf=pdf=>Promise.resolve().then(()=>pdf?.loadingTask?.destroy?.()).catch(()=>{});
+function pdfReadError(e){if(e?.name==='PasswordException')return 'This PDF is password-protected, so its pages cannot be shown or put into reports. The file is kept with the job and goes in backups.';if(String(e?.message||'')===LIB_FAIL)return LIB_FAIL;return 'This file could not be read as a PDF. It is kept with the job and goes in backups, but its pages cannot be put into reports.';}
+function toolDocTitle(name){return clean(String(name||'').replace(/\.pdf$/i,'').replace(/[_]+/g,' '))||'Document';}
+function toolDocLabel(d,k){return clean(d?.title)||toolDocTitle(d?.name)||`Document ${k+1}`;}
+const fmtMB=n=>n>=1048576?`${(n/1048576).toFixed(1)} MB`:`${Math.max(1,Math.round((n||0)/1024))} KB`;
+function renderToolDocs(){
+ if(!current||!$('thList'))return;
+ const list=current.toolDocs||(current.toolDocs=[]);
+ $('toolHistory').classList.toggle('has-docs',list.length>0);
+ $('thCount').textContent=list.length?`· ${list.length} PDF${list.length===1?'':'s'}`:'';
+ $('thList').innerHTML=list.length?list.map((d,k)=>{const id=esc(d.id),n=k+1;return `<div class="th-doc" data-th="${id}"><div class="th-head"><b class="th-no">${n}</b><input class="compact" data-thf="title" value="${esc(d.title)}" placeholder="Title, e.g. Build sheet" aria-label="Title of document ${n}" maxlength="200"><input class="compact th-date" type="date" data-thf="date" value="${esc(d.date)}" aria-label="Date of document ${n}"></div><div class="th-meta" data-th-meta>${esc(d.name||'PDF')} · ${d.pages?`${d.pages} page${d.pages===1?'':'s'}`:'pages not counted'} · ${fmtMB(d.size)}</div><div class="th-tools"><button type="button" class="th-view" data-th-view="${id}" aria-label="View document ${n}">👁 View</button><button type="button" data-th-up="${id}" ${k===0?'disabled':''} aria-label="Move document ${n} up">↑</button><button type="button" data-th-down="${id}" ${k===list.length-1?'disabled':''} aria-label="Move document ${n} down">↓</button><button type="button" class="danger" data-th-del="${id}" aria-label="Delete document ${n}">✕ Delete</button></div></div>`;}).join(''):'<p class="muted" style="margin:6px 0 10px">No documents yet.</p>';
+}
+async function addToolDocs(files){
+ if(!current)return 0;
+ if(busy||startingMic){toast('Busy – try again in a moment.');return 0;}
+ const all=[...(files||[])];
+ const pdfs=all.filter(f=>/pdf/i.test(f.type||'')||/\.pdf$/i.test(f.name||''));
+ if(!pdfs.length){toast('Choose PDF files for the tool history.');return 0;}
+ if((current.toolDocs||[]).length+pdfs.length>60)throw Error('Up to 60 documents per job.');
+ busy=true;setBusy(true);$('progressTitle').textContent='Adding tool history';$('progressDialog').showModal();
+ let added=0;const problems=[];let unread=0;
+ try{
+  for(let i=0;i<pdfs.length;i++){
+   const f=pdfs[i];
+   progress(`Reading ${f.name||'PDF'} (${i+1} of ${pdfs.length})`,i,pdfs.length);await tick();
+   if(f.size>TH_MAX_BYTES){problems.push(`${f.name}: larger than 150 MB`);continue;}
+   const bytes=new Uint8Array(await f.arrayBuffer());
+   const head=new TextDecoder('latin1').decode(bytes.subarray(0,1024));
+   if(!head.includes('%PDF')){problems.push(`${f.name}: not a PDF file`);continue;}
+   let pages=0;
+   try{const pdf=await openPdfJs(bytes);pages=pdf.numPages;await closePdf(pdf);}catch(e){console.warn('PDF pages not counted',f.name,e);unread++;problems.push(`${f.name}: ${pdfReadError(e)}`);}
+   const id=uid();
+   await put('media',{id,kind:'pdf',blob:new Blob([bytes],{type:'application/pdf'}),name:String(f.name||'document.pdf').slice(0,200),size:bytes.length,pages});
+   current.toolDocs.push({id,title:toolDocTitle(f.name),date:'',name:String(f.name||'document.pdf').slice(0,200),size:bytes.length,pages});
+   await persistReport();added++;
+   renderToolDocs();
+  }
+ }finally{$('progressDialog').close();busy=false;setBusy(false);$('thFile').value='';}
+ if($('toolHistory'))$('toolHistory').open=true;
+ const msg=[added?`${added} PDF${added===1?'':'s'} added to the tool history.`:'No PDF added.',...problems.slice(0,3)].join(' ');
+ $('thStatus').textContent=msg;toast(msg);
+ checkStorage(true).catch(()=>{});
+ return added;
+}
+let thView=null;
+async function viewToolDoc(id){
+ const k=(current?.toolDocs||[]).findIndex(x=>x.id===id);if(k<0)return;const d=current.toolDocs[k];
+ if(thView)thView.stop=true;
+ const tok={stop:false,urls:[],id};thView=tok;
+ $('thvTitle').textContent=`${k+1}. ${toolDocLabel(d,k)}${d.date?' · '+prettyDate(d.date):''}`;
+ $('thvPages').innerHTML='';$('thvStatus').textContent='Opening…';
+ if(!$('thViewer').open)$('thViewer').showModal();
+ const m=await get('media',id).catch(()=>null);
+ if(!m?.blob){$('thvStatus').textContent='This PDF is missing from this device. Delete it and add it again.';return;}
+ let pdf;
+ try{pdf=await openPdfJs(new Uint8Array(await m.blob.arrayBuffer()));}catch(e){if(thView===tok)$('thvStatus').textContent=pdfReadError(e);return;}
+ try{
+  const n=pdf.numPages;
+  if(d.pages!==n){d.pages=n;persistReport().catch(()=>{});renderToolDocs();}
+  const W=Math.min(1600,Math.max(600,Math.round(($('thvPages').clientWidth||380)*(window.devicePixelRatio||1))));
+  for(let p=1;p<=n;p++){
+   if(tok.stop)return;
+   $('thvStatus').textContent=`Showing page ${p} of ${n}…`;
+   const img=await renderPdfPage(pdf,p,W,Math.round(W*1.7),.85);
+   if(tok.stop)return;
+   const url=URL.createObjectURL(img.blob);tok.urls.push(url);
+   $('thvPages').insertAdjacentHTML('beforeend',`<figure class="thv-page"><img src="${url}" alt="Page ${p} of ${n}"><figcaption>Page ${p} of ${n}</figcaption></figure>`);
+   await tick();
+  }
+  $('thvStatus').textContent=`${n} page${n===1?'':'s'}.`;
+ }catch(e){if(!tok.stop)$('thvStatus').textContent=pdfReadError(e);}
+ finally{closePdf(pdf);}
+}
+function endToolView(){if(thView){thView.stop=true;thView.urls.forEach(u=>URL.revokeObjectURL(u));thView=null;}$('thvPages').innerHTML='';}
+// Export helper: reads each attached PDF once – page count, and whether pdf-lib can copy its pages as they are.
+// mode: 'vector' (pdf-lib copies the original page, crisp), 'raster' (pdf.js page image), 'unreadable', 'missing'.
+async function toolDocsForExport(r,notify=()=>{},opt={}){
+ const list=r.toolDocs||[],out=[];
+ for(const [k,d] of list.entries()){
+  const it={...d,no:k+1,label:toolDocLabel(d,k),blob:null,pages:0,mode:'missing'};
+  const m=await get('media',d.id).catch(()=>null);
+  if(m?.blob){
+   it.blob=m.blob;it.mode='unreadable';
+   notify(`Reading tool history ${k+1} of ${list.length}`,k,list.length);await tick();
+   const bytes=new Uint8Array(await m.blob.arrayBuffer());
+   if(opt.vector){try{const L=await loadPdfLib();const src=await L.PDFDocument.load(bytes,{ignoreEncryption:true,updateMetadata:false,throwOnInvalidObject:false});if(!src.isEncrypted&&src.getPageCount()>0){it.mode='vector';it.pages=src.getPageCount();}}catch(e){console.warn('pdf-lib could not read',d.name,e);}}
+   if(it.mode!=='vector'){try{const pdf=await openPdfJs(bytes);it.pages=pdf.numPages;it.mode='raster';await closePdf(pdf);}catch(e){console.warn('pdf.js could not read',d.name,e);it.err=pdfReadError(e);}}
+  }
+  out.push(it);
+ }
+ return out;
+}
+function toolDocNote(d){return d.mode==='missing'?'Missing on this device':d.mode==='unreadable'?'Could not be read – original kept with the job':'';}
+// PDF report: draw each original page (pdf-lib, vector) into the blank box StripNote left on its appendix page.
+async function stampToolPages(bytes,places,notify=()=>{}){
+ const L=await loadPdfLib();
+ const out=await L.PDFDocument.load(bytes,{updateMetadata:false});
+ const MM=72/25.4;
+ const byDoc=new Map();for(const pl of places){if(!byDoc.has(pl.d))byDoc.set(pl.d,[]);byDoc.get(pl.d).push(pl);}
+ let done=0;
+ for(const [d,list] of byDoc){
+  const src=await L.PDFDocument.load(new Uint8Array(await d.blob.arrayBuffer()),{ignoreEncryption:true,updateMetadata:false,throwOnInvalidObject:false});
+  const srcPages=src.getPages();
+  for(const pl of list){
+   notify(`Adding tool history pages (${++done} of ${places.length})`,done,places.length);
+   const sp=srcPages[pl.p-1];if(!sp)continue;
+   const cb=sp.getCropBox();
+   const emb=await out.embedPage(sp,{left:cb.x,bottom:cb.y,right:cb.x+cb.width,top:cb.y+cb.height});
+   const rot=(((sp.getRotation().angle||0)%360)+360)%360;
+   const pw=emb.width,ph=emb.height,vw=rot%180?ph:pw,vh=rot%180?pw:ph;
+   const bw=pl.box.w*MM,bh=pl.box.h*MM,s=Math.min(bw/vw,bh/vh),W=vw*s,H=vh*s;
+   const page=out.getPage(pl.page-1),PHt=page.getHeight();
+   const left=pl.box.x*MM+(bw-W)/2,bottomY=PHt-pl.box.y*MM-H;
+   // PDF /Rotate turns the page clockwise; pdf-lib rotates anticlockwise about the drawing origin.
+   const x=rot===0||rot===90?left:left+W,y=rot===0||rot===270?bottomY:bottomY+H;
+   page.drawPage(emb,{x,y,xScale:s,yScale:s,rotate:L.degrees(-rot)});
+   page.drawRectangle({x:left,y:bottomY,width:W,height:H,borderColor:L.rgb(.78,.82,.83),borderWidth:.6});
+   if(done%4===0)await tick();
+  }
+ }
+ notify('Packaging PDF…',1,1);await tick();
+ return out.save({useObjectStreams:false});
+}
+on('thAdd','click',()=>{if(!current)return;$('thFile').click();});
+on('thFile','change',e=>addToolDocs([...(e.target.files||[])]));
+$('thList').addEventListener('input',e=>{const inp=e.target.closest('[data-thf]');if(!inp||!current)return;const d=current.toolDocs.find(x=>x.id===inp.closest('[data-th]')?.dataset.th);if(!d)return;if(inp.dataset.thf==='title')d.title=inp.value.slice(0,200);else d.date=/^\d{4}-\d{2}-\d{2}$/.test(inp.value)?inp.value:'';persistReport().catch(()=>{});});
+on('thList','click',async e=>{
+ if(!current)return;
+ let b=e.target.closest('[data-th-view]');if(b)return viewToolDoc(b.dataset.thView);
+ b=e.target.closest('[data-th-up],[data-th-down]');if(b){const id=b.dataset.thUp||b.dataset.thDown;const k=current.toolDocs.findIndex(x=>x.id===id);if(moveItem(current.toolDocs,k,b.dataset.thUp?-1:1)){renderToolDocs();await persistReport();$('thList').querySelector(`[data-th="${CSS.escape(id)}"] [data-th-${b.dataset.thUp?'up':'down'}]`)?.focus();}return;}
+ b=e.target.closest('[data-th-del]');if(b){const d=current.toolDocs.find(x=>x.id===b.dataset.thDel);if(!d)return;if(!confirm(`Delete “${toolDocLabel(d,current.toolDocs.indexOf(d))}” from this job? The PDF is removed from this device.`))return;current.toolDocs=current.toolDocs.filter(x=>x!==d);await persistReport();await remove('media',d.id).catch(()=>{});renderToolDocs();$('thStatus').textContent='Document deleted.';}
+});
+on('thvClose','click',()=>$('thViewer').close());
+on('thvDone','click',()=>$('thViewer').close());
+$('thViewer').addEventListener('close',endToolView);
+on('thvShare','click',async()=>{const id=thView?.id;const d=current?.toolDocs.find(x=>x.id===id);if(!d)return;const m=await get('media',id);if(!m?.blob)throw Error('This PDF is missing from this device.');await deliver(new Blob([m.blob],{type:'application/pdf'}),/\.pdf$/i.test(d.name)?d.name:`${safeFileName(toolDocLabel(d,0),'document')}.pdf`);});
+on('disposition','change',async()=>{if(!editing)return;editing.disposition=dispOf($('disposition').value);$('disposition').classList.toggle('set',!!editing.disposition);$('dispRow').classList.toggle('has-val',!!editing.disposition);renderEntries();await persistReport();});
+
 window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
  get db(){return db;},get session(){return session;},
@@ -4314,6 +4629,7 @@ window.StripNoteTest={
  redoDictation,dictationKey,isDesk,deskLayout,handleDrop,speechLang,loadBig,useWebcam,openWebcam,probeCam,removeLastInsertion,attachSpoken,getFieldText,
  openEditReport,closeEditReport,rotatePhoto,asRot,viewKey,rotShapes,reportTitle,reportIdLine,reportHeading,coverRows,syncTitlePreset,movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
+ addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,dispCountText,get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
