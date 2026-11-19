@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><meta name="theme-color" content="#10161a"><meta name="color-scheme" content="dark light"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon.svg"><title>StripNote · Photo inspection reports</title>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><meta name="theme-color" content="#10161a"><meta name="color-scheme" content="dark light"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon-192.png"><title>StripNote · Photo inspection reports</title>
 <style>
 :root{color-scheme:dark;--bg:#10161a;--panel:#182226;--ink:#e7eef0;--muted:#93a3a8;--line:#314249;--mark:#c6e07a;--button:#24343a;--primary:#e7eef0;--primary-ink:#142024;--danger:#ffb4aa;--radius:14px;font-family:"Segoe UI",system-ui,-apple-system,sans-serif}
 body.light{color-scheme:light;--bg:#f3f6f6;--panel:#fff;--ink:#1a272c;--muted:#5c6f75;--line:#d3e0e3;--mark:#3d6810;--button:#e7eeee;--primary:#1a272c;--primary-ink:#f4f8f8;--danger:#9d261c}
@@ -355,22 +355,99 @@ dialog#markup[open]{display:flex;flex-direction:column}
 .photo-opts .mk-opts button{min-height:56px}
 .title-field{margin:4px 0 10px}.title-field select{margin-bottom:6px}.title-field input{font-size:18px;font-weight:600}
 #erHead{display:none}#report.edit-report #erHead{display:block}
-#report.edit-report>:not(.er-keep){display:none!important}
+#report.edit-report>:not(.er-keep):not(.pane),#report.edit-report>.pane>:not(.er-keep){display:none!important}
 #report.edit-report #erHead{position:sticky;top:0;z-index:5}
 [data-job-mic][aria-pressed="true"]{background:#E5484D;color:#fff}
+/* v14: desktop / tablet layout. Everything below 768px wide is unchanged (panes are display:contents). */
+.pane{display:contents}
+.desk-only{display:none}
+#camDialog video{display:block;width:100%;max-height:60vh;background:#000;border-radius:10px;object-fit:contain}
+.drop-on{outline:3px dashed var(--mark)!important;outline-offset:-3px}
+@media (min-width:768px){
+ main:has(> #report:not([hidden])){max-width:1760px;padding:8px 18px 24px}
+ main:has(> #home:not([hidden])){max-width:1240px}
+ body:has(#report:not([hidden])) .header-inner{max-width:1760px;padding-left:18px;padding-right:18px}
+ body:has(#home:not([hidden])) .header-inner{max-width:1240px}
+ #home:not([hidden]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;align-items:start}
+ #home>.hero,#home>.ver,#home>#storageWarn{grid-column:1/-1}
+ #report:not([hidden]){display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr);column-gap:18px;align-items:start;padding-bottom:110px}
+ #report>.row.between:first-child{grid-column:1/-1}
+ #report>.pane{display:block;min-width:0}
+ #paneSide{grid-column:1;grid-row:2/span 2;position:sticky;top:calc(var(--hdr,86px) + 8px);max-height:calc(100dvh - var(--hdr,86px) - 96px);overflow:auto;overscroll-behavior:contain;padding:0 4px 8px 0;scrollbar-width:thin}
+ #paneMain{grid-column:2;grid-row:2}
+ #paneRight{grid-column:2;grid-row:3}
+ #paneMain>#editor,#paneMain>#deskEmpty{margin-top:12px}
+ .desk-only{display:block}
+ #paneMain #editor:not([hidden])~#deskEmpty{display:none}
+ #deskEmpty{padding:28px;text-align:center}
+ .dock{left:var(--dockL,0px);right:var(--dockR,0px);border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0}
+ #paneSide .entry{padding:12px;cursor:pointer}
+ #paneSide .entry p{-webkit-line-clamp:2;font-size:14px}
+ #paneSide .entry h3{font-size:16px}
+ #paneSide .thumbstrip img{width:60px;height:45px}
+ #paneSide .entry .toolbar{margin:8px 0 4px}
+ #paneSide .entry .toolbar button,#paneSide details.more>summary{min-height:44px;padding:6px 10px;font-size:15px}
+ #paneSide .entry.sel{border-color:var(--mark);box-shadow:0 0 0 2px var(--mark) inset}
+ #paneSide .list-tools{flex-wrap:wrap}
+ #editorPhotos{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+ #subBox .photos{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+ .steps-dialog,.pick-dialog,#newJobDialog{width:min(680px,92vw);max-width:680px}
+ dialog{max-width:min(680px,92vw)}
+ .style-dialog{max-width:600px}
+ #viewer{max-width:96vw;max-height:96vh;padding:12px}
+ #viewer img{max-width:min(92vw,1600px);max-height:84vh}
+ #viewer>div{display:flex;justify-content:center}
+ #camDialog{width:min(820px,92vw)}
+ dialog#markup[open]{display:grid;grid-template-columns:minmax(0,1fr) 360px;grid-template-rows:auto auto auto auto minmax(0,1fr)}
+ #markup .mk-top{grid-column:1/-1}
+ #markup .mk-stage{grid-column:1;grid-row:2/-1}
+ #markup .mk-bar{grid-column:2;align-content:start;padding:8px 10px}
+ #markup .mk-bar:last-child{padding-bottom:10px}
+ #markup .mk-bar[aria-label="Tool"]{grid-row:2}
+ #markup .mk-bar[aria-label="Colour"]{grid-row:3}
+ #markup .mk-bar[aria-label="Line and history"]{grid-row:4}
+ #markup .mk-keys{display:block;grid-column:2;grid-row:5;padding:4px 12px;margin:0;font-size:13px;color:#9aa7ab;align-self:start}
+}
+@media (min-width:1280px){
+ #report:not([hidden]){grid-template-columns:minmax(260px,300px) minmax(0,1fr) minmax(320px,370px);padding-bottom:0}
+ #paneMain{grid-column:2;grid-row:2/span 2;padding-bottom:110px}
+ #report>#paneRight{grid-column:3;grid-row:2/span 2;position:sticky;top:calc(var(--hdr,86px) + 8px);max-height:calc(100dvh - var(--hdr,86px) - 16px);overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;padding:0 4px 8px 0;scrollbar-width:thin}
+ #paneSide{max-height:calc(100dvh - var(--hdr,86px) - 16px)}
+ #paneRight>#reportCard{order:-1}
+ #paneRight>.card{margin:12px 0 0}
+ #paneRight .grid{grid-template-columns:1fr 1fr}
+ #editorPhotos{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
+@media (min-width:768px){
+ #report.edit-report:not([hidden]){grid-template-columns:minmax(0,1fr);padding-bottom:24px}
+ #report.edit-report>#paneSide,#report.edit-report>#paneMain{display:none}
+ #report.edit-report>#paneRight{grid-column:1/-1;grid-row:2;position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;align-items:start;max-width:1400px;width:100%;margin:0 auto}
+ #report.edit-report #erHead{grid-column:1/-1}
+ #report.edit-report #details{grid-row:span 2}
+}
+@media (min-width:768px) and (hover:hover) and (pointer:fine){
+ button:hover:not(:disabled),.button:hover{filter:brightness(1.15);border-color:var(--muted)}
+ button.primary:hover:not(:disabled){filter:brightness(.92)}
+ details>summary:hover{filter:brightness(1.15)}
+ #paneSide .entry:hover{border-color:var(--muted)}
+ #paneSide .entry.sel:hover{border-color:var(--mark)}
+ .photo img[data-media]:hover,.thumbstrip img:hover{outline:2px solid var(--mark);outline-offset:1px;cursor:zoom-in}
+ input:hover,textarea:hover,select:hover{border-color:var(--muted)}
+}
+.mk-keys{display:none}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="theme" class="small" type="button" aria-label="Display mode: Dark. Tap for Light.">◐ Dark</button></div></div></header>
 <main>
 <section id="home">
 <div class="card hero"><div class="tag">Field record</div><h1>Record the strip-down while the part is in your hands.</h1><p class="lead muted">Photograph a part, dictate the name and the damage, then add more photos of that same part. Word and PDF reports are built on this phone.</p><button id="newReport" class="primary" type="button">New report</button></div>
-<div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2>On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
+<div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2 id="savedHead">On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v12</p>
+<p class="ver">StripNote v14</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
-<div class="card er-head er-keep" id="erHead"><div class="row between"><h2 style="margin:0">Edit report</h2><button id="erDone" class="primary" type="button">✓ Done</button></div><p class="note" style="margin:6px 0 0">Title, style, details and report text in one place. Everything saves as you type.</p></div>
+<div class="pane pane-right" id="paneRight"><div class="card er-head er-keep" id="erHead"><div class="row between"><h2 style="margin:0">Edit report</h2><button id="erDone" class="primary" type="button">✓ Done</button></div><p class="note" style="margin:6px 0 0">Title, style, details and report text in one place. Everything saves as you type.</p></div>
 <details class="card er-keep" id="details" open><summary>Report details</summary><div class="title-field"><label for="title">Report title</label><select id="titlePreset" aria-label="Report title suggestions"><option value="">Choose a title…</option><option value="Workshop Strip-down Report">Workshop Strip-down Report</option><option value="Field Strip-down Report">Field Strip-down Report</option><option value="Inspection Report">Inspection Report</option><option value="Failure Investigation Report">Failure Investigation Report</option><option value="__custom">Custom…</option></select><input id="title" data-job="title" placeholder="e.g. Workshop Strip-down Report" autocomplete="off"><p class="hint" id="titleHint">The cover shows this title large, then Equipment · Serial no.</p></div><div class="style-row"><label for="reportStyle">Report style</label><select id="reportStyle" aria-label="Report style: colours and logo used in Word, PDF and Slides"></select></div>
 <div id="packHeader" class="grid" hidden></div>
 <div class="grid" id="detailGrid">
@@ -404,8 +481,8 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
 </div></details>
-<div class="card"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div>
-<section id="editor" class="card" hidden>
+<div class="card" id="reportCard"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div></div>
+<div class="pane pane-main" id="paneMain"><section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
 <input id="cameraFile" type="file" accept="image/*" capture="environment" hidden><input id="galleryFile" type="file" accept="image/*" multiple hidden>
@@ -424,8 +501,9 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <div id="audioList"></div>
 <p class="muted">Autosaved on this phone. Use the buttons along the bottom for another photo of this part, or the next part.</p>
 </section>
-<div id="listTools" class="row between list-tools" hidden><span class="status" id="listOrderText"></span><button id="sortToggle" class="small" type="button" aria-label="Change the order of the part list">⇅ Order</button></div>
-<div id="entries"></div>
+<div id="deskEmpty" class="card desk-only"><h2>No part open</h2><p class="muted">Click a part in the list to open it here, or use <b>Add part</b> / <b>Photo → new part</b> below. You can drag photo files from this computer onto a part.</p></div></div>
+<div class="pane pane-side" id="paneSide"><div id="listTools" class="row between list-tools" hidden><span class="status" id="listOrderText"></span><button id="sortToggle" class="small" type="button" aria-label="Change the order of the part list">⇅ Order</button></div>
+<div id="entries"></div></div>
 <div id="dock" class="dock">
 <div id="dockIdle" class="dock-row"><button id="resume" class="primary" type="button" hidden>▶ Continue steps</button><button id="rapid" class="primary" type="button">Photo → new part</button><button id="addPart" type="button">Add part</button></div>
 <div id="dockEdit" hidden><div id="heard" class="heard dock-heard" hidden aria-live="polite"></div><div class="dock-row"><button id="stepShot" class="primary step-only" type="button">📷 Photo</button><button id="speakBtn" class="mic primary" type="button" aria-pressed="false">🎙 Speak</button><button id="kbDone" type="button">⌨ Done typing</button><button id="samePart" type="button">📷 Same part</button></div><div class="dock-row"><button id="stepBack" class="step-only" type="button">← Back</button><button id="stepSkip" class="step-only" type="button">Skip</button><button id="stepNext" class="step-only" type="button">Next →</button><button id="nextPart" type="button">Next part</button><button id="doneEntry" type="button">Done</button></div></div>
@@ -447,8 +525,8 @@ dialog#markup[open]{display:flex;flex-direction:column}
 <dialog id="cropDialog"><h2>Crop the drawing</h2><p class="muted">Drag a box round the part, then Use selection. Or use the whole image.</p><div class="crop-wrap"><canvas id="cropCanvas" width="300" height="200"></canvas></div><div class="dialog-actions"><button id="cropWhole" type="button">Whole image</button><button id="cropUse" class="primary" type="button" disabled>Use selection</button></div><button id="cropCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <input id="drawingFile" type="file" accept="image/*" hidden>
 <dialog id="styleDialog" class="style-dialog"><h2 id="styleDlgTitle" style="margin-top:0">New report style</h2><p class="hint" id="styleStdNote" hidden>Standard keeps its built-in colours and the Company logo. You can choose its cover layout and header lines here.</p><div class="std-hide"><label for="styleName">Style name</label><input id="styleName" maxlength="60" placeholder="e.g. Client A" autocomplete="off"></div><label for="styleLayout">Cover &amp; page header layout</label><select id="styleLayout"><option value="banner">Banner – coloured title band</option><option value="clean">Clean – white header, boxed details</option></select><label for="styleHL1">Header lines (optional, Clean layout)</label><p class="hint" style="margin:0">Up to 3 small lines top-left on every page, e.g. company, department, address.</p><input id="styleHL1" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 1"><input id="styleHL2" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 2"><input id="styleHL3" class="hl-in" maxlength="90" autocomplete="off" placeholder="Line 3"><div class="std-hide"><div class="grid"><div><label for="styleAccentHex">Accent (rule lines)</label><div class="hex-pair"><input id="styleAccent" type="color" value="#1f3a44" aria-label="Pick accent colour"><input id="styleAccentHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div><div><label for="styleHeadingHex">Headings &amp; table heads</label><div class="hex-pair"><input id="styleHeading" type="color" value="#1f3a44" aria-label="Pick heading colour"><input id="styleHeadingHex" class="hex-in" type="text" inputmode="text" autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="7" placeholder="#0014DC" value="#1F3A44" aria-describedby="styleHexHelp"></div></div></div><p class="hint" id="styleHexHelp">Type a hex code such as #0014DC (3 or 6 digits, # optional), or use the picker.</p><div class="quick-sw" role="group" aria-label="Quick colours (sets headings and accent)"><span>Quick colours:</span><button type="button" data-qcol="1F3A44" aria-label="Slate" title="Slate"><i style="background:#1F3A44"></i></button><button type="button" data-qcol="1B2A6B" aria-label="Navy" title="Navy"><i style="background:#1B2A6B"></i></button><button type="button" data-qcol="0B5CAD" aria-label="Blue" title="Blue"><i style="background:#0B5CAD"></i></button><button type="button" data-qcol="1E6B3A" aria-label="Green" title="Green"><i style="background:#1E6B3A"></i></button><button type="button" data-qcol="7A1F2B" aria-label="Maroon" title="Maroon"><i style="background:#7A1F2B"></i></button><button type="button" data-qcol="333333" aria-label="Charcoal" title="Charcoal"><i style="background:#333333"></i></button></div><p class="status" id="styleContrast"></p></div><div id="stylePreview" class="style-preview" aria-hidden="true"><div class="sp-clean"><div class="sp-chead"><div class="sp-hl" id="spHL"></div><span class="sp-clogo" id="spCLogo" hidden><img id="spCLogoImg" alt=""></span></div><div class="sp-ctitle">Workshop Strip-down Report</div><div class="sp-cid">Equipment · Serial no.</div><div class="sp-grid"><span class="l">Report title:</span><span class="w">Workshop Strip-down Report</span><span class="l">Client:</span><span>…</span><span class="l">Site:</span><span>…</span></div></div><div class="sp-band"><span class="sp-logo" id="styleLogoBox" hidden><img id="styleLogoImg" alt=""></span><span class="sp-title">Equipment strip-down report</span></div><div class="sp-stripe"></div><div class="sp-h">Part 1 · Part heading</div><div class="sp-rule"></div><div class="sp-th">No. · Part · Condition</div></div><div class="toolbar std-hide"><button id="styleLogoPick" type="button">Choose logo</button><button id="styleLogoRemove" class="small danger" type="button" hidden>Remove logo</button></div><input id="styleLogoFile" type="file" accept="image/*" hidden><div class="toolbar"><button id="styleSave" class="primary" type="button" style="flex:1">Save style</button><button id="styleCancel" type="button">Cancel</button></div><button id="styleDelete" class="small danger" type="button" style="width:100%" hidden>Delete this style</button></dialog><dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
-<dialog id="markup" aria-label="Mark up photo"><div class="mk-top"><button type="button" id="mkCancel">Cancel</button><span id="mkTitle">Mark up</span><button type="button" id="mkClear">Clear all</button><button type="button" id="mkSave" class="primary">Save</button></div><div class="mk-stage" id="mkStage"><canvas id="mkCanvas" aria-label="Photo – draw with your finger"></canvas><div id="mkTextBox" hidden><input id="mkText" maxlength="120" enterkeyhint="done" autocomplete="off" placeholder="Label text" aria-label="Label text"><div class="mk-row"><button type="button" id="mkTextMic">🎙 Speak</button><button type="button" id="mkTextCancel">Cancel</button><button type="button" id="mkTextOk" class="primary">Add</button></div></div></div><div class="mk-bar" role="group" aria-label="Tool"><button type="button" data-mk-tool="arrow" aria-pressed="true">↗<small>Arrow</small></button><button type="button" data-mk-tool="ellipse" aria-pressed="false">◯<small>Circle</small></button><button type="button" data-mk-tool="box" aria-pressed="false">▭<small>Box</small></button><button type="button" data-mk-tool="pen" aria-pressed="false">✎<small>Pen</small></button><button type="button" data-mk-tool="text" aria-pressed="false">T<small>Text</small></button></div><div class="mk-bar" role="group" aria-label="Colour"><button type="button" data-mk-color="red" aria-pressed="true" aria-label="Red"><i style="background:#E8202A"></i></button><button type="button" data-mk-color="yellow" aria-pressed="false" aria-label="Yellow"><i style="background:#FFD60A"></i></button><button type="button" data-mk-color="white" aria-pressed="false" aria-label="White"><i style="background:#FFFFFF"></i></button><button type="button" data-mk-color="black" aria-pressed="false" aria-label="Black"><i style="background:#111111"></i></button><button type="button" data-mk-color="blue" aria-pressed="false" aria-label="Blue"><i style="background:#1E6BFF"></i></button></div><div class="mk-bar" role="group" aria-label="Line and history"><button type="button" data-mk-w="1" aria-pressed="false" aria-label="Thin line"><b style="height:2px"></b><small>Thin</small></button><button type="button" data-mk-w="2" aria-pressed="true" aria-label="Medium line"><b style="height:5px"></b><small>Medium</small></button><button type="button" data-mk-w="3" aria-pressed="false" aria-label="Thick line"><b style="height:9px"></b><small>Thick</small></button><button type="button" id="mkUndo" disabled>↶<small>Undo</small></button><button type="button" id="mkRedo" disabled>↷<small>Redo</small></button></div></dialog>
-<dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
+<dialog id="markup" aria-label="Mark up photo"><div class="mk-top"><button type="button" id="mkCancel">Cancel</button><span id="mkTitle">Mark up</span><button type="button" id="mkClear">Clear all</button><button type="button" id="mkSave" class="primary">Save</button></div><div class="mk-stage" id="mkStage"><canvas id="mkCanvas" aria-label="Photo – draw with your finger"></canvas><div id="mkTextBox" hidden><input id="mkText" maxlength="120" enterkeyhint="done" autocomplete="off" placeholder="Label text" aria-label="Label text"><div class="mk-row"><button type="button" id="mkTextMic">🎙 Speak</button><button type="button" id="mkTextCancel">Cancel</button><button type="button" id="mkTextOk" class="primary">Add</button></div></div></div><p class="mk-keys">Keys: A arrow · C circle · B box · P pen · T text · Ctrl+Z undo · Ctrl+Y redo · Ctrl+S or Ctrl+Enter save · Esc cancel</p><div class="mk-bar" role="group" aria-label="Tool"><button type="button" data-mk-tool="arrow" aria-pressed="true">↗<small>Arrow</small></button><button type="button" data-mk-tool="ellipse" aria-pressed="false">◯<small>Circle</small></button><button type="button" data-mk-tool="box" aria-pressed="false">▭<small>Box</small></button><button type="button" data-mk-tool="pen" aria-pressed="false">✎<small>Pen</small></button><button type="button" data-mk-tool="text" aria-pressed="false">T<small>Text</small></button></div><div class="mk-bar" role="group" aria-label="Colour"><button type="button" data-mk-color="red" aria-pressed="true" aria-label="Red"><i style="background:#E8202A"></i></button><button type="button" data-mk-color="yellow" aria-pressed="false" aria-label="Yellow"><i style="background:#FFD60A"></i></button><button type="button" data-mk-color="white" aria-pressed="false" aria-label="White"><i style="background:#FFFFFF"></i></button><button type="button" data-mk-color="black" aria-pressed="false" aria-label="Black"><i style="background:#111111"></i></button><button type="button" data-mk-color="blue" aria-pressed="false" aria-label="Blue"><i style="background:#1E6BFF"></i></button></div><div class="mk-bar" role="group" aria-label="Line and history"><button type="button" data-mk-w="1" aria-pressed="false" aria-label="Thin line"><b style="height:2px"></b><small>Thin</small></button><button type="button" data-mk-w="2" aria-pressed="true" aria-label="Medium line"><b style="height:5px"></b><small>Medium</small></button><button type="button" data-mk-w="3" aria-pressed="false" aria-label="Thick line"><b style="height:9px"></b><small>Thick</small></button><button type="button" id="mkUndo" disabled>↶<small>Undo</small></button><button type="button" id="mkRedo" disabled>↷<small>Redo</small></button></div></dialog>
+<dialog id="camDialog" aria-label="Take a photo with the camera"><h2 style="margin-top:0">Camera</h2><video id="camVideo" autoplay playsinline muted></video><p class="status" id="camStatus"></p><div class="dialog-actions"><button id="camShoot" class="primary" type="button">📷 Take photo</button><button id="camFiles" type="button">🖼 Choose files instead</button><button id="camClose" type="button">Close</button></div></dialog><dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
 <script>
 /*!
 
@@ -1148,6 +1226,7 @@ function showReport(){
  document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});syncTitlePreset();renderPackHeader();renderEndChecks();renderDetails();
  renderEntries();
  window.scrollTo(0,0);
+ if(isDesk()){$('paneRight').scrollTop=0;$('paneSide').scrollTop=0;requestAnimationFrame(deskLayout);}
 }
 function syncTitlePreset(){const v=clean($('title').value);$('titlePreset').value=!v?'':TITLE_PRESETS.includes(v)?v:'__custom';const id=current?reportIdLine(current):'';$('titleHint').textContent=`Cover: “${reportTitle({title:v})}”${id?` · ${id}`:' · (add Equipment and Serial no.)'}`;}
 function updateHeading(){
@@ -1182,7 +1261,7 @@ async function loadThumb(img){
  if(thumbById.get(id))return;
  const url=URL.createObjectURL(tb);
  thumbById.set(id,url);
- document.querySelectorAll('img[data-media]').forEach(el=>{if(el.dataset.media===id)el.src=url;});
+ document.querySelectorAll('img[data-media]').forEach(el=>{if(el.dataset.media===id&&!el.dataset.big)el.src=url;});
 }
 function observeThumbs(){
  io=new IntersectionObserver(items=>{
@@ -1222,6 +1301,7 @@ function renderEntries(){
  }).join(''):'<div class="empty">No parts yet. Use Photo → new part, say the part name, pause, then describe the damage.</div>';
  observeThumbs();
  if(editing)updateEditorChrome();
+ markSel();
 }
 async function movePartTo(id,n){
  const parts=current.parts;const i=parts.findIndex(p=>p.id===id);if(i<0)return;
@@ -1298,6 +1378,7 @@ function showEditor(){
  renderEditorMedia();
  paintStep();
  if(isStepMode())window.scrollTo(0,Math.max(0,$('editor').getBoundingClientRect().top+window.scrollY-72));
+ if(isDesk()){markSel();if(!isStepMode())window.scrollTo(0,0);}
  else $('editor').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function photoCardHTML(ph,i,label,ctx){
@@ -1324,6 +1405,7 @@ function renderEditorMedia(){
  renderSubParts();
  $('noPhotos').hidden=editing.photos.length>0;
  for(const img of $('editorPhotos').querySelectorAll('img'))loadThumb(img);
+ if(isDesk())loadBig();
  audioURLs.forEach(url=>URL.revokeObjectURL(url));audioURLs.clear();
  $('audioList').innerHTML=editing.audio.length?`<p class="note">Old voice notes from an earlier version. They stay on this phone until you delete them, and are not put in new backups or reports.</p>`+editing.audio.map((id,i)=>`<div class="row" style="margin:8px 0"><button type="button" data-play-audio="${esc(id)}">▶ Voice note ${i+1}</button><button type="button" class="small danger" data-remove-audio="${esc(id)}">Delete clip</button></div>`).join(''):'';
  if(editing)paintStep();
@@ -3216,6 +3298,7 @@ function openCamera(prepare,caption,subId){
  photoDest=subId||null;galleryForPart=null;
  listenCaptionForNextPhoto=!!caption;
  captureReady=Promise.resolve().then(()=>prepare());
+ if(useWebcam()){openWebcam().catch(fail);return;}
  $('cameraFile').click();
 }
 on('newReport','click',newReport);
@@ -3243,8 +3326,8 @@ on('rapid','click',()=>openCamera(async()=>{if(session)await stopRecording();awa
 on('camera','click',()=>openCamera(async()=>{},false));
 function openGallery(subId,forPart){if(startingMic||busy)return;photoDest=subId||null;galleryForPart=forPart||null;$('galleryFile').click();}
 on('gallery','click',()=>openGallery(null));
-on('cameraFile','change',async e=>{
- const files=Array.from(e.target.files||[]);
+on('cameraFile','change',e=>onCameraFiles(Array.from(e.target.files||[])));
+async function onCameraFiles(files){
  const caption=listenCaptionForNextPhoto;listenCaptionForNextPhoto=false;
  if(!files.length){photoDest=null;return;}
  await captureReady;
@@ -3254,7 +3337,7 @@ on('cameraFile','change',async e=>{
  if(res?.sub)return;
  if(caption&&added&&(clean(editing.name)||clean(editing.description)))await startRecording('speech',true,{mode:'caption',photoId:editing.photos[editing.photos.length-1].id});
  else await maybeAutoListen();
-});
+}
 on('galleryFile','change',async e=>{
  listenCaptionForNextPhoto=false;const files=Array.from(e.target.files||[]);e.target.value='';
  const forPart=galleryForPart;galleryForPart=null;
@@ -3336,7 +3419,7 @@ function mkOpenText(at){MK.textAt=at;$('mkText').value='';$('mkTextBox').hidden=
 function mkAddText(){const t=$('mkText').value.replace(/\s+/g,' ').trim();mkStopMic();$('mkTextBox').hidden=true;$('mkText').blur();if(t&&MK.textAt)mkCommit([...MK.shapes,{t:'text',c:MK.c,w:MK.w,pts:[MK.textAt],text:t.slice(0,120)}]);MK.textAt=null;}
 function mkMic(){
  if(!SpeechAPI)return;if(MK.rec){mkStopMic();return;}
- const rec=new SpeechAPI();rec.lang=navigator.language||'en-GB';rec.interimResults=true;rec.continuous=false;MK.rec=rec;
+ const rec=new SpeechAPI();rec.lang=speechLang();rec.interimResults=true;rec.continuous=false;MK.rec=rec;
  const base=$('mkText').value.trim();
  rec.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;$('mkText').value=(base?base+' ':'')+t.trim();};
  rec.onerror=()=>{};rec.onend=()=>{if(MK.rec===rec){MK.rec=null;$('mkTextMic').textContent='🎙 Speak';}};
@@ -3548,7 +3631,7 @@ async function saveStyle(){
 on('styleNew','click',()=>openStyleEditor(null));
 // v12: Edit report – the same Report details, Report text and Sign-off cards shown on their own (no copies of the data).
 async function openEditReport(){if(!current)return;if(editing)await finishEntry();$('report').classList.add('edit-report');['details','reportText','signoff'].forEach(id=>$(id).open=true);window.scrollTo(0,0);}
-function closeEditReport(){jobMicStop();$('report').classList.remove('edit-report');window.scrollTo(0,0);}
+function closeEditReport(){jobMicStop();$('report').classList.remove('edit-report');window.scrollTo(0,0);if(isDesk())requestAnimationFrame(deskLayout);}
 on('editReport','click',openEditReport);on('erDone','click',closeEditReport);
 let jobRec=null;
 function jobMicStop(){if(!jobRec)return;const r=jobRec;jobRec=null;try{r.stop();}catch(e){}document.querySelectorAll('[data-job-mic]').forEach(b=>{b.setAttribute('aria-pressed','false');b.textContent='🎙 Speak';});}
@@ -3556,7 +3639,7 @@ async function jobMic(k,btn){
  if(jobRec){const same=jobRec.field===k;jobMicStop();if(same)return;}
  if(!SpeechAPI){toast('Voice typing is not available here. Use the 🎙 on your phone keyboard.');$(k).focus();return;}
  await stopRecording();
- const ta=$(k);const base=ta.value.replace(/\s+$/,'');const rec=new SpeechAPI();rec.lang=navigator.language||'en-GB';rec.interimResults=true;rec.continuous=true;rec.field=k;jobRec=rec;
+ const ta=$(k);const base=ta.value.replace(/\s+$/,'');const rec=new SpeechAPI();rec.lang=speechLang();rec.interimResults=true;rec.continuous=true;rec.field=k;jobRec=rec;
  rec.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;t=capSentences(clean(t));t=t.charAt(0).toUpperCase()+t.slice(1);ta.value=(base?base+(/[.!?]$/.test(base)?' ':'. '):'')+t;ta.dispatchEvent(new Event('input'));};
  rec.onerror=()=>{};rec.onend=()=>{if(jobRec===rec)jobMicStop();};
  try{rec.start();btn.setAttribute('aria-pressed','true');btn.textContent='■ Stop';}catch(e){jobRec=null;}
@@ -4106,6 +4189,121 @@ $('packHeader').addEventListener('change',e=>{const inp=e.target.closest('[data-
 on('packHeader','click',async e=>{const b=e.target.closest('[data-hchoice]');if(!b||!current)return;const l=b.dataset.hchoice,v=b.dataset.hval;const now=headerValue(current,l)===v?'':v;setHeaderValue(l,now);renderPackHeader();renderEntries();if(editing)paintStep();await persistReport();toast(now?`${l}: ${now}. Specs that depend on it are updated.`:`${l} cleared.`);});
 on('endChecks','change',async e=>{const a=e.target.closest('[data-endrep],[data-endfin]');if(!a||!isPackJob(current))return;const list=a.dataset.endrep!=null?current.pack.end.replaceNew:current.pack.end.finalChecks;const x=list[Number(a.dataset.endrep??a.dataset.endfin)];if(x)x.done=a.checked;await persistReport();const open=true;renderEndChecks();if(open)$('endChecks').querySelector('details')?.setAttribute('open','');});
 function shapeHeader(h){const o={};if(h&&typeof h==='object'&&!Array.isArray(h))for(const [k,v] of Object.entries(h).slice(0,60))if(typeof v==='string'||typeof v==='number')o[String(k).slice(0,80)]=String(v).slice(0,300);return o;}
+// ---- v14: desktop / laptop and tablet. Nothing here runs on a phone-width screen (< 768 px). ----
+const DESK=matchMedia('(min-width:768px)');
+function isDesk(){return DESK.matches;}
+function speechLang(){const l=navigator.language||'en-GB';return isDesk()&&/^en\b/i.test(l)?'en-GB':l;}
+function deskLayout(){
+ const root=document.documentElement.style;
+ if(!isDesk()){root.removeProperty('--dockL');root.removeProperty('--dockR');root.removeProperty('--hdr');return;}
+ const h=document.querySelector('header');root.setProperty('--hdr',(h?.offsetHeight||86)+'px');
+ const m=$('paneMain');if(!m||$('report').hidden)return;const r=m.getBoundingClientRect();if(!r.width)return;
+ root.setProperty('--dockL',Math.max(0,Math.round(r.left))+'px');root.setProperty('--dockR',Math.max(0,Math.round(document.documentElement.clientWidth-r.right))+'px');
+}
+window.addEventListener('resize',()=>requestAnimationFrame(deskLayout));
+if(window.ResizeObserver)new ResizeObserver(()=>deskLayout()).observe($('report'));
+DESK.addEventListener('change',()=>{deskLayout();$('cameraFile').multiple=isDesk();if(editing)renderEditorMedia();});
+function markSel(){document.querySelectorAll('#entries .entry[data-part]').forEach(a=>{const on=!!editing&&a.dataset.part===editing.id;if(on!==a.classList.contains('sel'))a.classList.toggle('sel',on);});}
+// Larger screens show the full report-size photo in the part editor instead of the small list thumbnail.
+const bigURLs=[];let bigGen=0;
+async function loadBig(){
+ const gen=++bigGen;bigURLs.splice(0).forEach(u=>URL.revokeObjectURL(u));
+ if(!isDesk()||!editing)return;
+ for(const img of $('editorPhotos').querySelectorAll('img[data-media]')){
+  const id=img.dataset.media;let m;try{m=await get('media',id);}catch(e){continue;}
+  if(gen!==bigGen)return;if(!m?.blob||!img.isConnected)continue;
+  let b=m.blob;const ph=photoById(id);if(viewKey(ph)){try{const mm=await markedMedia(ph,m);if(mm?.marked)b=mm.marked;}catch(e){}}
+  if(gen!==bigGen)return;const u=URL.createObjectURL(b);bigURLs.push(u);img.dataset.big='1';img.src=u;
+ }
+}
+// Click a part card in the side list to open it (buttons, photos and menus keep their own actions).
+$('entries').addEventListener('click',e=>{if(!isDesk()||!current||busy)return;if(e.target.closest('button,a,input,select,textarea,summary,details,img,label'))return;const a=e.target.closest('.entry[data-part]');if(!a||editing?.id===a.dataset.part)return;editPart(a.dataset.part).catch(fail);});
+// Drag photo files from the computer onto a part (side list) or the open part; a backup ZIP onto the home screen.
+const dragFiles=e=>[...(e.dataTransfer?.types||[])].includes('Files');
+let dropEl=null;
+function dropMark(el){if(dropEl===el)return;dropEl?.classList.remove('drop-on');dropEl=el||null;dropEl?.classList.add('drop-on');}
+function dropTarget(e){
+ const t=e.target instanceof Element?e.target:null;
+ if(!$('home').hidden)return $('home');
+ if($('report').hidden||!current||$('report').classList.contains('edit-report')||!t)return null;
+ const ent=t.closest('#entries .entry[data-part]');if(ent)return ent;
+ const ed=t.closest('#editor');if(ed&&!ed.hidden&&editing)return ed;
+ return null;
+}
+window.addEventListener('dragover',e=>{if(!isDesk()||!dragFiles(e))return;e.preventDefault();const t=document.querySelector('dialog[open]')?null:dropTarget(e);e.dataTransfer.dropEffect=t?'copy':'none';dropMark(t);});
+window.addEventListener('dragleave',e=>{if(!e.relatedTarget)dropMark(null);});
+window.addEventListener('drop',e=>{if(!isDesk()||!dragFiles(e))return;e.preventDefault();const t=dropEl;dropMark(null);handleDrop(t,[...(e.dataTransfer.files||[])]).catch(fail);});
+const IMG_EXT=/\.(jpe?g|png|webp|gif|bmp|heic|heif|avif)$/i;
+async function handleDrop(t,files){
+ if(!t||!files.length)return;
+ if(t===$('home')){const z=files.find(f=>/\.zip$/i.test(f.name)||/zip/i.test(f.type));if(!z){toast('Drop a StripNote backup ZIP here to import it.');return;}return importBackup(z);}
+ if(busy||startingMic){toast('Busy – try again in a moment.');return;}
+ const imgs=files.filter(f=>/^image\//i.test(f.type||'')||IMG_EXT.test(f.name||''));
+ if(!imgs.length){toast('Only photo files can be dropped on a part (JPEG or PNG).');return;}
+ if(t.matches('.entry')){const id=t.dataset.part;if(editing?.id!==id)await editPart(id);if(editing?.id!==id){toast('That part could not be opened.');return;}}
+ if(!editing)return;
+ photoDest=null;const before=editing.photos.length;await addPhotos(imgs);
+ const n=editing?editing.photos.length-before:0;if(n===1)toast(`Photo added to ${clean(editing.name)||'the part'}.`);
+}
+// Keyboard: Enter saves a dialog, Esc closes the open part / Edit report, Ctrl+Enter = Done, mark-up shortcuts.
+function mkKeys(e){
+ if(e.target.matches('input,textarea'))return;
+ const k=e.key.toLowerCase(),mod=e.ctrlKey||e.metaKey;
+ const click=id=>{const b=$(id);if(b&&!b.disabled){e.preventDefault();b.click();}};
+ if(mod&&k==='z'&&!e.shiftKey)return click('mkUndo');
+ if(mod&&(k==='y'||(k==='z'&&e.shiftKey)))return click('mkRedo');
+ if(mod&&(k==='s'||k==='enter'))return click('mkSave');
+ if(mod||e.altKey)return;
+ const tool={a:'arrow',c:'ellipse',o:'ellipse',b:'box',r:'box',p:'pen',t:'text'}[k];
+ if(tool){const b=document.querySelector(`[data-mk-tool="${tool}"]`);if(b){e.preventDefault();b.click();}}
+}
+document.addEventListener('keydown',e=>{
+ if(!isDesk()||e.isComposing)return;
+ const dlg=document.querySelector('dialog[open]');
+ if(dlg){
+  if(dlg.id==='markup'){mkKeys(e);return;}
+  if(e.key==='Enter'&&!e.shiftKey&&!e.defaultPrevented&&dlg.contains(e.target)&&e.target.matches('input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=color])')){const b=[...dlg.querySelectorAll('button.primary')].find(x=>!x.disabled&&x.offsetParent);if(b){e.preventDefault();b.click();}}
+  return;
+ }
+ if(e.defaultPrevented||$('report').hidden||!current)return;
+ if(e.key==='Escape'){
+  if($('report').classList.contains('edit-report')){e.preventDefault();closeEditReport();return;}
+  if(session){e.preventDefault();stopRecording().catch(fail);return;}
+  if(editing){e.preventDefault();finishEntry().catch(fail);}
+  return;
+ }
+ if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&editing){e.preventDefault();finishEntry().catch(fail);return;}
+ if(e.key==='Enter'&&!e.shiftKey&&editing&&(e.target.id==='part'||e.target.id==='partNo')){e.preventDefault();$('description').focus();}
+});
+// Camera button on a computer: use the webcam when there is one, otherwise the file picker (several photos at once).
+let camStream=null,hasCam=false;
+async function probeCam(){try{if(!isDesk()||!navigator.mediaDevices?.enumerateDevices)return;const d=await navigator.mediaDevices.enumerateDevices();hasCam=d.some(x=>x.kind==='videoinput');}catch(e){hasCam=false;}}
+function useWebcam(){return isDesk()&&hasCam&&!!navigator.mediaDevices?.getUserMedia&&!matchMedia('(pointer:coarse)').matches;}
+async function openWebcam(){
+ const d=$('camDialog');$('camStatus').textContent='Starting the camera…';$('camShoot').disabled=true;d.showModal();
+ try{
+  camStream=await navigator.mediaDevices.getUserMedia({video:{width:{ideal:1920},height:{ideal:1080}},audio:false});
+  if(!d.open){stopCam();return;}
+  $('camVideo').srcObject=camStream;await $('camVideo').play().catch(()=>{});
+  $('camStatus').textContent='Frame the part, then Take photo (or press Enter).';$('camShoot').disabled=false;$('camShoot').focus();
+ }catch(e){$('camStatus').textContent=`The camera could not be opened (${e.name||'error'}). Use Choose files instead.`;$('camFiles').focus();}
+}
+function stopCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}$('camVideo').srcObject=null;}
+$('camDialog').addEventListener('close',()=>{stopCam();});
+on('camClose','click',()=>{photoDest=null;listenCaptionForNextPhoto=false;$('camDialog').close();});
+on('camFiles','click',()=>{$('camDialog').close();$('cameraFile').click();});
+on('camShoot','click',async()=>{
+ const v=$('camVideo');if(!v.videoWidth)return;
+ const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
+ const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));if(!b)return;
+ $('camDialog').close();
+ await onCameraFiles([new File([b],`webcam-${new Date().toISOString().replace(/[:.]/g,'-')}.jpg`,{type:'image/jpeg'})]);
+});
+function deskWords(){const h=$('savedHead');const t=isDesk()?'On this computer':'On this phone';if(h&&h.textContent!==t)h.textContent=t;}
+DESK.addEventListener('change',deskWords);deskWords();
+$('cameraFile').multiple=isDesk();
+probeCam();
+
 window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
  get db(){return db;},get session(){return session;},
@@ -4113,7 +4311,7 @@ window.StripNoteTest={
  newReport:startBlank,chooseNewReport:newReport,addEntry:addPart,addPart,addPhotos,finishEntry,buildDocx,buildPDF,buildPptx,buildBackup,exportReport,saveOriginals,
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
- redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
+ redoDictation,dictationKey,isDesk,deskLayout,handleDrop,speechLang,loadBig,useWebcam,openWebcam,probeCam,removeLastInsertion,attachSpoken,getFieldText,
  openEditReport,closeEditReport,rotatePhoto,asRot,viewKey,rotShapes,reportTitle,reportIdLine,reportHeading,coverRows,syncTitlePreset,movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
