@@ -305,6 +305,10 @@ body.stepmode #subBox{order:4}
 .sp-h{font-weight:750;padding:10px 10px 2px}
 .sp-rule{height:2px;margin:0 10px 8px}
 .sp-th{color:#fff;font-weight:700;font-size:12px;padding:6px 10px;margin:0 10px 10px}
+.photo-opts .reorder{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
+.photo-opts .reorder button{min-height:56px}
+.photo-opts .pos-row{display:grid;grid-template-columns:1fr auto;gap:6px;width:100%}
+.photo-opts .pos-row input{min-width:0;min-height:56px;font-size:16px}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="theme" class="small" type="button" aria-label="Display mode: Dark. Tap for Light.">◐ Dark</button></div></div></header>
 <main>
@@ -817,9 +821,13 @@ const put=(store,v)=>request(store,'readwrite',s=>s.put(v));
 const remove=(store,id)=>request(store,'readwrite',s=>s.delete(id));
 const getAll=store=>request(store,'readonly',s=>s.getAll());
 
+// v11d: photo numbers are always worked out from the photo's current place (part position + photo position).
+// Nothing number-like is stored; an old caption that starts with a written-in number ("Photo 4.1 – …") loses that prefix.
+const STORED_NO_RE=/^\s*(?:photo|fig(?:ure)?\.?)\s*\d+(?:\.(?:\d+|[a-z]))+\s*(?:[\u2013\u2014:\-]\s*)?/i;
+function stripStoredNo(c){return String(c||'').replace(STORED_NO_RE,'');}
 function asPhoto(p){
  if(typeof p==='string'&&p)return {id:p,caption:'',prompt:''};
- if(p&&typeof p==='object'&&typeof p.id==='string'&&p.id)return {id:p.id,caption:typeof p.caption==='string'?p.caption:'',prompt:typeof p.prompt==='string'?p.prompt:''};
+ if(p&&typeof p==='object'&&typeof p.id==='string'&&p.id)return {id:p.id,caption:typeof p.caption==='string'?stripStoredNo(p.caption):'',prompt:typeof p.prompt==='string'?p.prompt:''};
  return null;
 }
 const MEAS_TYPES=['Size','Quantity'];
@@ -917,7 +925,9 @@ function asSub(x){
  return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
 }
 function subLetter(k){let t='';k++;while(k>0){const m=(k-1)%26;t=String.fromCharCode(97+m)+t;k=Math.floor((k-1)/26);}return t;}
-function subLabel(i,k){return `${i+1}.${subLetter(k)}`;}
+function partRef(i){return String(i+1);}// the part's printed number = its current position
+function partTitle(r,i,p){return `${isTemplateJob(r)?'Step':'Part'} ${partRef(i)} \u00b7 ${p?.name||'Untitled part'}`;}
+function subLabel(i,k){return `${partRef(i)}.${subLetter(k)}`;}
 function subCond(x){return SUB_CONDS.includes(x?.condition)?x.condition:'Not rated';}
 function subFacts(x){return [clean(x.partNo)?`Part no. ${clean(x.partNo)}`:'',clean(x.qty)?`Qty ${clean(x.qty)}`:''].filter(Boolean).join(' · ');}
 function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
@@ -941,6 +951,7 @@ function migrateReport(r){
 function isCurrentReport(r){
  if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
  if(typeof r.styleId!=='string')return false;
+ if(r.parts.some(p=>[...(p?.photos||[]),...(p?.subParts||[]).flatMap(x=>x?.photos||[])].some(ph=>ph&&(STORED_NO_RE.test(String(ph.caption||''))||Object.keys(ph).some(k=>!['id','caption','prompt'].includes(k))))))return false;
  if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields))return false;
  if(!r.parts.every(p=>typeof p?.partNo==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.photos)&&typeof x.condition==='string')))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
@@ -1215,7 +1226,7 @@ function showEditor(){
 function photoCardHTML(ph,i,label,ctx){
  const id=esc(ph.id);
  const labelSel=ctx.main&&editing.prompts.length?`<select class="compact wide" data-photo-prompt="${id}" aria-label="Label for photo ${label}"><option value="">No label</option>${editing.prompts.map(pr=>`<option value="${esc(pr)}" ${pr===ph.prompt?'selected':''}>${esc(promptLabel(pr))}</option>`).join('')}</select>`:'';
- return `<div class="photo" data-photo="${id}"><div class="fig" ${ctx.main?`data-fig="${i}"`:'data-subfig'}>Photo ${label}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><div class="img-wrap"><img data-media="${id}" alt="Photo ${label}"><button type="button" class="opt-btn" data-photo-opts="${id}" aria-expanded="false" aria-label="Options for photo ${label}">⋯</button></div><div class="photo-row"><input class="compact" data-caption-for="${id}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${label}"></div><div class="photo-opts" data-opts-for="${id}" hidden>${ctx.main?`<button type="button" class="small" data-caption-mic="${id}" aria-label="Dictate caption for photo ${label}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${id}" aria-label="Re-record caption for photo ${label}">↻ Re-record</button>`:''}<button type="button" class="small" data-photo-up="${id}" aria-label="Move photo ${label} earlier" ${i===0?'disabled':''}>↑ Earlier</button><button type="button" class="small" data-photo-down="${id}" aria-label="Move photo ${label} later" ${i===ctx.count-1?'disabled':''}>↓ Later</button><button type="button" class="small wide" data-photo-move="${id}">➜ Move to another part</button><button type="button" class="small wide" data-photo-copy="${id}">⧉ Copy to another part</button>${labelSel}<button type="button" class="small danger wide" data-remove-photo="${id}">Remove photo</button></div></div>`;
+ return `<div class="photo" data-photo="${id}"><div class="fig" ${ctx.main?`data-fig="${i}"`:'data-subfig'}>Photo ${label}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><div class="img-wrap"><img data-media="${id}" alt="Photo ${label}"><button type="button" class="opt-btn" data-photo-opts="${id}" aria-expanded="false" aria-label="Options for photo ${label}">⋯</button></div><div class="photo-row"><input class="compact" data-caption-for="${id}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${label}"></div><div class="photo-opts" data-opts-for="${id}" hidden>${ctx.main?`<button type="button" class="small" data-caption-mic="${id}" aria-label="Dictate caption for photo ${label}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${id}" aria-label="Re-record caption for photo ${label}">↻ Re-record</button>`:''}<div class="reorder" role="group" aria-label="Reorder photo ${label}"><button type="button" class="small" data-photo-up="${id}" aria-label="Move photo ${label} earlier" ${i===0?'disabled':''}>◀ Earlier</button><button type="button" class="small" data-photo-down="${id}" aria-label="Move photo ${label} later" ${i===ctx.count-1?'disabled':''}>Later ▶</button><button type="button" class="small" data-photo-first="${id}" aria-label="Make photo ${label} the first" ${i===0?'disabled':''}>⤒ First</button><button type="button" class="small" data-photo-last="${id}" aria-label="Make photo ${label} the last" ${i===ctx.count-1?'disabled':''}>⤓ Last</button></div>${ctx.count>2?`<div class="pos-row"><input class="compact" type="number" inputmode="numeric" min="1" max="${ctx.count}" data-photo-pos-for="${id}" placeholder="No. 1–${ctx.count}" aria-label="New position for photo ${label}"><button type="button" class="small" data-photo-pos="${id}">Go</button></div>`:''}<button type="button" class="small wide" data-photo-move="${id}">➜ Move to another part</button><button type="button" class="small wide" data-photo-copy="${id}">⧉ Copy to another part</button>${labelSel}<button type="button" class="small danger wide" data-remove-photo="${id}">Remove photo</button></div></div>`;
 }
 function subCardHTML(x,k,i){
  const id=esc(x.id),lab=subLabel(i,k),cond=x.condition;
@@ -1826,7 +1837,7 @@ function jobRows(r){
  for(const [k,l] of DETAIL_ROWS){if(used.has(k))continue;const v=val(k);if(clean(v))rows.push([l,v]);}
  return rows.concat(custom);}
 // Condition-of-parts rows, with each part's sub-parts (3.a, 3.b) under it.
-function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:String(i+1),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true}));});return rows;}
+function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true}));});return rows;}
 const COND_KEY='Condition key: OK – serviceable as found. Wear – normal wear; monitor or plan renewal. Damaged – defect found; repair or assess. Replace – not fit for further service. Not rated – not assessed.';
 const REPORT_KIND='EQUIPMENT STRIP-DOWN INVESTIGATION REPORT';
 const paragraphsOf=t=>String(t||'').split(/\n+/).map(x=>capSentences(clean(x))).filter(Boolean);
@@ -2024,8 +2035,8 @@ async function buildDocx(raw,notify=()=>{}){
   const cond=COND_STYLE[tj&&part.skipped?'Not rated':conditionOf(part.condition)];
   if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;body+=docxPara(docxRun(part.section,{size:26,bold:true,color:'FFFFFF'}),'<w:keepNext/><w:shd w:val="clear" w:color="auto" w:fill="'+RN()+'"/><w:spacing w:before="360" w:after="60"/>');}
   const headingPr=`<w:pStyle w:val="Heading1"/><w:keepNext/><w:keepLines/><w:spacing w:before="280" w:after="40"/><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="1" w:color="${cond.hex}"/></w:pBdr>`;
-  body+=docxPara(docxRun(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`,{size:31,bold:true,color:RN()})+(partNoLabel(part)?docxRun(`   ·  ${partNoLabel(part)}`,{size:21,color:'5C6B70'}):''),headingPr);
-  if(!tj){docxCondDesc(part,cond);await docxPhotos(part,String(i+1));await docxSubs(part,i);continue;}
+  body+=docxPara(docxRun(partTitle(r,i,part),{size:31,bold:true,color:RN()})+(partNoLabel(part)?docxRun(`   ·  ${partNoLabel(part)}`,{size:21,color:'5C6B70'}):''),headingPr);
+  if(!tj){docxCondDesc(part,cond);await docxPhotos(part,partRef(i));await docxSubs(part,i);continue;}
   if(part.skipped){body+=docxPara(docxRun(`Not inspected${part.skipReason?': '+part.skipReason:''}`,{size:21,italic:true,color:'5A6468'}),'<w:spacing w:before="80" w:after="160"/>');await docxSubs(part,i);continue;}
   const d=part.drawingId?await exportDrawing(part.drawingId):null;
   if(d){
@@ -2036,7 +2047,7 @@ async function buildDocx(raw,notify=()=>{}){
    body+=drawingXml(100000+dn,cx,cy,`Part drawing: ${part.name||''}`,`rIdD${dn}`).replace('<w:pPr>','<w:pPr><w:keepNext/>');
    body+=docxPara(docxRun(part.drawingCaption||part.drawingRef||'Part drawing',{size:16,italic:true,color:'5C6B70'}),'<w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="120"/>');
   }
-  await docxPhotos(part,String(i+1));
+  await docxPhotos(part,partRef(i));
   docxCondDesc(part,cond);
   {const cr=checkTableRows(part,r);if(cr.length){body+=docxPara(docxRun('Check & record',{size:18,bold:true,color:RN()}),'<w:keepNext/><w:spacing w:before="80" w:after="60"/>');body+=simpleTable([2300,2700,800,1500,1366,1200],['Item / Part no','Spec','Qty exp.','Measured / found','Result','Notes'],cr,(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:'B00020'}:resultStyle(t)==='good'?{bold:true,color:'146C36'}:null):null);body+=docxPara('','<w:spacing w:before="0" w:after="80"/>');}}
   await docxSubs(part,i);
@@ -2218,7 +2229,7 @@ async function buildPDF(raw,notify=()=>{}){
   if(isPortraitImg(dims[0])){const items=dims[1]&&isPortraitImg(dims[1])?[0,1]:[0];const H=Math.max(...items.map(k=>Math.min(150,HW*dims[k].height/Math.max(1,dims[k].width))));return H+3+Math.max(...items.map(k=>capLinesPdf(cap(k),HW).length))*4+6;}
   const h=Math.min(maxH,CW*dims[0].height/Math.max(1,dims[0].width));return h+3+capLinesPdf(cap(0),CW).length*4+6;
  };
- const freeNeed=async(part,i)=>textLines(`${findNo}.${i+1}  ${part.name||'Untitled part'}`,PART_PT,CW-6).length*PART_LH+6+(partNoLabel(part)?5.5:0)+5+textLines(capSentences(part.description)||'No description recorded.',10.5,CW).length*5+3+(measuresOf(part).length?14+measuresOf(part).length*7:0)+(part.photos.length?await firstRowH(part,String(i+1)):((part.subParts||[]).length?24:0));
+ const freeNeed=async(part,i)=>textLines(partTitle(r,i,part),PART_PT,CW-6).length*PART_LH+6+(partNoLabel(part)?5.5:0)+5+textLines(capSentences(part.description)||'No description recorded.',10.5,CW).length*5+3+(measuresOf(part).length?14+measuresOf(part).length*7:0)+(part.photos.length?await firstRowH(part,partRef(i)):((part.subParts||[]).length?24:0));
  const pdfPhotos=async(part,label)=>{
   // v11b: landscape photos one per row at full width. Consecutive portrait photos go side by side in pairs filling the
   // text width; a lone portrait takes the left half. A row (photos + captions) never splits across a page.
@@ -2295,9 +2306,9 @@ async function buildPDF(raw,notify=()=>{}){
    if(d){let w=CW*0.78,h=w*d.height/Math.max(1,d.width);if(h>78){h=78;w=h*d.width/Math.max(1,d.height);}drw={...d,w,h};}
   }
   // v11c keep-together: heading, condition, description (and measurements) plus the first photo row go on one page.
-  const headTxt=tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${findNo}.${i+1}  ${part.name||'Untitled part'}`;
+  const headTxt=partTitle(r,i,part);
   let blockNeed=textLines(headTxt,PART_PT,CW-6).length*PART_LH+6+(partNoLabel(part)?5.5:0);
-  if(tj){blockNeed+=part.skipped?12:drw?drw.h+10:(part.photos.length?await firstRowH(part,String(i+1)):20);}
+  if(tj){blockNeed+=part.skipped?12:drw?drw.h+10:(part.photos.length?await firstRowH(part,partRef(i)):20);}
   else blockNeed=await freeNeed(part,i);
   if(y+blockNeed+5>bottom&&y>MT+1)newPage();
   y=Math.max(y,MT+5);// bigger title: keep it clear of the page-header rule
@@ -2307,7 +2318,7 @@ async function buildPDF(raw,notify=()=>{}){
   head.forEach((line,k)=>{drawText(line,ML+4,y,{size:PART_PT,color:[31,42,48],bold:true});if(k===head.length-1&&pnText){doc.setFontSize(PART_PT);const lw=doc.getTextWidth(line);doc.setFontSize(9.5);const pw=doc.getTextWidth(pnText);if(ML+4+lw+5+pw<=ML+CW){drawText(pnText,ML+4+lw+5,y,{size:10,color:[90,100,104]});pnInline=true;}}y+=PART_LH;});
   y+=0.5;doc.setDrawColor(cond.rgb[0],cond.rgb[1],cond.rgb[2]);doc.setLineWidth(0.45);doc.line(ML,y,ML+36,y);y+=5;
   if(pnText&&!pnInline){drawText(clipText(pnText,120),ML,y,{size:9,color:[90,100,104]});y+=5.5;}
-  if(!tj){pdfCondDesc(part,cond);await pdfPhotos(part,String(i+1));await pdfSubs(part,i);y+=4;continue;}
+  if(!tj){pdfCondDesc(part,cond);await pdfPhotos(part,partRef(i));await pdfSubs(part,i);y+=4;continue;}
   if(part.skipped){for(const line of textLines(`Not inspected${part.skipReason?': '+part.skipReason:''}`,10.5,CW)){need(5);drawText(line,ML,y,{size:10.5,color:[90,100,104]});y+=5;}y+=5;await pdfSubs(part,i);continue;}
   if(drw){
    const dx=ML+(CW-drw.w)/2;
@@ -2315,7 +2326,7 @@ async function buildPDF(raw,notify=()=>{}){
    doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(dx,y,drw.w,drw.h);
    y+=drw.h+3.6;drawText(clipText(part.drawingCaption||part.drawingRef||'Part drawing',130),PW/2,y,{size:8,color:[90,100,104],align:'center'});y+=5.5;
   }
-  await pdfPhotos(part,String(i+1));
+  await pdfPhotos(part,partRef(i));
   pdfCondDesc(part,cond);
   {const cr=checkTableRows(part,r);if(cr.length){need(24);drawText('Check & record',ML,y+1,{size:9,color:RNR(),bold:true});y+=4;table([40,48,14,26,26,20],['Item / Part no','Spec','Qty exp.','Measured/found','Result','Notes'],cr,{cellStyle:(t,i)=>i===4?(resultStyle(t)==='bad'?{bold:true,color:[176,0,32]}:resultStyle(t)==='good'?{bold:true,color:[20,108,54]}:null):null});y+=5;}}
   await pdfSubs(part,i);
@@ -2556,8 +2567,8 @@ async function buildPptx(raw,notify=()=>{}){
  for(let i=0;i<r.parts.length;i++){
   const part=r.parts[i];const cond=condFor(part);
   if(tj&&clean(part.section)&&part.section!==prevSec){prevSec=part.section;const ss=newSlide(RN());ss.title=true;ppShape(ss.shapes,ss.next++,0,PPH-0.12,PPW,0.12,null,{fill:ruleColor(),name:'Accent rule'});ppShape(ss.shapes,ss.next++,0.8,2.5,11.7,1.7,ppPara(clipText(part.section,120),{size:36,bold:true,color:'FFFFFF'}),{name:'Section',anchor:'ctr'});const ns=r.parts.filter(p=>p.section===part.section).length;ppShape(ss.shapes,ss.next++,0.8,4.25,11.7,0.6,ppPara(`${ns} step${ns===1?'':'s'}`,{size:16,color:'D9E2E5'}),{name:'Section steps',fit:false});}
-  const head=(tj?`Step ${i+1} \u00b7 ${part.name||'Untitled part'}`:`${i+1}. ${part.name||'Untitled part'}`)+(clean(part.partNo)?`  \u00b7  ${clean(part.partNo)}`:'');
-  if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,String(i+1),cond,head);await pptSubs(part,i,head);continue;}
+  const head=partTitle(r,i,part)+(clean(part.partNo)?`  \u00b7  ${clean(part.partNo)}`:'');
+  if(!(tj&&part.skipped)&&!(tj&&part.drawingId)&&part.photos.length){await partPhotos(part,partRef(i),cond,head);await pptSubs(part,i,head);continue;}
   const sl=await frame(head,{accent:cond.hex});
   if(tj&&part.skipped){
    badge(sl,0.5,1.3,3.2,cond);
@@ -2587,7 +2598,7 @@ async function buildPptx(raw,notify=()=>{}){
    ppShape(sl.shapes,sl.next++,0.45,2.05,12.4,4.0,ppParas(clipText(desc,1200),{size:20,after:8}),{name:'Description'});
    ppShape(sl.shapes,sl.next++,0.45,6.2,12.4,0.6,ppPara(facts.join('   ·   '),{size:14,color:'5C6B70'}),{name:'Facts'});
   }
-  await partPhotos(part,String(i+1),cond,head);
+  await partPhotos(part,partRef(i),cond,head);
   await pptSubs(part,i,head);
  }
  if(isPackJob(r)){
@@ -2987,6 +2998,16 @@ function captionInput(e){
 }
 $('editorPhotos').addEventListener('input',captionInput);
 $('editorPhotos').addEventListener('pointerdown',e=>{if(e.target.closest('[data-caption-for]')&&session)stopRecording().catch(fail);});
+// v11d: reorder a photo inside its part or sub-part; numbers are redrawn at once and the options stay open.
+async function reorderPhoto(id,to){
+ const f=findPhoto(id);if(!f)return;const n=f.list.length;to=Math.max(0,Math.min(n-1,to));if(to===f.index)return;
+ const [ph]=f.list.splice(f.index,1);f.list.splice(to,0,ph);
+ await persistReport();renderEditorMedia();renderEntries();
+ const card=$('editor').querySelector(`.photo[data-photo="${CSS.escape(id)}"]`);
+ if(card){const box=card.querySelector('[data-opts-for]');if(box)box.hidden=false;card.querySelector('[data-photo-opts]')?.setAttribute('aria-expanded','true');card.scrollIntoView({block:'nearest'});}
+ const pi=current.parts.indexOf(f.part);const base=f.sub?subLabel(pi,f.part.subParts.indexOf(f.sub)):partRef(pi);
+ toast(`Now photo ${base}.${to+1}. Photos renumbered.`);
+}
 async function photoAction(e){
  let b=e.target.closest('[data-photo-opts]');if(b){const box=b.closest('.photo')?.querySelector('[data-opts-for]');if(!box)return;const open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',String(open));return;}
  b=e.target.closest('[data-remove-photo]');if(b)return removePhoto(b.dataset.removePhoto);
@@ -2996,12 +3017,15 @@ async function photoAction(e){
  b=e.target.closest('[data-photo-up],[data-photo-down]');if(b&&editing){
   const id=b.dataset.photoUp||b.dataset.photoDown;
   const f=findPhoto(id);
-  if(f&&moveItem(f.list,f.index,b.dataset.photoUp?-1:1)){await persistReport();renderEditorMedia();renderEntries();}
+  if(f)await reorderPhoto(id,f.index+(b.dataset.photoUp?-1:1));
   return;
  }
+ b=e.target.closest('[data-photo-first],[data-photo-last]');if(b&&editing){const id=b.dataset.photoFirst||b.dataset.photoLast;const f=findPhoto(id);if(f)await reorderPhoto(id,b.dataset.photoFirst?0:f.list.length-1);return;}
+ b=e.target.closest('[data-photo-pos]');if(b&&editing){const id=b.dataset.photoPos;const f=findPhoto(id);const inp=b.closest('.photo')?.querySelector('[data-photo-pos-for]');const v=parseInt(inp?.value,10);if(!f)return;if(!(v>=1&&v<=f.list.length)){toast(`Type a number from 1 to ${f.list.length}.`);inp?.focus();return;}await reorderPhoto(id,v-1);return;}
  if(e.target.matches('img[data-media]'))return viewPhoto(e.target.dataset.media);
 }
 on('editorPhotos','click',photoAction);
+$('editor').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-photo-pos-for]')){e.preventDefault();e.target.closest('.pos-row')?.querySelector('[data-photo-pos]')?.click();}});
 on('editorPhotos','change',async e=>{
  const lab=e.target.closest('[data-photo-prompt]');if(lab&&editing){const ph=editing.photos.find(p=>p.id===lab.dataset.photoPrompt);if(ph){ph.prompt=lab.value;await persistReport();renderEditorMedia();renderEntries();}return;}
 });
@@ -3644,7 +3668,7 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- movePartTo,placePhoto,openPhotoPicker,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
+ movePartTo,placePhoto,openPhotoPicker,reorderPhoto,partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
