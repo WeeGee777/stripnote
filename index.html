@@ -309,6 +309,28 @@ body.stepmode #subBox{order:4}
 .photo-opts .reorder button{min-height:56px}
 .photo-opts .pos-row{display:grid;grid-template-columns:1fr auto;gap:6px;width:100%}
 .photo-opts .pos-row input{min-width:0;min-height:56px;font-size:16px}
+dialog#markup{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:#0b0d0e;color:#fff;overflow:hidden}
+dialog#markup[open]{display:flex;flex-direction:column}
+.mk-top{display:flex;gap:6px;align-items:center;padding:6px;padding-top:max(6px,env(safe-area-inset-top))}
+.mk-top button{min-height:56px;padding:0 12px}
+#mkTitle{flex:1;font-weight:700;text-align:center;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;background:#000}
+#mkCanvas{touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;display:block}
+#mkTextBox{position:absolute;left:8px;right:8px;top:8px;background:#1b2023;border:1px solid #3a4348;border-radius:12px;padding:8px;display:grid;gap:6px}
+#mkTextBox[hidden]{display:none}
+#mkTextBox input{min-height:56px;font-size:18px}
+.mk-row{display:flex;gap:6px}.mk-row button{flex:1;min-height:56px}
+.mk-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:5px 6px}
+.mk-bar:last-child{padding-bottom:max(6px,env(safe-area-inset-bottom))}
+.mk-bar button{min-height:56px;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;line-height:1.1}
+.mk-bar button small{font-size:11px;font-weight:600}
+.mk-bar button[aria-pressed="true"]{outline:3px solid #fff;outline-offset:-3px;background:#2d6cdf;color:#fff}
+.mk-bar button i{display:block;width:30px;height:30px;border-radius:50%;border:2px solid #888}
+.mk-bar button b{display:block;width:30px;background:currentColor;border-radius:4px;margin:6px 0 4px}
+.mk-badge{position:absolute;left:6px;bottom:6px;background:#E8202A;color:#fff;font-size:11px;font-weight:700;padding:2px 6px;border-radius:8px;pointer-events:none}
+.img-wrap{position:relative}
+.photo-opts .mk-opts{display:grid;grid-template-columns:1fr;gap:6px;width:100%}
+.photo-opts .mk-opts button{min-height:56px}
 </style></head><body>
 <header><div class="header-inner"><div class="brand"><i></i>Strip<span>Note</span></div><div class="header-btns"><button id="theme" class="small" type="button" aria-label="Display mode: Dark. Tap for Light.">◐ Dark</button></div></div></header>
 <main>
@@ -397,6 +419,7 @@ body.stepmode #subBox{order:4}
 <dialog id="cropDialog"><h2>Crop the drawing</h2><p class="muted">Drag a box round the part, then Use selection. Or use the whole image.</p><div class="crop-wrap"><canvas id="cropCanvas" width="300" height="200"></canvas></div><div class="dialog-actions"><button id="cropWhole" type="button">Whole image</button><button id="cropUse" class="primary" type="button" disabled>Use selection</button></div><button id="cropCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <input id="drawingFile" type="file" accept="image/*" hidden>
 <dialog id="styleDialog" class="style-dialog"><h2 id="styleDlgTitle" style="margin-top:0">New report style</h2><label for="styleName">Style name</label><input id="styleName" maxlength="60" placeholder="e.g. Client A" autocomplete="off"><div class="grid"><div><label for="styleAccent">Accent (rule lines)</label><input id="styleAccent" type="color" value="#1f3a44"></div><div><label for="styleHeading">Headings &amp; table heads</label><input id="styleHeading" type="color" value="#1f3a44"></div></div><p class="status" id="styleContrast"></p><div id="stylePreview" class="style-preview" aria-hidden="true"><div class="sp-band"><span class="sp-logo" id="styleLogoBox" hidden><img id="styleLogoImg" alt=""></span><span class="sp-title">Equipment strip-down report</span></div><div class="sp-h">2.1 Part heading</div><div class="sp-rule"></div><div class="sp-th">No. · Part · Condition</div></div><div class="toolbar"><button id="styleLogoPick" type="button">Choose logo</button><button id="styleLogoRemove" class="small danger" type="button" hidden>Remove logo</button></div><input id="styleLogoFile" type="file" accept="image/*" hidden><div class="toolbar"><button id="styleSave" class="primary" type="button" style="flex:1">Save style</button><button id="styleCancel" type="button">Cancel</button></div><button id="styleDelete" class="small danger" type="button" style="width:100%" hidden>Delete this style</button></dialog><dialog id="pickDialog" class="pick-dialog"><h2 id="pickTitle" style="margin-top:0">Move photo to…</h2><p class="muted" id="pickText"></p><div id="pickList" class="pick-list"></div><button id="pickCancel" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
+<dialog id="markup" aria-label="Mark up photo"><div class="mk-top"><button type="button" id="mkCancel">Cancel</button><span id="mkTitle">Mark up</span><button type="button" id="mkClear">Clear all</button><button type="button" id="mkSave" class="primary">Save</button></div><div class="mk-stage" id="mkStage"><canvas id="mkCanvas" aria-label="Photo – draw with your finger"></canvas><div id="mkTextBox" hidden><input id="mkText" maxlength="120" enterkeyhint="done" autocomplete="off" placeholder="Label text" aria-label="Label text"><div class="mk-row"><button type="button" id="mkTextMic">🎙 Speak</button><button type="button" id="mkTextCancel">Cancel</button><button type="button" id="mkTextOk" class="primary">Add</button></div></div></div><div class="mk-bar" role="group" aria-label="Tool"><button type="button" data-mk-tool="arrow" aria-pressed="true">↗<small>Arrow</small></button><button type="button" data-mk-tool="ellipse" aria-pressed="false">◯<small>Circle</small></button><button type="button" data-mk-tool="box" aria-pressed="false">▭<small>Box</small></button><button type="button" data-mk-tool="pen" aria-pressed="false">✎<small>Pen</small></button><button type="button" data-mk-tool="text" aria-pressed="false">T<small>Text</small></button></div><div class="mk-bar" role="group" aria-label="Colour"><button type="button" data-mk-color="red" aria-pressed="true" aria-label="Red"><i style="background:#E8202A"></i></button><button type="button" data-mk-color="yellow" aria-pressed="false" aria-label="Yellow"><i style="background:#FFD60A"></i></button><button type="button" data-mk-color="white" aria-pressed="false" aria-label="White"><i style="background:#FFFFFF"></i></button><button type="button" data-mk-color="black" aria-pressed="false" aria-label="Black"><i style="background:#111111"></i></button><button type="button" data-mk-color="blue" aria-pressed="false" aria-label="Blue"><i style="background:#1E6BFF"></i></button></div><div class="mk-bar" role="group" aria-label="Line and history"><button type="button" data-mk-w="1" aria-pressed="false" aria-label="Thin line"><b style="height:2px"></b><small>Thin</small></button><button type="button" data-mk-w="2" aria-pressed="true" aria-label="Medium line"><b style="height:5px"></b><small>Medium</small></button><button type="button" data-mk-w="3" aria-pressed="false" aria-label="Thick line"><b style="height:9px"></b><small>Thick</small></button><button type="button" id="mkUndo" disabled>↶<small>Undo</small></button><button type="button" id="mkRedo" disabled>↷<small>Redo</small></button></div></dialog>
 <dialog id="viewer"><img alt="Inspection photo" id="fullPhoto"><div><button id="closeViewer" type="button">Close photo</button></div></dialog>
 <script>
 /*!
@@ -825,9 +848,28 @@ const getAll=store=>request(store,'readonly',s=>s.getAll());
 // Nothing number-like is stored; an old caption that starts with a written-in number ("Photo 4.1 – …") loses that prefix.
 const STORED_NO_RE=/^\s*(?:photo|fig(?:ure)?\.?)\s*\d+(?:\.(?:\d+|[a-z]))+\s*(?:[\u2013\u2014:\-]\s*)?/i;
 function stripStoredNo(c){return String(c||'').replace(STORED_NO_RE,'');}
+// v11e: mark-up is vector data on the photo entry (0–1 coordinates of the displayed, upright image). The photo itself is never changed.
+const MK_COLORS={red:'#E8202A',yellow:'#FFD60A',white:'#FFFFFF',black:'#111111',blue:'#1E6BFF'};
+const MK_TOOLS=['arrow','ellipse','box','pen','text'];
+const MK_W=[0.005,0.009,0.014],MK_T=[0.045,0.06,0.08];
+function sanitizeMarkup(a){
+ if(!Array.isArray(a))return [];
+ const n=v=>{v=Number(v);return Number.isFinite(v)?Math.round(Math.max(0,Math.min(1,v))*10000)/10000:null;};
+ const out=[];
+ for(const x of a.slice(0,300)){
+  if(!x||typeof x!=='object'||!MK_TOOLS.includes(x.t))continue;
+  const pts=(Array.isArray(x.pts)?x.pts:[]).slice(0,1500).map(q=>Array.isArray(q)?[n(q[0]),n(q[1])]:null).filter(q=>q&&q[0]!=null&&q[1]!=null);
+  const need=x.t==='text'?1:2;if(pts.length<need)continue;
+  const y={t:x.t,c:Object.hasOwn(MK_COLORS,x.c)?x.c:'red',w:[1,2,3].includes(x.w)?x.w:2,pts:x.t==='pen'?pts:pts.slice(0,need)};
+  if(x.t==='text'){y.text=String(x.text??'').replace(/\s+/g,' ').trim().slice(0,120);if(!y.text)continue;}
+  out.push(y);
+ }
+ return out;
+}
+function markKey(mk){if(!Array.isArray(mk)||!mk.length)return '';const t=JSON.stringify(mk);let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return 'mk'+(h>>>0).toString(36)+'_'+t.length;}
 function asPhoto(p){
- if(typeof p==='string'&&p)return {id:p,caption:'',prompt:''};
- if(p&&typeof p==='object'&&typeof p.id==='string'&&p.id)return {id:p.id,caption:typeof p.caption==='string'?stripStoredNo(p.caption):'',prompt:typeof p.prompt==='string'?p.prompt:''};
+ if(typeof p==='string'&&p)return {id:p,caption:'',prompt:'',markup:[]};
+ if(p&&typeof p==='object'&&typeof p.id==='string'&&p.id)return {id:p.id,caption:typeof p.caption==='string'?stripStoredNo(p.caption):'',prompt:typeof p.prompt==='string'?p.prompt:'',markup:sanitizeMarkup(p.markup)};
  return null;
 }
 const MEAS_TYPES=['Size','Quantity'];
@@ -951,7 +993,7 @@ function migrateReport(r){
 function isCurrentReport(r){
  if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
  if(typeof r.styleId!=='string')return false;
- if(r.parts.some(p=>[...(p?.photos||[]),...(p?.subParts||[]).flatMap(x=>x?.photos||[])].some(ph=>ph&&(STORED_NO_RE.test(String(ph.caption||''))||Object.keys(ph).some(k=>!['id','caption','prompt'].includes(k))))))return false;
+ if(r.parts.some(p=>[...(p?.photos||[]),...(p?.subParts||[]).flatMap(x=>x?.photos||[])].some(ph=>ph&&(STORED_NO_RE.test(String(ph.caption||''))||!Array.isArray(ph.markup)||Object.keys(ph).some(k=>!['id','caption','prompt','markup'].includes(k))))))return false;
  if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields))return false;
  if(!r.parts.every(p=>typeof p?.partNo==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.photos)&&typeof x.condition==='string')))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
@@ -1103,7 +1145,10 @@ async function loadThumb(img){
  let m;try{m=await get('media',id);}catch(e){thumbById.delete(id);return;}
  if(!thumbById.has(id)&&!document.querySelector(`#editor img[data-media="${CSS.escape(id)}"]`))return;
  if(!m?.thumb){thumbById.delete(id);return;}
- const url=URL.createObjectURL(m.thumb);
+ let tb=m.thumb;const mph=photoById(id);
+ if(markKey(mph?.markup)){try{const mm=await markedMedia(mph,m);if(mm?.markedThumb)tb=mm.markedThumb;}catch(e){}}
+ if(thumbById.get(id))return;
+ const url=URL.createObjectURL(tb);
  thumbById.set(id,url);
  document.querySelectorAll('img[data-media]').forEach(el=>{if(el.dataset.media===id)el.src=url;});
 }
@@ -1226,7 +1271,7 @@ function showEditor(){
 function photoCardHTML(ph,i,label,ctx){
  const id=esc(ph.id);
  const labelSel=ctx.main&&editing.prompts.length?`<select class="compact wide" data-photo-prompt="${id}" aria-label="Label for photo ${label}"><option value="">No label</option>${editing.prompts.map(pr=>`<option value="${esc(pr)}" ${pr===ph.prompt?'selected':''}>${esc(promptLabel(pr))}</option>`).join('')}</select>`:'';
- return `<div class="photo" data-photo="${id}"><div class="fig" ${ctx.main?`data-fig="${i}"`:'data-subfig'}>Photo ${label}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><div class="img-wrap"><img data-media="${id}" alt="Photo ${label}"><button type="button" class="opt-btn" data-photo-opts="${id}" aria-expanded="false" aria-label="Options for photo ${label}">⋯</button></div><div class="photo-row"><input class="compact" data-caption-for="${id}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${label}"></div><div class="photo-opts" data-opts-for="${id}" hidden>${ctx.main?`<button type="button" class="small" data-caption-mic="${id}" aria-label="Dictate caption for photo ${label}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${id}" aria-label="Re-record caption for photo ${label}">↻ Re-record</button>`:''}<div class="reorder" role="group" aria-label="Reorder photo ${label}"><button type="button" class="small" data-photo-up="${id}" aria-label="Move photo ${label} earlier" ${i===0?'disabled':''}>◀ Earlier</button><button type="button" class="small" data-photo-down="${id}" aria-label="Move photo ${label} later" ${i===ctx.count-1?'disabled':''}>Later ▶</button><button type="button" class="small" data-photo-first="${id}" aria-label="Make photo ${label} the first" ${i===0?'disabled':''}>⤒ First</button><button type="button" class="small" data-photo-last="${id}" aria-label="Make photo ${label} the last" ${i===ctx.count-1?'disabled':''}>⤓ Last</button></div>${ctx.count>2?`<div class="pos-row"><input class="compact" type="number" inputmode="numeric" min="1" max="${ctx.count}" data-photo-pos-for="${id}" placeholder="No. 1–${ctx.count}" aria-label="New position for photo ${label}"><button type="button" class="small" data-photo-pos="${id}">Go</button></div>`:''}<button type="button" class="small wide" data-photo-move="${id}">➜ Move to another part</button><button type="button" class="small wide" data-photo-copy="${id}">⧉ Copy to another part</button>${labelSel}<button type="button" class="small danger wide" data-remove-photo="${id}">Remove photo</button></div></div>`;
+ return `<div class="photo" data-photo="${id}"><div class="fig" ${ctx.main?`data-fig="${i}"`:'data-subfig'}>Photo ${label}${ph.prompt?' · '+esc(promptLabel(ph.prompt)):''}</div><div class="img-wrap"><img data-media="${id}" alt="Photo ${label}">${ph.markup?.length?`<span class="mk-badge" title="Marked up">✎ Marked</span>`:''}<button type="button" class="opt-btn" data-photo-opts="${id}" aria-expanded="false" aria-label="Options for photo ${label}">⋯</button></div><div class="photo-row"><input class="compact" data-caption-for="${id}" value="${esc(ph.caption)}" placeholder="Caption (optional)" aria-label="Caption for photo ${label}"></div><div class="photo-opts" data-opts-for="${id}" hidden>${ctx.main?`<button type="button" class="small" data-caption-mic="${id}" aria-label="Dictate caption for photo ${label}">🎙 Caption</button><button type="button" class="redo" data-caption-redo="${id}" aria-label="Re-record caption for photo ${label}">↻ Re-record</button>`:''}<div class="mk-opts"><button type="button" class="small" data-photo-markup="${id}" aria-label="Mark up photo ${label}">✎ ${ph.markup?.length?'Edit mark-up':'Mark up'}</button>${ph.markup?.length?`<button type="button" class="small" data-photo-unmark="${id}" aria-label="Remove mark-up from photo ${label}">⌫ Remove mark-up</button>`:''}</div><div class="reorder" role="group" aria-label="Reorder photo ${label}"><button type="button" class="small" data-photo-up="${id}" aria-label="Move photo ${label} earlier" ${i===0?'disabled':''}>◀ Earlier</button><button type="button" class="small" data-photo-down="${id}" aria-label="Move photo ${label} later" ${i===ctx.count-1?'disabled':''}>Later ▶</button><button type="button" class="small" data-photo-first="${id}" aria-label="Make photo ${label} the first" ${i===0?'disabled':''}>⤒ First</button><button type="button" class="small" data-photo-last="${id}" aria-label="Make photo ${label} the last" ${i===ctx.count-1?'disabled':''}>⤓ Last</button></div>${ctx.count>2?`<div class="pos-row"><input class="compact" type="number" inputmode="numeric" min="1" max="${ctx.count}" data-photo-pos-for="${id}" placeholder="No. 1–${ctx.count}" aria-label="New position for photo ${label}"><button type="button" class="small" data-photo-pos="${id}">Go</button></div>`:''}<button type="button" class="small wide" data-photo-move="${id}">➜ Move to another part</button><button type="button" class="small wide" data-photo-copy="${id}">⧉ Copy to another part</button>${labelSel}<button type="button" class="small danger wide" data-remove-photo="${id}">Remove photo</button></div></div>`;
 }
 function subCardHTML(x,k,i){
  const id=esc(x.id),lab=subLabel(i,k),cond=x.condition;
@@ -1346,7 +1391,7 @@ async function placePhoto(photoId,mode,partId,subId){
  // A step photo keeps its label only if the new step asks for it and does not have it yet.
  const fit=pr=>sub?'':(part.prompts?.length?((pr&&part.prompts.includes(pr)&&!part.photos.some(x=>x.prompt===pr))?pr:(nextPrompt(part)||'')):'');
  if(mode==='move'){const [ph]=f.list.splice(f.index,1);ph.prompt=fit(ph.prompt);dest.photos.push(ph);}
- else{const m=await get('media',photoId);if(!m?.blob)throw Error('That photo could not be read, so it was not copied.');const nid=uid();await put('media',{...m,id:nid});dest.photos.push({id:nid,caption:f.photo.caption,prompt:fit(f.photo.prompt)});}
+ else{const m=await get('media',photoId);if(!m?.blob)throw Error('That photo could not be read, so it was not copied.');const nid=uid();await put('media',{...m,id:nid});dest.photos.push({id:nid,caption:f.photo.caption,prompt:fit(f.photo.prompt),markup:sanitizeMarkup(f.photo.markup)});}
  if(!sub&&part.skipped)part.skipped=false;
  await persistReport();
  const pi=current.parts.indexOf(part);
@@ -1460,6 +1505,70 @@ async function imageBlob(blob,max=1600,quality=.8){
   return {blob:result,width:w,height:h};
  }finally{URL.revokeObjectURL(url);}
 }
+function jpegFromCanvas(canvas,quality){
+ try{const u=canvas.toDataURL('image/jpeg',quality);const bin=atob(u.slice(u.indexOf(',')+1));const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);if(/^data:image\/jpeg/.test(u)&&bytes.length)return new Blob([bytes],{type:'image/jpeg'});}catch(e){}
+ return null;
+}
+// Draw mark-up shapes on a canvas of W×H pixels. Line widths and text size follow the image size, so the look is the same on screen and in exports.
+function drawMarkup(ctx,W,H,shapes){
+ const S=(W+H)/2;
+ for(const s of shapes||[]){
+  const col=MK_COLORS[s.c]||MK_COLORS.red,lw=Math.max(1,MK_W[(s.w||2)-1]*S);
+  const P=s.pts.map(q=>[q[0]*W,q[1]*H]);
+  ctx.save();ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=lw;ctx.lineCap='round';ctx.lineJoin='round';
+  if(s.t==='arrow'){
+   const [a,b]=P;const dx=b[0]-a[0],dy=b[1]-a[1],L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L;
+   const hl=Math.min(L*.6,Math.max(lw*4.5,S*.035)),ang=.45;
+   ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0]-ux*hl*.7,b[1]-uy*hl*.7);ctx.stroke();
+   ctx.beginPath();ctx.moveTo(b[0],b[1]);
+   ctx.lineTo(b[0]-hl*(ux*Math.cos(ang)-uy*Math.sin(ang)),b[1]-hl*(uy*Math.cos(ang)+ux*Math.sin(ang)));
+   ctx.lineTo(b[0]-hl*(ux*Math.cos(-ang)-uy*Math.sin(-ang)),b[1]-hl*(uy*Math.cos(-ang)+ux*Math.sin(-ang)));
+   ctx.closePath();ctx.fill();ctx.lineWidth=Math.max(1,lw*.5);ctx.stroke();
+  }else if(s.t==='ellipse'){
+   const [a,b]=P;ctx.beginPath();ctx.ellipse((a[0]+b[0])/2,(a[1]+b[1])/2,Math.max(1,Math.abs(b[0]-a[0])/2),Math.max(1,Math.abs(b[1]-a[1])/2),0,0,Math.PI*2);ctx.stroke();
+  }else if(s.t==='box'){
+   const [a,b]=P;ctx.strokeRect(Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]));
+  }else if(s.t==='pen'){
+   ctx.beginPath();ctx.moveTo(P[0][0],P[0][1]);
+   if(P.length===2)ctx.lineTo(P[1][0],P[1][1]);
+   for(let i=1;i<P.length-1;i++){const m=[(P[i][0]+P[i+1][0])/2,(P[i][1]+P[i+1][1])/2];ctx.quadraticCurveTo(P[i][0],P[i][1],m[0],m[1]);}
+   if(P.length>2)ctx.lineTo(P[P.length-1][0],P[P.length-1][1]);
+   ctx.stroke();
+  }else if(s.t==='text'){
+   const fs=Math.max(8,MK_T[(s.w||2)-1]*S);ctx.font=`bold ${fs}px "DejaVu Sans",Roboto,Arial,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
+   const words=String(s.text).split(' '),lines=[];let cur='';const maxW=W*.9;
+   for(const w of words){const t=cur?cur+' '+w:w;if(cur&&ctx.measureText(t).width>maxW){lines.push(cur);cur=w;}else cur=t;}
+   if(cur)lines.push(cur);
+   const tw=Math.min(maxW,Math.max(...lines.map(l=>ctx.measureText(l).width))),lh=fs*1.2,th=lh*lines.length;
+   const cx=Math.max(tw/2+fs*.3,Math.min(W-tw/2-fs*.3,P[0][0])),cy=Math.max(th/2+fs*.2,Math.min(H-th/2-fs*.2,P[0][1]));
+   ctx.strokeStyle=s.c==='black'?'#FFFFFF':'#000000';ctx.lineWidth=fs*.18;
+   lines.forEach((l,i)=>{const y=cy-th/2+lh*(i+.5);ctx.strokeText(l,cx,y,maxW);ctx.fillText(l,cx,y,maxW);});
+  }
+  ctx.restore();
+ }
+}
+function loadImg(blob){const url=URL.createObjectURL(blob);return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res({img:i,url});i.onerror=()=>{URL.revokeObjectURL(url);rej(Error('This image could not be read.'));};i.src=url;});}
+// Flatten: the browser decodes with EXIF orientation applied (the same path imageBlob uses), so shapes line up with what was shown.
+async function renderMarked(blob,shapes,max=2000,quality=.88){
+ const {img,url}=await loadImg(blob);
+ try{
+  const sc=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const W=Math.max(1,Math.round(img.naturalWidth*sc)),H=Math.max(1,Math.round(img.naturalHeight*sc));
+  const c=document.createElement('canvas');c.width=W;c.height=H;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.drawImage(img,0,0,W,H);drawMarkup(ctx,W,H,shapes);
+  let out=jpegFromCanvas(c,quality);if(!out)out=await new Promise(r=>c.toBlob(r,'image/jpeg',quality));c.width=c.height=1;
+  if(!out)throw Error('Mark-up image could not be made');return {blob:out,width:W,height:H};
+ }finally{URL.revokeObjectURL(url);}
+}
+function photoById(id){for(const p of current?.parts||[]){for(const ph of p.photos||[])if(ph.id===id)return ph;for(const x of p.subParts||[])for(const ph of x.photos||[])if(ph.id===id)return ph;}return null;}
+// Cached flattened copy (report-size + thumbnail) on the media record, keyed by the shapes – rebuilt whenever the shapes change.
+async function markedMedia(ph,m){
+ const key=markKey(ph?.markup);if(!key)return null;
+ m=m||await get('media',ph.id);if(!m?.blob)return null;
+ if(m.markKey===key&&m.marked&&m.markedThumb)return m;
+ const full=await renderMarked(m.blob,ph.markup,Math.max(m.width||0,m.height||0,1600));
+ const th=await imageBlob(full.blob,240,.65);
+ const nm={...m,marked:full.blob,markedThumb:th.blob,markKey:key};await put('media',nm);return nm;
+}
+function dropThumb(id){const u=thumbById.get(id);if(u)URL.revokeObjectURL(u);thumbById.delete(id);}
 async function addPhotos(files){
  if(!editing||!files?.length){photoDest=null;return {added:0,sub:false};}
  const part=editing;const sub=photoDest?(part.subParts||[]).find(x=>x.id===photoDest)||null:null;photoDest=null;
@@ -1479,7 +1588,7 @@ async function addPhotos(files){
    if(!sub){if(forcedPrompt!==null&&i===0)prompt=forcedPrompt;else if(part.prompts&&part.prompts.length)prompt=nextPrompt(part)||'';}
    const id=uid();
    await put('media',{id,kind:'photo',blob:compressed.blob,thumb:thumb.blob,width:compressed.width,height:compressed.height,original,originalWidth,originalHeight,originalMime:original.type||'image/jpeg',originalName:String(file.name||'')});
-   target.photos.push({id,caption:'',prompt});added++;
+   target.photos.push({id,caption:'',prompt,markup:[]});added++;
    if(!sub&&part.skipped)part.skipped=false;
    await persistReport();
   }
@@ -1496,7 +1605,7 @@ function setBusy(flag){
   else if('wasDisabled'in el.dataset){el.disabled=el.dataset.wasDisabled==='1';delete el.dataset.wasDisabled;}
  });
 }
-async function viewPhoto(id){const m=await get('media',id);if(!m?.blob)return;if(fullURL)URL.revokeObjectURL(fullURL);fullURL=URL.createObjectURL(m.blob);$('fullPhoto').src=fullURL;$('viewer').showModal();}
+async function viewPhoto(id){let m=await get('media',id);if(!m?.blob)return;const vph=photoById(id);if(markKey(vph?.markup)){try{m=(await markedMedia(vph,m))||m;}catch(e){}}if(fullURL)URL.revokeObjectURL(fullURL);fullURL=URL.createObjectURL(m.marked&&markKey(vph?.markup)===m.markKey?m.marked:m.blob);$('fullPhoto').src=fullURL;$('viewer').showModal();}
 
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
 const isAndroid=/Android/i.test(navigator.userAgent);
@@ -1874,11 +1983,14 @@ function contrastRatio(a,b){const x=relLum(a),y=relLum(b);return (Math.max(x,y)+
 // v11b: photo pairing shared by Word, PDF and Slides – a photo is "portrait" when clearly taller than wide.
 function isPortraitImg(img){return !!img&&img.height>img.width*1.05;}
 function RAR(){return hexRgb(RA());}
-async function exportPhoto(id){
+async function exportPhoto(p){
+ const id=typeof p==='string'?p:p?.id;
  const m=await get('media',id);
  if(!m?.blob)throw Error('A saved photo is missing; export stopped rather than omitting evidence.');
- let out=await imageBlob(m.blob,1200,.72);
- for(const [px,q] of [[1200,.62],[1000,.58],[900,.5],[800,.45]]){if(out.blob.size<=230000)break;out=await imageBlob(m.blob,px,q);}
+ let src=m.blob;
+ if(typeof p==='object'&&markKey(p.markup)){const mm=await markedMedia(p,m);if(mm?.marked)src=mm.marked;}
+ let out=await imageBlob(src,1200,.72);
+ for(const [px,q] of [[1200,.62],[1000,.58],[900,.5],[800,.45]]){if(out.blob.size<=230000)break;out=await imageBlob(src,px,q);}
  return out;
 }
 function fitEmu(w,h,maxW=2880000,maxH=2300000){const scale=Math.min(maxW/Math.max(1,w),maxH/Math.max(1,h));return {cx:Math.max(1,Math.round(w*scale)),cy:Math.max(1,Math.round(h*scale))};}
@@ -1988,7 +2100,7 @@ async function buildDocx(raw,notify=()=>{}){
   const ph=part.photos,imgs=[],ids=[];
   const capOf=j=>figureCaption(label,j+1,ph[j].caption,part.name,ph[j].prompt);
   for(let j=0;j<ph.length;j++){
-   const img=await exportPhoto(ph[j].id);n++;ids.push(n);imgs.push(img);
+   const img=await exportPhoto(ph[j]);n++;ids.push(n);imgs.push(img);
    zip.file(`word/media/photo${n}.jpg`,await img.blob.arrayBuffer());
    rels+=`<Relationship Id="rId${n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/photo${n}.jpg"/>`;
    notify(`Preparing photo ${n} of ${totalPhotos}`,n,totalPhotos+1);await tick();
@@ -2237,7 +2349,7 @@ async function buildPDF(raw,notify=()=>{}){
   const capOf=j=>figureCaption(label,j+1,ph[j].caption,part.name,ph[j].prompt);
   const capLines=(t,w)=>{doc.setFontSize(9);let l=doc.splitTextToSize(t,w);if(l.length>4){l=l.slice(0,3);l.push('…');}return l;};
   const imgs=[];
-  for(let j=0;j<ph.length;j++){imgs.push(await exportPhoto(ph[j].id));n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();}
+  for(let j=0;j<ph.length;j++){imgs.push(await exportPhoto(ph[j]));n++;notify(`Preparing photo ${n} of ${total}`,n,total+1);await tick();}
   const put1=async(img,x,yy,w,h,k)=>{doc.addImage(new Uint8Array(await img.blob.arrayBuffer()),'JPEG',x,yy,w,h,'ph'+(++imgNo),'FAST');doc.setDrawColor(200,208,212);doc.setLineWidth(0.2);doc.rect(x,yy,w,h);};
   for(let j=0;j<ph.length;){
    const a=imgs[j];
@@ -2507,10 +2619,10 @@ async function buildPptx(raw,notify=()=>{}){
   const condRight=cond.label;
   let j=0;
   while(j<part.photos.length){
-   const a=await exportPhoto(part.photos[j].id);done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();
+   const a=await exportPhoto(part.photos[j]);done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();
    let b=null;
    if(isPortraitImg(a)&&j+1<part.photos.length){
-    const nb=await exportPhoto(part.photos[j+1].id);
+    const nb=await exportPhoto(part.photos[j+1]);
     if(isPortraitImg(nb)){b=nb;done++;notify(`Preparing photo ${done} of ${total}`,done,total+1);await tick();}
     else{nb.blob=null;}
    }
@@ -2682,6 +2794,11 @@ async function saveOriginals(){
     const ext=fileExt(src.mime,src.name);
     const fname=`${photoStem(pi,j,parts.length,e.name,e.prompt,e.sub)}.${ext}`;
     folder.file(fname,src.blob, {binary:true,compression:'STORE'});
+    if(markKey(e.ph.markup)){
+     // v11e: the original stays untouched; a flattened copy with the mark-up goes beside it.
+     let mk=null;try{mk=await renderMarked(src.blob,e.ph.markup,4096,.9);}catch(err){try{mk=await renderMarked(m.blob,e.ph.markup,4096,.9);}catch(err2){mk=null;}}
+     if(mk)folder.file(`${photoStem(pi,j,parts.length,e.name,e.prompt,e.sub)}_marked.jpg`,mk.blob,{binary:true,compression:'STORE'});
+    }
     done++;
     progress(`Adding ${fname} (${done} of ${total})`,done,total+1);
     await tick();
@@ -2839,7 +2956,7 @@ async function importBackup(file){
    const photos=[];
    for(const ph of part.photos){
     const id=await restoreAttachment(z,ph.id,'photo',importedIds);
-    photos.push({id,caption:String(ph.caption||'').slice(0,4000),prompt:String(ph.prompt||'').slice(0,120)});
+    photos.push({id,caption:String(ph.caption||'').slice(0,4000),prompt:String(ph.prompt||'').slice(0,120),markup:sanitizeMarkup(ph.markup)});
     progress(`Restoring attachment ${++done} of ${total}`,done,Math.max(total,1));
     await tick();
    }
@@ -2852,7 +2969,7 @@ async function importBackup(file){
    part.photos=photos;part.audio=audio;
    for(const sp of part.subParts||[]){
     sp.id=uid();const sps=[];
-    for(const ph of sp.photos){const id=await restoreAttachment(z,ph.id,'photo',importedIds);sps.push({id,caption:String(ph.caption||'').slice(0,4000),prompt:''});progress(`Restoring attachment ${++done} of ${total}`,done,Math.max(total,1));await tick();}
+    for(const ph of sp.photos){const id=await restoreAttachment(z,ph.id,'photo',importedIds);sps.push({id,caption:String(ph.caption||'').slice(0,4000),prompt:'',markup:sanitizeMarkup(ph.markup)});progress(`Restoring attachment ${++done} of ${total}`,done,Math.max(total,1));await tick();}
     sp.photos=sps;
    }
    if(part.drawingId){try{part.drawingId=await restoreOnce(part.drawingId);}catch(e){console.warn('Drawing in backup could not be restored',e);part.drawingId='';}}
@@ -2998,6 +3115,109 @@ function captionInput(e){
 }
 $('editorPhotos').addEventListener('input',captionInput);
 $('editorPhotos').addEventListener('pointerdown',e=>{if(e.target.closest('[data-caption-for]')&&session)stopRecording().catch(fail);});
+// ---------- v11e: mark-up editor (full screen, touch) ----------
+const MK={id:null,shapes:[],orig:'[]',undo:[],redo:[],tool:'arrow',c:'red',w:2,img:null,url:'',draft:null,pid:null,textAt:null,rec:null,W:1,H:1};
+function mkLayout(){
+ const st=$('mkStage'),cv=$('mkCanvas');if(!MK.img)return;
+ const r=st.getBoundingClientRect(),ar=MK.img.naturalWidth/Math.max(1,MK.img.naturalHeight);
+ let w=r.width-8,h=w/ar;if(h>r.height-8){h=r.height-8;w=h*ar;}
+ w=Math.max(40,Math.floor(w));h=Math.max(40,Math.floor(h));const dpr=Math.min(3,window.devicePixelRatio||1);
+ cv.style.width=w+'px';cv.style.height=h+'px';cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);MK.W=cv.width;MK.H=cv.height;mkDraw();
+}
+function mkDraw(){const cv=$('mkCanvas');const ctx=cv.getContext('2d');if(!MK.img)return;ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(MK.img,0,0,cv.width,cv.height);drawMarkup(ctx,cv.width,cv.height,MK.draft?[...MK.shapes,MK.draft]:MK.shapes);}
+function mkSync(){
+ document.querySelectorAll('[data-mk-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mkTool===MK.tool)));
+ document.querySelectorAll('[data-mk-color]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mkColor===MK.c)));
+ document.querySelectorAll('[data-mk-w]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.mkW)===MK.w)));
+ $('mkUndo').disabled=!MK.undo.length;$('mkRedo').disabled=!MK.redo.length;$('mkClear').disabled=!MK.shapes.length;
+}
+function mkCommit(next){MK.undo.push(MK.shapes);if(MK.undo.length>100)MK.undo.shift();MK.shapes=next;MK.redo=[];mkSync();mkDraw();}
+function mkPoint(e){const r=$('mkCanvas').getBoundingClientRect();const n=v=>Math.round(Math.max(0,Math.min(1,v))*10000)/10000;return [n((e.clientX-r.left)/Math.max(1,r.width)),n((e.clientY-r.top)/Math.max(1,r.height))];}
+async function openMarkup(id){
+ if(busy)return;await stopRecording();
+ const f=findPhoto(id);if(!f)return;const m=await get('media',id);if(!m?.blob){toast('That photo could not be read.');return;}
+ const {img,url}=await loadImg(m.blob);
+ if(MK.url)URL.revokeObjectURL(MK.url);
+ Object.assign(MK,{id,img,url,shapes:sanitizeMarkup(f.photo.markup),undo:[],redo:[],draft:null,pid:null,textAt:null});MK.orig=JSON.stringify(MK.shapes);
+ const pi=current.parts.indexOf(f.part);const base=f.sub?subLabel(pi,f.part.subParts.indexOf(f.sub)):partRef(pi);
+ $('mkTitle').textContent=`Photo ${base}.${f.index+1}`;$('mkTextBox').hidden=true;
+ $('markup').showModal();mkSync();requestAnimationFrame(mkLayout);
+}
+function mkClose(){mkStopMic();$('markup').close();if(MK.url)URL.revokeObjectURL(MK.url);MK.url='';MK.img=null;MK.id=null;}
+function mkCancel(){if(JSON.stringify(MK.shapes)!==MK.orig&&!confirm('Discard your mark-up changes?'))return;mkClose();}
+async function mkSave(){
+ const id=MK.id;const f=findPhoto(id);if(!f){mkClose();return;}
+ f.photo.markup=sanitizeMarkup(MK.shapes);const had=MK.orig!=='[]';
+ await persistReport();
+ try{if(f.photo.markup.length)await markedMedia(f.photo);}catch(e){}
+ mkClose();dropThumb(id);renderEditorMedia();renderEntries();
+ toast(f.photo.markup.length?'Mark-up saved. The original photo is not changed.':had?'Mark-up removed.':'No mark-up drawn.');
+}
+async function removeMarkup(id){
+ const f=findPhoto(id);if(!f||!f.photo.markup?.length)return;
+ if(!confirm('Remove the mark-up from this photo? The photo itself stays.'))return;
+ f.photo.markup=[];await persistReport();
+ const m=await get('media',id);if(m&&(m.marked||m.markKey)){const {marked,markedThumb,markKey,...rest}=m;await put('media',rest);}
+ dropThumb(id);renderEditorMedia();renderEntries();toast('Mark-up removed.');
+}
+function mkStopMic(){try{MK.rec?.abort();}catch(e){}MK.rec=null;$('mkTextMic').textContent='🎙 Speak';}
+function mkOpenText(at){MK.textAt=at;$('mkText').value='';$('mkTextBox').hidden=false;$('mkTextMic').hidden=!SpeechAPI;setTimeout(()=>$('mkText').focus(),30);}
+function mkAddText(){const t=$('mkText').value.replace(/\s+/g,' ').trim();mkStopMic();$('mkTextBox').hidden=true;$('mkText').blur();if(t&&MK.textAt)mkCommit([...MK.shapes,{t:'text',c:MK.c,w:MK.w,pts:[MK.textAt],text:t.slice(0,120)}]);MK.textAt=null;}
+function mkMic(){
+ if(!SpeechAPI)return;if(MK.rec){mkStopMic();return;}
+ const rec=new SpeechAPI();rec.lang=navigator.language||'en-GB';rec.interimResults=true;rec.continuous=false;MK.rec=rec;
+ const base=$('mkText').value.trim();
+ rec.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;$('mkText').value=(base?base+' ':'')+t.trim();};
+ rec.onerror=()=>{};rec.onend=()=>{if(MK.rec===rec){MK.rec=null;$('mkTextMic').textContent='🎙 Speak';}};
+ try{rec.start();$('mkTextMic').textContent='■ Stop';}catch(e){MK.rec=null;}
+}
+function mkWire(){
+ const cv=$('mkCanvas');
+ cv.addEventListener('pointerdown',e=>{
+  if(!$('mkTextBox').hidden)return;
+  if(MK.pid!=null){MK.draft=null;MK.pid=-1;mkDraw();return;}// a second finger cancels the stroke (pinch / palm)
+  e.preventDefault();const p=mkPoint(e);
+  if(MK.tool==='text'){mkOpenText(p);return;}
+  MK.pid=e.pointerId;try{cv.setPointerCapture(e.pointerId);}catch(err){}
+  MK.draft={t:MK.tool,c:MK.c,w:MK.w,pts:MK.tool==='pen'?[p]:[p,p]};mkDraw();
+ });
+ cv.addEventListener('pointermove',e=>{
+  if(e.pointerId!==MK.pid||!MK.draft)return;e.preventDefault();
+  const evs=MK.draft.t==='pen'&&e.getCoalescedEvents?e.getCoalescedEvents():[e];
+  for(const ev of evs.length?evs:[e]){const p=mkPoint(ev);
+   if(MK.draft.t==='pen'){const q=MK.draft.pts[MK.draft.pts.length-1];if(Math.hypot((p[0]-q[0])*MK.W,(p[1]-q[1])*MK.H)>=2&&MK.draft.pts.length<1500)MK.draft.pts.push(p);}
+   else MK.draft.pts[1]=p;}
+  mkDraw();
+ });
+ const end=e=>{
+  if(MK.pid===-1){if(e.type!=='pointerdown')MK.pid=null;return;}
+  if(e.pointerId!==MK.pid)return;MK.pid=null;const d=MK.draft;MK.draft=null;
+  if(!d||e.type==='pointercancel'){mkDraw();return;}
+  const p=mkPoint(e);if(d.t!=='pen')d.pts[1]=p;
+  const r=cv.getBoundingClientRect();const a=d.pts[0],b=d.pts[d.pts.length-1];
+  const big=d.t==='pen'?d.pts.length>=2:Math.hypot((b[0]-a[0])*r.width,(b[1]-a[1])*r.height)>=10;
+  if(d.t==='pen'&&d.pts.length===1)d.pts.push([Math.min(1,a[0]+0.001),a[1]]);// a tap with the pen leaves a dot
+  if(big||d.t==='pen')mkCommit([...MK.shapes,d]);else mkDraw();
+ };
+ cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+ cv.addEventListener('contextmenu',e=>e.preventDefault());
+ $('markup').addEventListener('cancel',e=>{e.preventDefault();if(!$('mkTextBox').hidden){mkStopMic();$('mkTextBox').hidden=true;return;}mkCancel();});
+ $('markup').addEventListener('click',e=>{
+  const t=e.target.closest('[data-mk-tool]');if(t){MK.tool=t.dataset.mkTool;mkSync();return;}
+  const c=e.target.closest('[data-mk-color]');if(c){MK.c=c.dataset.mkColor;mkSync();return;}
+  const w=e.target.closest('[data-mk-w]');if(w){MK.w=Number(w.dataset.mkW);mkSync();return;}
+ });
+ $('mkUndo').addEventListener('click',()=>{if(!MK.undo.length)return;MK.redo.push(MK.shapes);MK.shapes=MK.undo.pop();mkSync();mkDraw();});
+ $('mkRedo').addEventListener('click',()=>{if(!MK.redo.length)return;MK.undo.push(MK.shapes);MK.shapes=MK.redo.pop();mkSync();mkDraw();});
+ $('mkClear').addEventListener('click',()=>{if(MK.shapes.length)mkCommit([]);});
+ $('mkCancel').addEventListener('click',mkCancel);
+ $('mkSave').addEventListener('click',()=>mkSave().catch(fail));
+ $('mkTextOk').addEventListener('click',mkAddText);
+ $('mkTextCancel').addEventListener('click',()=>{mkStopMic();$('mkTextBox').hidden=true;MK.textAt=null;});
+ $('mkTextMic').addEventListener('click',mkMic);
+ $('mkText').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();mkAddText();}});
+ window.addEventListener('resize',()=>{if($('markup').open)requestAnimationFrame(mkLayout);});
+}
 // v11d: reorder a photo inside its part or sub-part; numbers are redrawn at once and the options stay open.
 async function reorderPhoto(id,to){
  const f=findPhoto(id);if(!f)return;const n=f.list.length;to=Math.max(0,Math.min(n-1,to));if(to===f.index)return;
@@ -3009,7 +3229,9 @@ async function reorderPhoto(id,to){
  toast(`Now photo ${base}.${to+1}. Photos renumbered.`);
 }
 async function photoAction(e){
- let b=e.target.closest('[data-photo-opts]');if(b){const box=b.closest('.photo')?.querySelector('[data-opts-for]');if(!box)return;const open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',String(open));return;}
+ let b=e.target.closest('[data-photo-markup]');if(b&&editing)return openMarkup(b.dataset.photoMarkup);
+ b=e.target.closest('[data-photo-unmark]');if(b&&editing)return removeMarkup(b.dataset.photoUnmark);
+ b=e.target.closest('[data-photo-opts]');if(b){const box=b.closest('.photo')?.querySelector('[data-opts-for]');if(!box)return;const open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',String(open));return;}
  b=e.target.closest('[data-remove-photo]');if(b)return removePhoto(b.dataset.removePhoto);
  b=e.target.closest('[data-caption-mic]');if(b)return dictateCaption(b.dataset.captionMic);
  b=e.target.closest('[data-caption-redo]');if(b)return redoDictation('caption',b.dataset.captionRedo);
@@ -3025,6 +3247,7 @@ async function photoAction(e){
  if(e.target.matches('img[data-media]'))return viewPhoto(e.target.dataset.media);
 }
 on('editorPhotos','click',photoAction);
+mkWire();
 $('editor').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-photo-pos-for]')){e.preventDefault();e.target.closest('.pos-row')?.querySelector('[data-photo-pos]')?.click();}});
 on('editorPhotos','change',async e=>{
  const lab=e.target.closest('[data-photo-prompt]');if(lab&&editing){const ph=editing.photos.find(p=>p.id===lab.dataset.photoPrompt);if(ph){ph.prompt=lab.value;await persistReport();renderEditorMedia();renderEntries();}return;}
@@ -3668,7 +3891,7 @@ window.StripNoteTest={
  get,put,remove,getAll,persistReport,imageBlob,imageSize,importBackup,parseDictation,guessSeverity,startRecording,stopRecording,
  migrateReport,isCurrentReport,showReport,openReport,editPart,saveLogoFile,showLogoPreview,prepareLogo,safeFileName,photoSource,fileExt,finishJob,checkStorage,setCondition,backupState,capSentences,
  redoDictation,dictationKey,removeLastInsertion,attachSpoken,getFieldText,
- movePartTo,placePhoto,openPhotoPicker,reorderPhoto,partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
+ movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
