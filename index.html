@@ -2126,7 +2126,9 @@ function jobRows(r){
  for(const [k,l] of DETAIL_ROWS){if(used.has(k))continue;const v=val(k);if(clean(v))rows.push([l,v]);}
  return rows.concat(custom);}
 // Condition-of-parts rows, with each part's sub-parts (3.a, 3.b) under it.
-function summaryRows(r){const tj=isTemplateJob(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(clean(p.partNo)?` (${clean(p.partNo)})`:''),cond,photos:String(p.photos.length),sub:false,disp:dispLabel(p.disposition),dispCode:p.disposition||''});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+(subFacts(x)?` – ${subFacts(x)}`:''),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true,disp:dispLabel(x.disposition),dispCode:x.disposition||''}));});return rows;}
+// v15b: Part no. column in the summary, only when some part or sub-part has a part number.
+function hasPartNo(r){return (r.parts||[]).some(p=>clean(p.partNo)||(p.subParts||[]).some(x=>clean(x.partNo)));}
+function summaryRows(r){const tj=isTemplateJob(r);const PN=hasPartNo(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(!PN&&clean(p.partNo)?` (${clean(p.partNo)})`:''),pn:clean(p.partNo),cond,photos:String(p.photos.length),sub:false,disp:dispLabel(p.disposition),dispCode:p.disposition||''});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+((PN?(clean(x.qty)?`Qty ${clean(x.qty)}`:''):subFacts(x))?` – ${PN?`Qty ${clean(x.qty)}`:subFacts(x)}`:''),pn:clean(x.partNo),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true,disp:dispLabel(x.disposition),dispCode:x.disposition||''}));});return rows;}
 // v15: the Action column is only printed when at least one part or sub-part has an action set.
 function hasDisp(r){return (r.parts||[]).some(p=>p.disposition||(p.subParts||[]).some(x=>x.disposition));}
 function dispCountText(r){const c={};let none=0;for(const p of r.parts||[])for(const v of [p.disposition,...(p.subParts||[]).map(x=>x.disposition)]){if(v)c[v]=(c[v]||0)+1;else none++;}const bits=DISPOSITIONS.filter(([k])=>c[k]).map(([k,l])=>`${l} ${c[k]}`);if(none)bits.push(`not set ${none}`);return `Action (parts and sub-parts): ${bits.join(' \u00b7 ')}`;}
@@ -2283,8 +2285,8 @@ async function buildDocx(raw,notify=()=>{}){
  if(TH.length){body+=H1(`${++sec}. Tool history / build paperwork`);body+=simpleTable([700,4366,1500,900,2400],['No.','Document','Date','Pages','Note'],TH.map(d=>[String(d.no),d.label,prettyDate(d.date),d.pages?String(d.pages):'\u2014',toolDocNote(d)||(d.pages?'Pages in the appendix':'')]),(t,i)=>i===4&&/not|missing/i.test(t)?{color:'B00020'}:null);body+=docxPara(docxRun('Copies of these documents, as received, are reproduced page by page in the appendix at the end of this report. The original PDF files are kept with the job backup.',{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="80" w:after="160"/>');}
  body+=H1(`${++sec}. Summary`)+PARAS(r.summary);
  body+=H2('Condition of parts');
- const HD=hasDisp(r);const cols=HD?[800,4666,1700,1900,800]:[900,6166,1800,1000];
- const summaryHead=(HD?[isTemplateJob(r)?'Step':'No.','Part','Condition','Action','Photos']:[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos']).map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
+ const HD=hasDisp(r),PN=hasPartNo(r);const cols=HD&&PN?[700,3266,1900,1500,1800,700]:HD?[800,4666,1700,1900,800]:PN?[800,4366,2100,1700,900]:[900,6166,1800,1000];const PO=PN?1:0;
+ const summaryHead=[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
  let summary=docxRow({header:true,html:summaryHead});
  if(!r.parts.length){
   summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:cols.length})});
@@ -2295,8 +2297,9 @@ async function buildDocx(raw,notify=()=>{}){
    const cells=[
     docxCell(docxPara(docxRun(row.no,{size:row.sub?18:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[0],{fill}),
     docxCell(docxPara(docxRun(row.name,{size:row.sub?18:20,color:row.sub?'3C4A50':'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[1],{fill}),
-    docxCell(docxPara(docxRun(cond.label,{size:18,bold:true,color:cond.hex}),'<w:spacing w:before="40" w:after="40"/>'),cols[2],{fill}),
-    ...(HD?[docxCell(docxPara(docxRun(row.disp||'',{size:18,bold:true,color:dispHex(row.dispCode)}),'<w:spacing w:before="40" w:after="40"/>'),cols[3],{fill})]:[]),
+    ...(PN?[docxCell(docxPara(docxRun(row.pn||'',{size:18,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[2],{fill})]:[]),
+    docxCell(docxPara(docxRun(cond.label,{size:18,bold:true,color:cond.hex}),'<w:spacing w:before="40" w:after="40"/>'),cols[2+PO],{fill}),
+    ...(HD?[docxCell(docxPara(docxRun(row.disp||'',{size:18,bold:true,color:dispHex(row.dispCode)}),'<w:spacing w:before="40" w:after="40"/>'),cols[3+PO],{fill})]:[]),
      docxCell(docxPara(docxRun(row.photos,{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[cols.length-1],{fill})
    ].join('');
    summary+=docxRow({html:cells});
@@ -2600,11 +2603,11 @@ async function buildPDF(raw,notify=()=>{}){
  }
  H1(`${++sec}. Summary`);PARAS(r.summary);
  H2('Condition of parts');
- const HD=hasDisp(r);const cols=HD?[12,80,28,38,16]:[12,104,36,22];
+ const HD=hasDisp(r),PN=hasPartNo(r);const cols=HD&&PN?[12,58,30,26,34,14]:HD?[12,80,28,38,16]:PN?[12,76,36,32,18]:[12,104,36,22];const PO=PN?1:0;
  const drawSummaryHead=()=>{
   const hh=7;need(hh+6);
   doc.setFillColor(...RNR());doc.rect(ML,y,CW,hh,'F');
-  let x=ML;(HD?[isTemplateJob(r)?'Step':'No.','Part','Condition','Action','Photos']:[isTemplateJob(r)?'Step':'No.','Part','Condition','Photos']).forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
+  let x=ML;[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos'].forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
   y+=hh;
  };
  drawSummaryHead();
@@ -2612,16 +2615,19 @@ async function buildPDF(raw,notify=()=>{}){
  else{
   summaryRows(r).forEach((row,i)=>{
    const nameLines=textLines(row.name,row.sub?8.5:9,cols[1]-3).slice(0,4);
-   const dl=HD&&row.disp?textLines(row.disp,8,cols[3]-3).slice(0,2):[];
-    const rh=Math.max(7,nameLines.length*4+2.5,dl.length*3.6+3.4);
+   const dl=HD&&row.disp?textLines(row.disp,8,cols[3+PO]-3).slice(0,2):[];
+   const pl=PN&&row.pn?textLines(row.pn,8.5,cols[2]-3):[];
+    const rh=Math.max(7,nameLines.length*4+2.5,dl.length*3.6+3.4,pl.length*3.8+3.2);
    if(y+rh>bottom){newPage();drawSummaryHead();}
    if(i%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
    drawText(row.no,ML+1.6,y+4.6,{size:row.sub?8.5:9,color:[31,42,48]});
    nameLines.forEach((line,k)=>drawText(line,ML+cols[0]+1.6,y+4.6+k*4,{size:9,color:[31,42,48]}));
    const cond=row.cond;
-   drawText(cond.label,ML+cols[0]+cols[1]+1.6,y+4.6,{size:8,color:cond.rgb,bold:true});
-   if(HD)dl.forEach((line,k)=>drawText(line,ML+cols[0]+cols[1]+cols[2]+1.6,y+4.6+k*3.6,{size:8,color:hexRgb(dispHex(row.dispCode)),bold:true}));
+   if(PN)pl.forEach((line,k)=>drawText(line,ML+cols[0]+cols[1]+1.6,y+4.6+k*3.8,{size:8.5,color:[31,42,48]}));
+   const cx=ML+cols.slice(0,2+PO).reduce((a,b)=>a+b,0);
+   drawText(cond.label,cx+1.6,y+4.6,{size:8,color:cond.rgb,bold:true});
+   if(HD)dl.forEach((line,k)=>drawText(line,cx+cols[2+PO]+1.6,y+4.6+k*3.6,{size:8,color:hexRgb(dispHex(row.dispCode)),bold:true}));
     drawText(row.photos,ML+cols.slice(0,-1).reduce((a,b)=>a+b,0)+1.6,y+4.6,{size:9,color:[31,42,48]});
    y+=rh;
   });
@@ -2977,10 +2983,10 @@ async function buildPptx(raw,notify=()=>{}){
    const per=11;const all=summaryRows(r);
    for(let s=0;s<all.length;s+=per){
     const sl=await frame(all.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(all.length/per)})`:'Condition of parts');
-    const HD=hasDisp(r);const rows=[HD?[tj?'Step':'No.','Part','Condition','Action','Photos']:[tj?'Step':'No.','Part','Condition','Photos']];
+    const HD=hasDisp(r),PN=hasPartNo(r),PO=PN?1:0;const rows=[[tj?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos']];
     const chunk=all.slice(s,s+per);
-    chunk.forEach(x=>rows.push(HD?[x.no,x.name,x.cond.label,x.disp,x.photos]:[x.no,x.name,x.cond.label,x.photos]));
-    ppTable(sl.shapes,sl.next++,0.4,1.1,HD?[1.1,5.83,2.2,2.4,1.0]:[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2?{bold:true,color:chunk[k-1].cond.hex}:HD&&i===3?{bold:true,color:dispHex(chunk[k-1].dispCode)}:null});
+    chunk.forEach(x=>rows.push([x.no,x.name,...(PN?[x.pn||'']:[]),x.cond.label,...(HD?[x.disp]:[]),x.photos]));
+    ppTable(sl.shapes,sl.next++,0.4,1.1,HD&&PN?[1.0,4.33,2.1,2.0,2.2,0.9]:HD?[1.1,5.83,2.2,2.4,1.0]:PN?[1.1,5.73,2.5,2.1,1.1]:[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2+PO?{bold:true,color:chunk[k-1].cond.hex}:HD&&i===3+PO?{bold:true,color:dispHex(chunk[k-1].dispCode)}:null});
    }
   }
  // v15: one light slide listing the tool history documents (the pages themselves are in the PDF and Word reports).
@@ -4629,7 +4635,7 @@ window.StripNoteTest={
  redoDictation,dictationKey,isDesk,deskLayout,handleDrop,speechLang,loadBig,useWebcam,openWebcam,probeCam,removeLastInsertion,attachSpoken,getFieldText,
  openEditReport,closeEditReport,rotatePhoto,asRot,viewKey,rotShapes,reportTitle,reportIdLine,reportHeading,coverRows,syncTitlePreset,movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
- addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,dispCountText,get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
+ addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,hasPartNo,dispCountText,get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
