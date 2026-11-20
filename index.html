@@ -172,7 +172,7 @@ body.stepmode #editor{display:flex;flex-direction:column}
 body.stepmode #editor>*{order:10}
 body.stepmode #stepHead{order:1}
 body.stepmode #editorPhotos,body.stepmode #noPhotos,body.stepmode #editorTools{order:2}
-body.stepmode #condLabel,body.stepmode #condButtons,body.stepmode #condHint,body.stepmode #dispRow{order:3}
+body.stepmode #condLabel,body.stepmode #condButtons,body.stepmode #condHint,body.stepmode #dispRow,body.stepmode #testRow{order:3}
 body.stepmode #descHead,body.stepmode #description{order:4}
 body.stepmode #micStatus{order:5}
 body.stepmode #editorHeadRow,body.stepmode #camera,body.stepmode #samePart,body.stepmode #nextPart,body.stepmode #doneEntry{display:none!important}
@@ -450,8 +450,40 @@ dialog#markup[open]{display:flex;flex-direction:column}
 .th-tools button.th-view{flex:2}
 #thAdd{min-height:56px}
 #thCount{white-space:nowrap}
+/* v15c: spell check */
+.spell-dialog{width:min(760px,96vw)}
+.sp-list{max-height:62vh;overflow:auto;margin:6px -4px 0;padding:0 4px}
+.sp-item{border:1px solid var(--line);border-left:5px solid #c9a227;border-radius:12px;padding:10px;margin:8px 0;background:var(--bg)}
+.sp-where{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px;overflow-wrap:anywhere}
+.sp-ctx{font-size:16px;line-height:1.45;overflow-wrap:anywhere}
+.sp-ctx mark{background:#f6d860;color:#1b1b1b;border-radius:4px;padding:0 3px;text-decoration:underline wavy #d0312d;text-underline-offset:3px}
+.sp-sugs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.sp-sugs button{min-height:48px;padding:6px 14px;font-weight:700}
+.sp-own{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.sp-own button{min-height:48px}
+.sp-tools{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sp-tools button{flex:1 1 auto;min-height:48px;padding:6px 10px}
+.spell-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0}
+.spell-line button{min-height:56px}
+#spellCount.warn{color:var(--mark);font-weight:600}
+#myWordsBox,#spWordsBox{min-height:110px;font-family:inherit}
+@media (max-width:600px){.spell-dialog[open]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0;padding:14px}.spell-dialog .sp-list{max-height:none;flex:1}.spell-dialog[open]{display:flex;flex-direction:column}}
 /* Optional extras can be hidden in Settings; anything already filled in stays visible. */
-body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val),body.no-extras .sub-disp:not(.has-val){display:none!important}
+body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val),body.no-extras .sub-disp:not(.has-val),body.no-extras #testRow:not(.has-val),body.no-extras .sub-test:not(.has-val){display:none!important}
+/* v15c: optional test result per part / sub-part */
+.test-row{margin:0 0 12px}
+.test-row>label{display:block;margin:0 0 6px}
+.test-btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.test-btns button{min-height:56px;font-weight:700;padding:6px}
+.test-btns button[data-test="pass"][aria-pressed="true"],.test-btns button[data-stest="pass"][aria-pressed="true"]{background:#1d7a43;color:#fff;border-color:#1d7a43}
+.test-btns button[data-test="fail"][aria-pressed="true"],.test-btns button[data-stest="fail"][aria-pressed="true"]{background:#c4262e;color:#fff;border-color:#c4262e}
+.test-btns button[data-test="na"][aria-pressed="true"],.test-btns button[data-stest="na"][aria-pressed="true"]{background:#5a6468;color:#fff;border-color:#5a6468}
+.test-row input{margin-top:8px}
+.sub-test{margin-top:6px}
+.sub-test .test-btns button{min-height:56px}
+.sub-test input{margin-top:6px}
+.test-line{font-size:14px;font-weight:700;margin-top:2px}
+.test-line.fail{color:#e0574b}.test-line.pass{color:#3fb46b}
 .th-viewer{width:min(900px,96vw)}
 .thv-pages{max-height:70vh;overflow:auto;background:#5b6366;border-radius:10px;padding:6px}
 .thv-page{margin:0 0 8px}
@@ -470,13 +502,13 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <section id="home">
 <div class="card hero"><div class="tag">Field record</div><h1>Record the strip-down while the part is in your hands.</h1><p class="lead muted">Photograph a part, dictate the name and the damage, then add more photos of that same part. Word and PDF reports are built on this phone.</p><button id="newReport" class="primary" type="button">New report</button></div>
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2 id="savedHead">On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
-<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
+<div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="myWordsCard"><details><summary><b>My spelling words</b> <span class="muted" id="myWordsCount"></span></summary><p class="muted">Words that Check spelling should accept – names, makes, local terms. One per line. Stored on this device and included in job backups. Trade words (mandrel, collet, elastomer, make-up…) are built in.</p><textarea id="myWordsBox" spellcheck="false" autocapitalize="off" aria-label="My spelling words, one per line"></textarea></details></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
 <p class="ver">StripNote v15</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
-<div class="pane pane-right" id="paneRight"><div class="card er-head er-keep" id="erHead"><div class="row between"><h2 style="margin:0">Edit report</h2><button id="erDone" class="primary" type="button">✓ Done</button></div><p class="note" style="margin:6px 0 0">Title, style, details and report text in one place. Everything saves as you type.</p></div>
+<div class="pane pane-right" id="paneRight"><div class="card er-head er-keep" id="erHead"><div class="row between"><h2 style="margin:0">Edit report</h2><button id="erDone" class="primary" type="button">✓ Done</button></div><button id="erSpell" type="button" style="width:100%;margin-top:8px">🔤 Check spelling</button><p class="note" style="margin:6px 0 0">Title, style, details and report text in one place. Everything saves as you type.</p></div>
 <details class="card er-keep" id="details" open><summary>Report details</summary><div class="title-field"><label for="title">Report title</label><select id="titlePreset" aria-label="Report title suggestions"><option value="">Choose a title…</option><option value="Workshop Strip-down Report">Workshop Strip-down Report</option><option value="Field Strip-down Report">Field Strip-down Report</option><option value="Inspection Report">Inspection Report</option><option value="Failure Investigation Report">Failure Investigation Report</option><option value="__custom">Custom…</option></select><input id="title" data-job="title" placeholder="e.g. Workshop Strip-down Report" autocomplete="off"><p class="hint" id="titleHint">The cover shows this title large, then Equipment · Serial no.</p></div><div class="style-row"><label for="reportStyle">Report style</label><select id="reportStyle" aria-label="Report style: colours and logo used in Word, PDF and Slides"></select></div>
 <div id="packHeader" class="grid" hidden></div>
 <div class="grid" id="detailGrid">
@@ -516,7 +548,7 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <button id="thAdd" type="button" style="width:100%">📄 Add PDF files</button><p class="hint desk-only" style="margin:6px 0 0">Or drag PDF files from this computer onto this box.</p>
 <input id="thFile" type="file" accept="application/pdf,.pdf" multiple hidden>
 </details>
-<div class="card" id="reportCard"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div></div>
+<div class="card" id="reportCard"><div class="row between"><div><div class="tag">Investigation</div><h2 id="reportTitle">Report</h2></div><span class="badge counts" id="counts"></span></div><button id="editReport" type="button" style="width:100%;margin:4px 0 8px">✎ Edit report: title, style, details, text</button><div id="tally" class="tally"></div><div id="reportStorageWarn" class="warnbox" role="alert" hidden></div><div id="stepTools" hidden><button id="resumeSteps" type="button" style="width:100%;margin:6px 0">▶ Continue steps</button><button id="openSteps" type="button" style="width:100%;margin:0 0 10px">☰ Step list: ticks and gaps</button></div><div id="endChecks" hidden></div><div class="style-now" id="styleNow"><span class="sw" id="styleNowSw"><i></i><i></i></span><label for="reportStyleQuick">Exports use style</label><select id="reportStyleQuick" aria-label="Report style used by Finish job, Word, PDF and Slides"></select></div><p class="hint" id="styleNowHint" hidden></p><div class="spell-line"><button id="spellCheck" type="button">🔤 Check spelling</button><span class="status" id="spellCount" role="status"></span></div><button id="finishJob" class="primary" type="button">✓ Finish job: report + backup</button><p class="status" id="backupStatus"></p><div class="toolbar"><button id="wordExport" type="button">Word</button><button id="pdfExport" type="button">PDF</button><button id="pptxExport" type="button">Slides</button><button id="backupExport" type="button">Backup</button><button id="saveOriginals" type="button">Save originals</button></div><label class="row" style="font-weight:500;font-size:15px"><input id="share" type="checkbox" style="width:22px;min-height:22px"> Share the file when the phone supports it. Otherwise it downloads.</label><p class="status">Finish job saves one ZIP with the PDF report, the Slides presentation (PowerPoint), a backup you can import again, and the full-size photos named by part — so you do not need Save originals as well. Copy that ZIP off the phone. Word, PDF and Slides use reduced copies.</p><div class="toolbar"><button id="saveAsTemplate" class="small" type="button">Save part list as template</button><button id="deleteReport" class="small danger" type="button">Delete this report</button></div></div></div>
 <div class="pane pane-main" id="paneMain"><section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
@@ -527,7 +559,7 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <div id="micStatus" class="status" role="status"></div>
 <div class="name-row" id="nameRow"><div class="name-col"><div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing"></div><div class="pn-col"><div class="field-head"><label for="partNo">Part no.</label></div><input id="partNo" placeholder="e.g. 1234-56" autocomplete="off" autocapitalize="characters" spellcheck="false"></div></div>
 <div id="checkCard" class="check-card" hidden></div>
-<label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p><div class="disp-row" id="dispRow"><label for="disposition">Action</label><select id="disposition" aria-label="Action for this part: what happens to it next (optional)"><option value="">— Not set —</option><option value="reuse">Reuse</option><option value="nif">No issues found – reuse</option><option value="inspect">Inspect</option><option value="redress">Redress</option><option value="replace">Replace</option><option value="scrap">Scrap</option><option value="quarantine">Quarantine</option></select></div>
+<label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p><div class="disp-row" id="dispRow"><label for="disposition">Action</label><select id="disposition" aria-label="Action for this part: what happens to it next (optional)"><option value="">— Not set —</option><option value="reuse">Reuse</option><option value="nif">No issues found – reuse</option><option value="inspect">Inspect</option><option value="redress">Redress</option><option value="replace">Replace</option><option value="scrap">Scrap</option><option value="quarantine">Quarantine</option></select></div><div class="test-row" id="testRow"><label id="testLabel">Test result <span class="muted" style="font-weight:400">(optional)</span></label><div class="test-btns" role="group" aria-labelledby="testLabel"><button type="button" data-test="pass" aria-pressed="false">✓ Pass</button><button type="button" data-test="fail" aria-pressed="false">✕ Fail</button><button type="button" data-test="na" aria-pressed="false">Not tested</button></div><input id="testText" maxlength="300" placeholder="Test, e.g. Pressure test 5000 psi 15 min" aria-label="Test done (optional)"></div>
 <div class="field-head" id="descHead"><label for="description">Description</label><button id="descMic" class="redo" type="button" aria-label="Speak the description">🎙 Speak</button><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
 <div id="subBox" class="subbox"><div class="row between"><h3 style="margin:0">Sub-parts</h3><span class="status" id="subCount"></span></div><p class="note" style="margin:4px 0 8px">O-rings, screws, seals… Each gets its own heading in the report (e.g. 3.a, 3.b), with its own photos if you add them.</p><div id="subList"></div><div class="sub-quick" id="subQuick" role="group" aria-label="Add a sub-part"><button type="button" data-subadd="O-ring">+ O-ring</button><button type="button" data-subadd="Seal">+ Seal</button><button type="button" data-subadd="Screw">+ Screw</button><button type="button" data-subadd="Bolt">+ Bolt</button><button type="button" data-subadd="">+ Other</button></div></div>
 <label>Measurements (optional)</label><p class="note" style="margin:2px 0 6px">Size or Quantity, then what you measured with its Min and Max. Outside Min–Max is flagged OUT.</p><div id="measureList"></div><div class="measure-tools"><button id="sayMeasure" type="button">🎙 Say measurement</button><button id="addMeasure" type="button">+ Type measurement</button></div><p class="note" style="margin:4px 0 0">Say it like: “pin OD 101.2 min 101 max 101.5” or “quantity bolts 7 min 8 max 8”.</p>
@@ -553,7 +585,7 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 </section>
 </main>
 <div id="toast" role="status" hidden></div>
-<dialog id="thViewer" class="th-viewer" aria-label="View PDF"><div class="row between"><h2 id="thvTitle" style="margin:0;font-size:18px;overflow-wrap:anywhere">PDF</h2><button id="thvClose" type="button" class="small">✕ Close</button></div><p class="status" id="thvStatus" role="status"></p><div id="thvPages" class="thv-pages"></div><div class="dialog-actions"><button id="thvShare" type="button">⇪ Open / save the original PDF</button><button id="thvDone" class="primary" type="button">Close</button></div></dialog>
+<dialog id="spellDialog" class="spell-dialog" aria-label="Check spelling"><div class="row between"><h2 style="margin:0">Check spelling</h2><button id="spClose" type="button" class="small">✕ Close</button></div><p class="status" id="spStatus" role="status"></p><div id="spList" class="sp-list"></div><details id="spMine" style="margin-top:8px"><summary>My words (accepted everywhere)</summary><textarea id="spWordsBox" spellcheck="false" autocapitalize="off" aria-label="My spelling words, one per line"></textarea></details><div class="dialog-actions"><button id="spDone" class="primary" type="button">Done</button></div></dialog><dialog id="thViewer" class="th-viewer" aria-label="View PDF"><div class="row between"><h2 id="thvTitle" style="margin:0;font-size:18px;overflow-wrap:anywhere">PDF</h2><button id="thvClose" type="button" class="small">✕ Close</button></div><p class="status" id="thvStatus" role="status"></p><div id="thvPages" class="thv-pages"></div><div class="dialog-actions"><button id="thvShare" type="button">⇪ Open / save the original PDF</button><button id="thvDone" class="primary" type="button">Close</button></div></dialog>
 <dialog id="progressDialog"><h2 id="progressTitle">Preparing export</h2><p id="progressText" role="status">Please keep this screen open.</p><progress id="progressBar" value="0" max="100"></progress><p class="muted">Large reports take a moment. Keep the app in the foreground.</p></dialog>
 <dialog id="newJobDialog"><h2>New report</h2><label for="newJobStyle" style="margin-top:0">Report style</label><select id="newJobStyle" aria-label="Report style for the new report"></select><p class="muted">Pick a template to go step by step, or start a free-form report.</p><div id="newJobList"></div><button id="newJobBlank" type="button" style="width:100%;margin-top:8px">Free-form report (no template)</button><button id="newJobCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="stepsDialog" class="steps-dialog"><div class="row between"><h2 style="margin:0">Steps</h2><button id="stepsClose" class="small" type="button">Close</button></div><p class="status" id="stepsSummary"></p><div id="stepsList"></div><button id="stepsToReport" type="button" style="width:100%">Go to report</button></dialog>
@@ -1104,6 +1136,7 @@ function migratePart(e){
  out.partNo=typeof src.partNo==='string'?src.partNo.slice(0,120):out.partNos.join(', ').slice(0,120);
  out.subParts=(Array.isArray(src.subParts)?src.subParts:[]).slice(0,200).map(asSub).filter(Boolean);
   out.disposition=dispOf(src.disposition);
+  out.testResult=testOf(src.testResult);out.testText=String(src.testText??'').slice(0,300);
  return out;
 }
 const SUB_CONDS=['OK','Damaged','Replace'];
@@ -1112,6 +1145,15 @@ const DISPOSITIONS=[['reuse','Reuse'],['nif','No issues found \u2013 reuse'],['i
 const DISP_LABEL=Object.fromEntries(DISPOSITIONS);
 function dispOf(v){if(typeof v!=='string'||!v)return '';if(DISP_LABEL[v])return v;const t=v.trim().toLowerCase().replace(/[\u2013\u2014-]/g,'-');const hit=DISPOSITIONS.find(([c,l])=>l.toLowerCase().replace(/[\u2013\u2014-]/g,'-')===t);return hit?hit[0]:'';}
 function dispLabel(v){return DISP_LABEL[v]||'';}
+// v15c: optional test result per part / sub-part ('' = not set) with a short description of the test.
+const TESTS=[['pass','Pass'],['fail','Fail'],['na','Not tested']];
+const TEST_LABEL={pass:'PASS',fail:'FAIL',na:'Not tested'},TEST_HEX={pass:'166E3A',fail:'B00020',na:'5A6468'};
+function testOf(v){const s=String(v??'').trim().toLowerCase();if(['pass','passed'].includes(s))return 'pass';if(['fail','failed'].includes(s))return 'fail';if(['na','n/a','not tested','not-tested'].includes(s))return 'na';return '';}
+function testLabel(v){return TEST_LABEL[testOf(v)]||'';}
+function testHex(v){return TEST_HEX[testOf(v)]||'5A6468';}
+function testLine(o){const t=testOf(o?.testResult),d=clean(o?.testText);if(!t&&!d)return '';return `Test: ${t?testLabel(t):'result not set'}${d?` \u2013 ${d}`:''}`;}
+function hasTest(r){return (r.parts||[]).some(p=>p.testResult||clean(p.testText)||(p.subParts||[]).some(x=>x.testResult||clean(x.testText)));}
+function testCountText(r){const c={pass:0,fail:0,na:0};let none=0;for(const p of r.parts||[])for(const o of [p,...(p.subParts||[])]){const t=testOf(o.testResult);if(t)c[t]++;else none++;}const bits=[];if(c.pass)bits.push(`${c.pass} pass`);if(c.fail)bits.push(`${c.fail} fail`);if(c.na)bits.push(`${c.na} not tested`);if(none)bits.push(`not set ${none}`);return `Tests (parts and sub-parts): ${bits.join(' \u00b7 ')}`;}
 const DISP_HEX={reuse:'166E3A',nif:'166E3A',inspect:'8C5400',redress:'8C5400',replace:'A82018',scrap:'7A141C',quarantine:'5B3A8E'};
 function dispHex(v){return DISP_HEX[v]||'5A6468';}
 function dispOptions(sel){return `<option value="">\u2014 Not set \u2014</option>${DISPOSITIONS.map(([c,l])=>`<option value="${c}" ${c===sel?'selected':''}>${esc(l)}</option>`).join('')}`;}
@@ -1120,7 +1162,7 @@ function shapeToolDocs(a){return (Array.isArray(a)?a:[]).slice(0,60).map(x=>x&&t
 function asSub(x){
  if(typeof x==='string')x={name:x};
  if(!x||typeof x!=='object')return null;
- return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',disposition:dispOf(x.disposition),note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
+ return {id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),name:String(x.name??'').slice(0,300),partNo:String(x.partNo??x.part_no??'').slice(0,120),qty:String(x.qty??'').slice(0,40),condition:SUB_CONDS.includes(x.condition)?x.condition:'',disposition:dispOf(x.disposition),testResult:testOf(x.testResult),testText:String(x.testText??'').slice(0,300),note:String(x.note??'').slice(0,2000),photos:Array.isArray(x.photos)?x.photos.map(asPhoto).filter(Boolean):[]};
 }
 function subLetter(k){let t='';k++;while(k>0){const m=(k-1)%26;t=String.fromCharCode(97+m)+t;k=Math.floor((k-1)/26);}return t;}
 function partRef(i){return String(i+1);}// the part's printed number = its current position
@@ -1128,7 +1170,7 @@ function partTitle(r,i,p){return `${isTemplateJob(r)?'Step':'Part'} ${partRef(i)
 function subLabel(i,k){return `${partRef(i)}.${subLetter(k)}`;}
 function subCond(x){return SUB_CONDS.includes(x?.condition)?x.condition:'Not rated';}
 function subFacts(x){return [clean(x.partNo)?`Part no. ${clean(x.partNo)}`:'',clean(x.qty)?`Qty ${clean(x.qty)}`:''].filter(Boolean).join(' · ');}
-function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),disposition:x.disposition||'',description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
+function subPseudo(x){return {name:x.name||'Sub-part',condition:subCond(x),disposition:x.disposition||'',testResult:x.testResult||'',testText:x.testText||'',description:x.note||'',photos:x.photos,measurements:[],checks:[],skipped:false,partNos:[],prompts:[],subParts:[]};}
 function partNoLabel(p){const v=clean(p?.partNo);return v?`Part no. ${v}`:'';}
 // Every photo of a job in report order: part photos, then each sub-part's photos.
 function photoEntries(parts){const out=[];(parts||[]).forEach((p,pi)=>{(p.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:p.name,prompt:ph.prompt,sub:-1}));(p.subParts||[]).forEach((x,k)=>(x.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:x.name||'Sub-part',prompt:'',sub:k})));});return out;}
@@ -1158,7 +1200,7 @@ function isCurrentReport(r){
  if(!JOB_TEXT.every(k=>typeof r[k]==='string')||typeof r.backedUpAt!=='string')return false;
  if(!r.parts.every(p=>Array.isArray(p?.measurements)&&p.measurements.every(m=>m&&typeof m.type==='string'&&typeof m.min==='string'&&typeof m.max==='string'&&typeof m.spec==='string')&&typeof p.severityAuto==='boolean'))return false;
  if(!r.header||typeof r.header!=='object'||!('pack' in r))return false;
- if(!Array.isArray(r.toolDocs)||!r.parts.every(p=>typeof p?.disposition==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>typeof x?.disposition==='string')))return false;
+ if(!Array.isArray(r.toolDocs)||!r.parts.every(p=>typeof p?.disposition==='string'&&typeof p?.testResult==='string'&&typeof p?.testText==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>typeof x?.disposition==='string'&&typeof x?.testResult==='string'&&typeof x?.testText==='string')))return false;
  if(!r.parts.every(p=>Array.isArray(p?.checks)&&Array.isArray(p.warnings)&&Array.isArray(p.partNos)&&typeof p.section==='string'&&typeof p.hint==='string'&&typeof p.drawingCaption==='string'&&typeof p.drawingRef==='string'))return false;
  return r.parts.every(p=>p&&typeof p.id==='string'&&typeof p.name==='string'&&typeof p.description==='string'&&CONDITIONS.includes(p.condition)&&Array.isArray(p.audio)&&p.audio.every(a=>typeof a==='string')&&Array.isArray(p.photos)&&p.photos.every(ph=>ph&&typeof ph.id==='string'&&typeof ph.caption==='string'));
 }
@@ -1180,6 +1222,7 @@ async function init(){
  db=await new Promise((resolve,reject)=>{const r=indexedDB.open('stripnote-v1',2);r.onupgradeneeded=()=>{const base=r.result;if(!base.objectStoreNames.contains('reports'))base.createObjectStore('reports',{keyPath:'id'});if(!base.objectStoreNames.contains('media'))base.createObjectStore('media',{keyPath:'id'});if(!base.objectStoreNames.contains('settings'))base.createObjectStore('settings',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
  await migrateStoredReports();
  await loadCompany();
+ await loadMyWords();
  await showLogoPreview();
  await listReports();
  await renderTemplateList().catch(console.warn);
@@ -1271,7 +1314,7 @@ function setDock(editingOpen){
 function showReport(){
  current=migrateReport(current);$('report').classList.remove('edit-report');
  $('home').hidden=true;$('tplEditor').hidden=true;$('report').hidden=false;$('editor').hidden=true;editing=null;setDock(false);
- document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});syncTitlePreset();renderPackHeader();renderEndChecks();renderDetails();if($('toolHistory').dataset.job!==current.id){$('toolHistory').dataset.job=current.id;$('toolHistory').open=false;}renderToolDocs();
+ document.querySelectorAll('[data-job]').forEach(el=>{el.value=current[el.dataset.job]||'';});syncTitlePreset();renderPackHeader();renderEndChecks();renderDetails();if($('toolHistory').dataset.job!==current.id){$('toolHistory').dataset.job=current.id;$('toolHistory').open=false;}renderToolDocs();updateSpellLine();spellIdleCount();
  renderEntries();
  window.scrollTo(0,0);
  if(isDesk()){$('paneRight').scrollTop=0;$('paneSide').scrollTop=0;requestAnimationFrame(deskLayout);}
@@ -1342,8 +1385,8 @@ function renderEntries(){
   const mergeOpts=parts.filter(o=>o.id!==p.id).map(o=>`<option value="${esc(o.id)}">${esc(o.name||'Untitled part')}</option>`).join('');
   const secHead=!rev&&p.section&&p.section!==(parts[i-1]?.section||'')?`<div class="sec-head">${esc(p.section)}</div>`:'';
   const subs=p.subParts||[];const subPh=subs.reduce((n,x)=>n+x.photos.length,0);
-  const subsLine=subs.length?`<div class="subs-line"><b>Sub-parts:</b> ${subs.map((x,k)=>`${subLabel(i,k)} ${esc(x.name||'Sub-part')}${clean(x.qty)?' ×'+esc(clean(x.qty)):''}${x.condition||x.disposition?` (${esc([x.condition,dispLabel(x.disposition)].filter(Boolean).join(' \u2192 '))})`:''}`).join(' · ')}</div>`:'';
-  const pn=(clean(p.partNo)?`<div class="pn">Part no. ${esc(clean(p.partNo))}</div>`:'')+(p.disposition?`<div class="disp-line">Action: ${esc(dispLabel(p.disposition))}</div>`:'');
+  const subsLine=subs.length?`<div class="subs-line"><b>Sub-parts:</b> ${subs.map((x,k)=>`${subLabel(i,k)} ${esc(x.name||'Sub-part')}${clean(x.qty)?' ×'+esc(clean(x.qty)):''}${x.condition||x.disposition||x.testResult?` (${esc([x.condition,dispLabel(x.disposition),x.testResult?'Test '+testLabel(x.testResult):''].filter(Boolean).join(' \u2192 '))})`:''}`).join(' · ')}</div>`:'';
+  const pn=(clean(p.partNo)?`<div class="pn">Part no. ${esc(clean(p.partNo))}</div>`:'')+(p.disposition?`<div class="disp-line">Action: ${esc(dispLabel(p.disposition))}</div>`:'')+(testLine(p)?`<div class="test-line ${esc(testOf(p.testResult))}">${esc(testLine(p))}</div>`:'');
   const id=esc(p.id),n=parts.length,up=rev?1:-1;
   return secHead+`<article class="card entry" data-part="${id}"><div class="row between"><h3>${tj?'Step ':''}${i+1}. ${esc(p.name||'Untitled part')}</h3><span class="badge ${condClass(cond)}">${esc(cond)}</span></div>${pn}<div class="muted" style="margin-top:4px">${p.photos.length} photo${p.photos.length===1?'':'s'}${subPh?` + ${subPh} in sub-parts`:''}${p.audio.length?` · ${p.audio.length} voice note${p.audio.length===1?'':'s'}`:''}${stLine}</div><div class="thumbstrip">${thumbs}${more}</div>${subsLine}<p>${esc(p.description||'No description yet.')}</p><div class="toolbar"><button type="button" data-edit="${id}" style="flex:1">Edit part</button><button type="button" data-add-photos="${id}" aria-label="Add photos to part ${i+1} from the gallery or files">🖼 Add photos</button></div><details class="more"><summary>⋯ More: move, merge, delete</summary><div class="more-row"><button class="small" type="button" data-move="${id}" data-dir="${up}" aria-label="Move part ${i+1} up the list" ${pos===0?'disabled':''}>↑ Up</button><button class="small" type="button" data-move="${id}" data-dir="${-up}" aria-label="Move part ${i+1} down the list" ${pos===order.length-1?'disabled':''}>↓ Down</button><button class="small" type="button" data-move-to="${id}" data-pos="1" ${i===0?'disabled':''}>⤒ To top (no. 1)</button><button class="small" type="button" data-move-to="${id}" data-pos="${n}" ${i===n-1?'disabled':''}>⤓ To bottom (no. ${n})</button><div class="pos-row"><span>Move to no.</span><input class="compact" type="number" inputmode="numeric" min="1" max="${n}" data-pos-for="${id}" placeholder="1–${n}" aria-label="New number for part ${i+1}"><button class="small" type="button" data-pos-go="${id}">Go</button></div><select class="compact" data-merge="${id}" aria-label="Merge this part into another" ${mergeOpts?'':'disabled'}><option value="">Merge into…</option>${mergeOpts}</select><button class="small danger" type="button" data-delete="${id}">Delete part</button></div></details></article>`;
  }).join(''):'<div class="empty">No parts yet. Use Photo → new part, say the part name, pause, then describe the damage.</div>';
@@ -1384,6 +1427,7 @@ function updateEditorChrome(){
 }
 function paintEditorBadge(){if(!editing)return;const cond=conditionOf(editing.condition);const badge=$('conditionBadge');badge.className='badge '+condClass(cond);badge.textContent=cond;$('condition').value=cond;
  {const ds=$('disposition');ds.value=dispOf(editing.disposition);ds.classList.toggle('set',!!ds.value);$('dispRow').classList.toggle('has-val',!!ds.value);}
+ paintTest();
  document.querySelectorAll('#condButtons [data-cond]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.cond===cond)));
  $('condHint').textContent=editing.severityManual?'Set by you.':editing.severityAuto?`Suggested from your words: ${cond}. Tap another to change it.`:cond==='Not rated'?'Not rated yet. It is suggested from the damage words, or tap one.':'';}
 async function setCondition(c){if(!editing||!CONDITIONS.includes(c))return;editing.condition=c;editing.severityManual=true;editing.severityAuto=false;paintEditorBadge();renderEntries();paintStep();await persistReport();}
@@ -1438,7 +1482,7 @@ function photoCardHTML(ph,i,label,ctx){
 function subCardHTML(x,k,i){
  const id=esc(x.id),lab=subLabel(i,k),cond=x.condition;
  const photos=x.photos.map((ph,j)=>photoCardHTML(ph,j,`${lab}.${j+1}`,{main:false,count:x.photos.length})).join('');
- return `<div class="sub ${esc(cond)}" data-sub="${id}"><div class="sub-head"><b class="sub-no" data-sub-no="${k}">${lab}</b><input class="compact" data-sfield="name" value="${esc(x.name)}" placeholder="Sub-part name, e.g. O-ring" aria-label="Sub-part ${lab} name"></div><div class="sub-grid"><label class="m-f"><span>Part no.</span><input class="compact" data-sfield="partNo" value="${esc(x.partNo)}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Sub-part ${lab} part number"></label><label class="m-f qty"><span>Qty</span><input class="compact" data-sfield="qty" value="${esc(x.qty)}" inputmode="numeric" aria-label="Sub-part ${lab} quantity"></label></div><div class="sub-cond" role="group" aria-label="Sub-part ${lab} condition">${SUB_CONDS.map(c=>`<button type="button" data-scond="${c}" aria-pressed="${cond===c}">${c}</button>`).join('')}</div><label class="m-f sub-disp${x.disposition?' has-val':''}"><span>Action</span><select class="compact${x.disposition?' set':''}" data-sdisp aria-label="Sub-part ${lab} action">${dispOptions(dispOf(x.disposition))}</select></label><input class="compact chk-note" data-sfield="note" value="${esc(x.note)}" placeholder="Note, e.g. cut, flattened, missing" aria-label="Sub-part ${lab} note">${photos?`<div class="photos">${photos}</div>`:''}<div class="sub-tools"><button type="button" data-sub-cam="${id}" aria-label="Take a photo of sub-part ${lab}">📷 Photo</button><button type="button" data-sub-gal="${id}" aria-label="Add photos of sub-part ${lab} from the gallery">🖼 Gallery</button><button type="button" data-sub-up="${id}" ${k===0?'disabled':''} aria-label="Move sub-part ${lab} up">↑</button><button type="button" data-sub-down="${id}" ${k===editing.subParts.length-1?'disabled':''} aria-label="Move sub-part ${lab} down">↓</button><button type="button" class="danger" data-sub-del="${id}" aria-label="Remove sub-part ${lab}">✕ Remove</button></div></div>`;
+ return `<div class="sub ${esc(cond)}" data-sub="${id}"><div class="sub-head"><b class="sub-no" data-sub-no="${k}">${lab}</b><input class="compact" data-sfield="name" value="${esc(x.name)}" placeholder="Sub-part name, e.g. O-ring" aria-label="Sub-part ${lab} name"></div><div class="sub-grid"><label class="m-f"><span>Part no.</span><input class="compact" data-sfield="partNo" value="${esc(x.partNo)}" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Sub-part ${lab} part number"></label><label class="m-f qty"><span>Qty</span><input class="compact" data-sfield="qty" value="${esc(x.qty)}" inputmode="numeric" aria-label="Sub-part ${lab} quantity"></label></div><div class="sub-cond" role="group" aria-label="Sub-part ${lab} condition">${SUB_CONDS.map(c=>`<button type="button" data-scond="${c}" aria-pressed="${cond===c}">${c}</button>`).join('')}</div><label class="m-f sub-disp${x.disposition?' has-val':''}"><span>Action</span><select class="compact${x.disposition?' set':''}" data-sdisp aria-label="Sub-part ${lab} action">${dispOptions(dispOf(x.disposition))}</select></label><div class="sub-test${x.testResult||clean(x.testText)?' has-val':''}"><div class="test-btns" role="group" aria-label="Sub-part ${lab} test result (optional)">${TESTS.map(([v,l])=>`<button type="button" data-stest="${v}" aria-pressed="${x.testResult===v}">${v==='pass'?'✓ ':v==='fail'?'✕ ':''}${l}</button>`).join('')}</div><input class="compact" data-sfield="testText" value="${esc(x.testText||'')}" maxlength="300" placeholder="Test, e.g. Pressure test 5000 psi" aria-label="Sub-part ${lab} test (optional)"></div><input class="compact chk-note" data-sfield="note" value="${esc(x.note)}" placeholder="Note, e.g. cut, flattened, missing" aria-label="Sub-part ${lab} note">${photos?`<div class="photos">${photos}</div>`:''}<div class="sub-tools"><button type="button" data-sub-cam="${id}" aria-label="Take a photo of sub-part ${lab}">📷 Photo</button><button type="button" data-sub-gal="${id}" aria-label="Add photos of sub-part ${lab} from the gallery">🖼 Gallery</button><button type="button" data-sub-up="${id}" ${k===0?'disabled':''} aria-label="Move sub-part ${lab} up">↑</button><button type="button" data-sub-down="${id}" ${k===editing.subParts.length-1?'disabled':''} aria-label="Move sub-part ${lab} down">↓</button><button type="button" class="danger" data-sub-del="${id}" aria-label="Remove sub-part ${lab}">✕ Remove</button></div></div>`;
 }
 function renderSubParts(){
  if(!editing)return;const i=Math.max(0,current.parts.indexOf(editing));
@@ -2128,7 +2172,7 @@ function jobRows(r){
 // Condition-of-parts rows, with each part's sub-parts (3.a, 3.b) under it.
 // v15b: Part no. column in the summary, only when some part or sub-part has a part number.
 function hasPartNo(r){return (r.parts||[]).some(p=>clean(p.partNo)||(p.subParts||[]).some(x=>clean(x.partNo)));}
-function summaryRows(r){const tj=isTemplateJob(r);const PN=hasPartNo(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(!PN&&clean(p.partNo)?` (${clean(p.partNo)})`:''),pn:clean(p.partNo),cond,photos:String(p.photos.length),sub:false,disp:dispLabel(p.disposition),dispCode:p.disposition||''});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+((PN?(clean(x.qty)?`Qty ${clean(x.qty)}`:''):subFacts(x))?` – ${PN?`Qty ${clean(x.qty)}`:subFacts(x)}`:''),pn:clean(x.partNo),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true,disp:dispLabel(x.disposition),dispCode:x.disposition||''}));});return rows;}
+function summaryRows(r){const tj=isTemplateJob(r);const PN=hasPartNo(r);const rows=[];r.parts.forEach((p,i)=>{const cond=p.skipped&&tj?{label:'NOT INSPECTED',hex:'5A6468',rgb:[90,100,104]}:COND_STYLE[conditionOf(p.condition)];rows.push({no:partRef(i),name:(p.name||'Untitled part')+(!PN&&clean(p.partNo)?` (${clean(p.partNo)})`:''),pn:clean(p.partNo),cond,photos:String(p.photos.length),sub:false,disp:dispLabel(p.disposition),dispCode:p.disposition||'',test:testLabel(p.testResult),testCode:testOf(p.testResult)});(p.subParts||[]).forEach((x,k)=>rows.push({no:subLabel(i,k),name:'   '+(x.name||'Sub-part')+((PN?(clean(x.qty)?`Qty ${clean(x.qty)}`:''):subFacts(x))?` – ${PN?`Qty ${clean(x.qty)}`:subFacts(x)}`:''),pn:clean(x.partNo),cond:COND_STYLE[subCond(x)],photos:String(x.photos.length),sub:true,disp:dispLabel(x.disposition),dispCode:x.disposition||'',test:testLabel(x.testResult),testCode:testOf(x.testResult)}));});return rows;}
 // v15: the Action column is only printed when at least one part or sub-part has an action set.
 function hasDisp(r){return (r.parts||[]).some(p=>p.disposition||(p.subParts||[]).some(x=>x.disposition));}
 function dispCountText(r){const c={};let none=0;for(const p of r.parts||[])for(const v of [p.disposition,...(p.subParts||[]).map(x=>x.disposition)]){if(v)c[v]=(c[v]||0)+1;else none++;}const bits=DISPOSITIONS.filter(([k])=>c[k]).map(([k,l])=>`${l} ${c[k]}`);if(none)bits.push(`not set ${none}`);return `Action (parts and sub-parts): ${bits.join(' \u00b7 ')}`;}
@@ -2285,8 +2329,8 @@ async function buildDocx(raw,notify=()=>{}){
  if(TH.length){body+=H1(`${++sec}. Tool history / build paperwork`);body+=simpleTable([700,4366,1500,900,2400],['No.','Document','Date','Pages','Note'],TH.map(d=>[String(d.no),d.label,prettyDate(d.date),d.pages?String(d.pages):'\u2014',toolDocNote(d)||(d.pages?'Pages in the appendix':'')]),(t,i)=>i===4&&/not|missing/i.test(t)?{color:'B00020'}:null);body+=docxPara(docxRun('Copies of these documents, as received, are reproduced page by page in the appendix at the end of this report. The original PDF files are kept with the job backup.',{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="80" w:after="160"/>');}
  body+=H1(`${++sec}. Summary`)+PARAS(r.summary);
  body+=H2('Condition of parts');
- const HD=hasDisp(r),PN=hasPartNo(r);const cols=HD&&PN?[700,3266,1900,1500,1800,700]:HD?[800,4666,1700,1900,800]:PN?[800,4366,2100,1700,900]:[900,6166,1800,1000];const PO=PN?1:0;
- const summaryHead=[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
+ const HD=hasDisp(r),PN=hasPartNo(r),HT=hasTest(r);const cols=HT?(()=>{const c=[700,0,...(PN?[1500]:[]),1500,...(HD?[1600]:[]),1050,700];c[1]=9866-c.reduce((a,b)=>a+b,0);return c;})():HD&&PN?[700,3266,1900,1500,1800,700]:HD?[800,4666,1700,1900,800]:PN?[800,4366,2100,1700,900]:[900,6166,1800,1000];const PO=PN?1:0,DO=HD?1:0;
+ const summaryHead=[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),...(HT?['Test']:[]),'Photos'].map((h,i)=>docxCell(docxPara(docxRun(h,{size:16,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="40"/>'),cols[i],{fill:RN()})).join('');
  let summary=docxRow({header:true,html:summaryHead});
  if(!r.parts.length){
   summary+=docxRow({html:docxCell(docxPara(docxRun('No parts recorded.',{size:20,color:'5C6B70'}),'<w:spacing w:before="60" w:after="60"/>'),TW,{span:cols.length})});
@@ -2300,6 +2344,7 @@ async function buildDocx(raw,notify=()=>{}){
     ...(PN?[docxCell(docxPara(docxRun(row.pn||'',{size:18,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[2],{fill})]:[]),
     docxCell(docxPara(docxRun(cond.label,{size:18,bold:true,color:cond.hex}),'<w:spacing w:before="40" w:after="40"/>'),cols[2+PO],{fill}),
     ...(HD?[docxCell(docxPara(docxRun(row.disp||'',{size:18,bold:true,color:dispHex(row.dispCode)}),'<w:spacing w:before="40" w:after="40"/>'),cols[3+PO],{fill})]:[]),
+    ...(HT?[docxCell(docxPara(docxRun(row.test||'',{size:18,bold:true,color:testHex(row.testCode)}),'<w:spacing w:before="40" w:after="40"/>'),cols[3+PO+DO],{fill:row.testCode==='fail'?'FBE9EB':fill})]:[]),
      docxCell(docxPara(docxRun(row.photos,{size:20,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),cols[cols.length-1],{fill})
    ].join('');
    summary+=docxRow({html:cells});
@@ -2309,6 +2354,7 @@ async function buildDocx(raw,notify=()=>{}){
  const totalPhotos=photoCount(r.parts);
  body+=docxPara(docxRun(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${totalPhotos} photograph${totalPhotos===1?'':'s'}`,{size:18,color:'5C6B70'}),'<w:spacing w:before="80" w:after="60"/>');
  if(HD)body+=docxPara(docxRun(dispCountText(r),{size:18,color:'5C6B70'}),'<w:spacing w:before="0" w:after="60"/>');
+ if(HT)body+=docxPara(docxRun(testCountText(r),{size:18,color:/\d+ fail/.test(testCountText(r))?'B00020':'5C6B70',bold:/\d+ fail/.test(testCountText(r))}),'<w:spacing w:before="0" w:after="60"/>');
  body+=docxPara(docxRun(COND_KEY,{size:17,italic:true,color:'5C6B70'}),'<w:spacing w:before="0" w:after="200"/>');
  if(isPackJob(r)&&r.pack.tools.length){body+=H1(`${++sec}. Tools`);body+=simpleTable([3600,2200,4066],['Tool','Size','Use'],r.pack.tools.map(t=>[t.tool,t.size,t.use]));}
  const findNo=++sec;
@@ -2343,8 +2389,10 @@ async function buildDocx(raw,notify=()=>{}){
    j++;
   }
  };
+ const docxTestPara=(o,sz,ind)=>{const t=testOf(o.testResult),d=clean(o.testText);return docxPara(docxRun('Test: ',{size:sz,bold:true,color:'1F2A30'})+docxRun(t?testLabel(t):'result not set',{size:sz,bold:true,color:testHex(t)})+(d?docxRun(` \u2013 ${d}`,{size:sz,color:'1F2A30'}):''),`<w:keepNext/>${ind}<w:spacing w:before="0" w:after="80"/>`);};
  const docxCondDesc=(part,cond)=>{
   body+=docxPara(docxRun(tj?`Condition: ${cond.label}`:cond.label,{size:20,bold:true,color:cond.hex})+(part.disposition?docxRun(`   \u00b7   Action: ${dispLabel(part.disposition)}`,{size:20,bold:true,color:dispHex(part.disposition)}):''),`<w:keepNext/><w:spacing w:before="${tj?120:60}" w:after="80"/>`);
+  if(testLine(part))body+=docxTestPara(part,20,'');
   const paras=leadSplit(tj?findingText(part):part.description);
   // v11c: in a free-form part the description keeps with the first photo row (heading + text never stranded)
   const kn=!tj&&((part.photos||[]).length||(part.subParts||[]).length)?'<w:keepNext/>':'';
@@ -2360,6 +2408,7 @@ async function buildDocx(raw,notify=()=>{}){
    const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
    body+=docxPara(docxRun(`${lab}  ${x.name||'Sub-part'}`,{size:27,bold:true,color:RN()})+(facts?docxRun(`   ·  ${facts}`,{size:20,color:'5C6B70'}):''),`<w:keepNext/><w:keepLines/><w:ind w:left="284"/><w:spacing w:before="220" w:after="40"/><w:pBdr><w:left w:val="single" w:sz="24" w:space="8" w:color="${sc.hex}"/></w:pBdr>`);
    body+=docxPara(docxRun(sc.label,{size:19,bold:true,color:sc.hex})+(x.disposition?docxRun(`  \u00b7  Action: ${dispLabel(x.disposition)}`,{size:19,bold:true,color:dispHex(x.disposition)}):'')+(clean(x.note)?docxRun(`  –  ${capSentences(clean(x.note))}`,{size:21,color:'1F2A30'}):''),`${x.photos.length?'<w:keepNext/>':''}<w:ind w:left="284"/><w:spacing w:before="20" w:after="100"/>`);
+   if(testLine(x))body+=docxTestPara(x,19,'<w:ind w:left="284"/>');
    if(x.photos.length)await docxPhotos(subPseudo(x),lab);
   }
  };
@@ -2603,11 +2652,11 @@ async function buildPDF(raw,notify=()=>{}){
  }
  H1(`${++sec}. Summary`);PARAS(r.summary);
  H2('Condition of parts');
- const HD=hasDisp(r),PN=hasPartNo(r);const cols=HD&&PN?[12,58,30,26,34,14]:HD?[12,80,28,38,16]:PN?[12,76,36,32,18]:[12,104,36,22];const PO=PN?1:0;
+ const HD=hasDisp(r),PN=hasPartNo(r),HT=hasTest(r);const cols=HT?(()=>{const c=[12,0,...(PN?[28]:[]),27,...(HD?[31]:[]),19,14];c[1]=174-c.reduce((a,b)=>a+b,0);return c;})():HD&&PN?[12,58,30,26,34,14]:HD?[12,80,28,38,16]:PN?[12,76,36,32,18]:[12,104,36,22];const PO=PN?1:0,DO=HD?1:0;
  const drawSummaryHead=()=>{
   const hh=7;need(hh+6);
   doc.setFillColor(...RNR());doc.rect(ML,y,CW,hh,'F');
-  let x=ML;[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos'].forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
+  let x=ML;[isTemplateJob(r)?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),...(HT?['Test']:[]),'Photos'].forEach((h,i)=>{drawText(h,x+1.6,y+4.8,{size:8,color:[255,255,255]});x+=cols[i];});
   y+=hh;
  };
  drawSummaryHead();
@@ -2620,6 +2669,7 @@ async function buildPDF(raw,notify=()=>{}){
     const rh=Math.max(7,nameLines.length*4+2.5,dl.length*3.6+3.4,pl.length*3.8+3.2);
    if(y+rh>bottom){newPage();drawSummaryHead();}
    if(i%2===1){doc.setFillColor(247,249,250);doc.rect(ML,y,CW,rh,'F');}
+   if(HT&&row.testCode==='fail'){doc.setFillColor(251,233,235);doc.rect(ML+cols.slice(0,3+PO+DO).reduce((a,b)=>a+b,0),y,cols[3+PO+DO],rh,'F');}
    doc.setDrawColor(220,226,228);doc.setLineWidth(0.15);doc.line(ML,y+rh,ML+CW,y+rh);
    drawText(row.no,ML+1.6,y+4.6,{size:row.sub?8.5:9,color:[31,42,48]});
    nameLines.forEach((line,k)=>drawText(line,ML+cols[0]+1.6,y+4.6+k*4,{size:9,color:[31,42,48]}));
@@ -2628,6 +2678,7 @@ async function buildPDF(raw,notify=()=>{}){
    const cx=ML+cols.slice(0,2+PO).reduce((a,b)=>a+b,0);
    drawText(cond.label,cx+1.6,y+4.6,{size:8,color:cond.rgb,bold:true});
    if(HD)dl.forEach((line,k)=>drawText(line,cx+cols[2+PO]+1.6,y+4.6+k*3.6,{size:8,color:hexRgb(dispHex(row.dispCode)),bold:true}));
+   if(HT&&row.test)drawText(row.test,ML+cols.slice(0,3+PO+DO).reduce((a,b)=>a+b,0)+1.6,y+4.6,{size:8,color:hexRgb(testHex(row.testCode)),bold:true});
     drawText(row.photos,ML+cols.slice(0,-1).reduce((a,b)=>a+b,0)+1.6,y+4.6,{size:9,color:[31,42,48]});
    y+=rh;
   });
@@ -2635,6 +2686,7 @@ async function buildPDF(raw,notify=()=>{}){
  y+=4;
  drawText(`${r.parts.length} part${r.parts.length===1?'':'s'} · ${photoCount(r.parts)} photograph${photoCount(r.parts)===1?'':'s'}`,ML,y+3,{size:8,color:[90,100,104]});
  if(HD){for(const line of textLines(dispCountText(r),8,CW)){y+=3.9;drawText(line,ML,y+3,{size:8,color:[90,100,104]});}}
+ if(HT){const tt=testCountText(r),f=/\d+ fail/.test(tt);for(const line of textLines(tt,8,CW)){y+=3.9;drawText(line,ML,y+3,{size:8,color:f?[176,0,32]:[90,100,104],bold:f});}}
  y+=6;
  for(const line of textLines(COND_KEY,8,CW)){need(4);drawText(line,ML,y,{size:8,color:[90,100,104]});y+=3.6;}
  y+=3;
@@ -2695,9 +2747,11 @@ async function buildPDF(raw,notify=()=>{}){
    y+=blockH;j++;
   }
  };
+ const pdfTestLine=(o,x0,w)=>{const t=testOf(o.testResult),d=clean(o.testText);doc.setFont('StripNoteSans','normal');doc.setFontSize(9);const head=`Test: ${t?testLabel(t):'result not set'}`;const lw=doc.getTextWidth('Test: ');const hw=doc.getTextWidth(head+' ')+0.4;drawText('Test:',x0,y,{size:9,color:[31,42,48],bold:true});drawText(t?testLabel(t):'result not set',x0+lw,y,{size:9,color:hexRgb(testHex(t)),bold:true});if(d){const ls=textLines(`\u2013 ${d}`,9,w-hw);ls.forEach((ln,k)=>{if(k&&y+4.4>bottom)newPage();drawText(ln,x0+hw,y,{size:9,color:[31,42,48]});if(k<ls.length-1)y+=4.4;});}y+=5;};
  const pdfCondDesc=(part,cond)=>{
   if(tj)need(16);
   {const ct=tj?`Condition: ${cond.label}`:cond.label;drawText(ct,ML,y,{size:9,color:cond.rgb,bold:true});if(part.disposition){doc.setFontSize(9);drawText(`\u00b7  Action: ${dispLabel(part.disposition)}`,ML+doc.getTextWidth(ct)+3,y,{size:9,color:hexRgb(dispHex(part.disposition)),bold:true});}y+=5;}
+  if(testLine(part))pdfTestLine(part,ML,CW);
   const descLines=textLines(tj?findingText(part):(capSentences(part.description)||'No description recorded.'),10.5,CW);
   const lh=5;
   for(const line of descLines){if(y+lh>bottom)newPage();drawText(line,ML,y,{size:10.5,color:[31,42,48]});y+=lh;}
@@ -2709,7 +2763,7 @@ async function buildPDF(raw,notify=()=>{}){
   for(const [k,x] of (part.subParts||[]).entries()){
    const sc=COND_STYLE[subCond(x)],lab=subLabel(i,k),facts=subFacts(x);
    // Keep the sub-heading with its note and its first photo (no heading stranded at the foot of a page).
-   let need=2+textLines(`${lab}  ${x.name||'Sub-part'}`,SUB_PT,CW-12).length*SUB_LH+(facts?4.8:0)+5+(clean(x.note)?textLines(capSentences(clean(x.note)),10,CW-8).length*4.8:0)+2.5;
+   let need=2+textLines(`${lab}  ${x.name||'Sub-part'}`,SUB_PT,CW-12).length*SUB_LH+(facts?4.8:0)+5+(clean(x.note)?textLines(capSentences(clean(x.note)),10,CW-8).length*4.8:0)+(testLine(x)?5+(clean(x.testText).length>80?4.4:0):0)+2.5;
    if(x.photos.length)need+=await firstRowH(subPseudo(x),lab);
    if(y+need+4>bottom&&y>MT+1)newPage();
    y+=2;y=Math.max(y,MT+4.5);
@@ -2717,6 +2771,7 @@ async function buildPDF(raw,notify=()=>{}){
    for(const line of textLines(`${lab}  ${x.name||'Sub-part'}`,SUB_PT,CW-12)){drawText(line,ML+8,y,{size:SUB_PT,color:[31,42,48],bold:true});y+=SUB_LH;}
    if(facts){drawText(clipText(facts,120),ML+8,y,{size:9,color:[90,100,104]});y+=4.8;}
    drawText(sc.label,ML+8,y+0.4,{size:9,color:sc.rgb,bold:true});if(x.disposition){doc.setFontSize(9);drawText(`\u00b7  Action: ${dispLabel(x.disposition)}`,ML+8+doc.getTextWidth(sc.label)+3,y+0.4,{size:9,color:hexRgb(dispHex(x.disposition)),bold:true});}y+=5;
+   if(testLine(x))pdfTestLine(x,ML+8,CW-8);
    if(clean(x.note))for(const line of textLines(capSentences(clean(x.note)),10,CW-8)){if(y+5>bottom)newPage();drawText(line,ML+8,y,{size:10,color:[31,42,48]});y+=4.8;}
    y+=2.5;
    if(x.photos.length)await pdfPhotos(subPseudo(x),lab);
@@ -2983,10 +3038,11 @@ async function buildPptx(raw,notify=()=>{}){
    const per=11;const all=summaryRows(r);
    for(let s=0;s<all.length;s+=per){
     const sl=await frame(all.length>per?`Condition of parts (${Math.floor(s/per)+1} of ${Math.ceil(all.length/per)})`:'Condition of parts');
-    const HD=hasDisp(r),PN=hasPartNo(r),PO=PN?1:0;const rows=[[tj?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),'Photos']];
+    const HD=hasDisp(r),PN=hasPartNo(r),HT=hasTest(r),PO=PN?1:0,DO=HD?1:0;const rows=[[tj?'Step':'No.','Part',...(PN?['Part no.']:[]),'Condition',...(HD?['Action']:[]),...(HT?['Test']:[]),'Photos']];
     const chunk=all.slice(s,s+per);
-    chunk.forEach(x=>rows.push([x.no,x.name,...(PN?[x.pn||'']:[]),x.cond.label,...(HD?[x.disp]:[]),x.photos]));
-    ppTable(sl.shapes,sl.next++,0.4,1.1,HD&&PN?[1.0,4.33,2.1,2.0,2.2,0.9]:HD?[1.1,5.83,2.2,2.4,1.0]:PN?[1.1,5.73,2.5,2.1,1.1]:[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2+PO?{bold:true,color:chunk[k-1].cond.hex}:HD&&i===3+PO?{bold:true,color:dispHex(chunk[k-1].dispCode)}:null});
+    chunk.forEach(x=>rows.push([x.no,x.name,...(PN?[x.pn||'']:[]),x.cond.label,...(HD?[x.disp]:[]),...(HT?[x.test]:[]),x.photos]));
+    ppTable(sl.shapes,sl.next++,0.4,1.1,HT?(()=>{const c=[0.9,0,...(PN?[1.9]:[]),1.8,...(HD?[1.9]:[]),1.25,0.85];c[1]=+(12.53-c.reduce((a,b)=>a+b,0)).toFixed(2);return c;})():HD&&PN?[1.0,4.33,2.1,2.0,2.2,0.9]:HD?[1.1,5.83,2.2,2.4,1.0]:PN?[1.1,5.73,2.5,2.1,1.1]:[1.2,7.73,2.3,1.3],rows,{rowH:0.48,size:14,clip:80,cellStyle:(t,i,k)=>i===2+PO?{bold:true,color:chunk[k-1].cond.hex}:HD&&i===3+PO?{bold:true,color:dispHex(chunk[k-1].dispCode)}:HT&&i===3+PO+DO?{bold:true,color:testHex(chunk[k-1].testCode)}:null});
+    if(HT){const tt=testCountText(r);ppShape(sl.shapes,sl.next++,0.4,6.75,12.5,0.4,ppPara(tt,{size:12,bold:/\d+ fail/.test(tt),color:/\d+ fail/.test(tt)?'B00020':'5C6B70'}),{name:'Test count',inset:0.02});}
    }
   }
  // v15: one light slide listing the tool history documents (the pages themselves are in the PDF and Word reports).
@@ -3016,7 +3072,7 @@ async function buildPptx(raw,notify=()=>{}){
     if(m)ppShape(ps.shapes,ps.next++,9.35,1.65,3.65,1.4,ppPara(clipText(m[2],140),{size:16,bold:true,color:'1F2A30'}),{name:'Caption',inset:0.02});
     badge(ps,9.35,3.15,2.6,cond,15);
     if(part.disposition)ppShape(ps.shapes,ps.next++,9.35,3.78,3.65,0.42,ppPara(`Action: ${dispLabel(part.disposition)}`,{size:14,bold:true,color:dispHex(part.disposition)}),{name:'Action',fit:false,inset:0.02});
-    ppShape(ps.shapes,ps.next++,9.35,part.disposition?4.25:3.85,3.65,part.disposition?2.65:3.1,ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
+    ppShape(ps.shapes,ps.next++,9.35,part.disposition?4.25:3.85,3.65,part.disposition?2.65:3.1,(testLine(part)?ppPara(clipText(testLine(part),110),{size:13,bold:true,color:testHex(part.testResult),after:4}):'')+ppPara(note,{size:13,color:'3C4A50'}),{name:'Condition note',inset:0.02});
     j++;
    }else{
     for(const [k,img] of [[0,a],[1,b]]){
@@ -3027,7 +3083,7 @@ async function buildPptx(raw,notify=()=>{}){
      ppPic(ps.shapes,ps.next++,rel,f.x,f.y,f.w,f.h,cap,{line:'C5D0D4'});
      ppShape(ps.shapes,ps.next++,bx,6.2,6.2,0.45,ppPara(clipText(cap,90),{size:14,bold:true,color:RN(),align:'ctr'}),{name:'Caption',inset:0.02});
     }
-    ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label}${part.disposition?' \u00b7 Action: '+dispLabel(part.disposition):''} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
+    ppShape(ps.shapes,ps.next++,0.35,6.65,12.6,0.4,ppPara(clipText(`Condition: ${cond.label}${part.disposition?' \u00b7 Action: '+dispLabel(part.disposition):''}${testLine(part)?' \u00b7 '+testLine(part):''} \u2013 ${note}`,170),{size:12,color:'3C4A50',align:'ctr'}),{name:'Condition note',inset:0.02});
     j+=2;
    }
   }
@@ -3049,8 +3105,8 @@ async function buildPptx(raw,notify=()=>{}){
   for(let s=0;s<subs.length;s+=8){
    const sl=await frame(`${head} · Sub-parts${subs.length>8?` (${Math.floor(s/8)+1})`:''}`,{size:20});
    const chunk=subs.slice(s,s+8);
-   const HDs=hasDisp(r);const rows=[HDs?['No.','Sub-part','Part no.','Qty','Condition','Action','Note']:['No.','Sub-part','Part no.','Qty','Condition','Note']].concat(chunk.map((x,k)=>HDs?[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,dispLabel(x.disposition),x.note]:[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,x.note]));
-   ppTable(sl.shapes,sl.next++,0.4,1.1,HDs?[0.9,3.0,1.8,0.8,1.7,1.9,2.43]:[1.0,3.4,2.0,0.9,1.9,3.33],rows,{rowH:0.62,size:13,headSize:12,clip:110,cellStyle:(t,c,k)=>c===4?{bold:true,color:COND_STYLE[subCond(chunk[k-1])].hex}:HDs&&c===5?{bold:true,color:dispHex(chunk[k-1].disposition)}:null});
+   const HDs=hasDisp(r),HTs=hasTest(r);const subTest=x=>[testLabel(x.testResult),clean(x.testText)].filter(Boolean).join(' \u2013 ');const rows=[['No.','Sub-part','Part no.','Qty','Condition',...(HDs?['Action']:[]),...(HTs?['Test']:[]),'Note']].concat(chunk.map((x,k)=>[subLabel(i,s+k),x.name||'Sub-part',x.partNo,x.qty,COND_STYLE[subCond(x)].label,...(HDs?[dispLabel(x.disposition)]:[]),...(HTs?[subTest(x)]:[]),x.note]));
+   ppTable(sl.shapes,sl.next++,0.4,1.1,HDs&&HTs?[0.8,2.4,1.6,0.7,1.5,1.6,2.1,1.83]:HTs?[0.9,2.8,1.8,0.8,1.7,2.4,2.13]:HDs?[0.9,3.0,1.8,0.8,1.7,1.9,2.43]:[1.0,3.4,2.0,0.9,1.9,3.33],rows,{rowH:0.62,size:13,headSize:12,clip:110,cellStyle:(t,c,k)=>c===4?{bold:true,color:COND_STYLE[subCond(chunk[k-1])].hex}:HDs&&c===5?{bold:true,color:dispHex(chunk[k-1].disposition)}:HTs&&c===5+(HDs?1:0)?{bold:true,color:testHex(chunk[k-1].testResult)}:null});
   }
   for(const [k,x] of subs.entries()){if(!x.photos.length)continue;const lab=subLabel(i,k);await partPhotos(subPseudo(x),lab,COND_STYLE[subCond(x)],`${lab}  ${x.name||'Sub-part'}${subFacts(x)?`  ·  ${subFacts(x)}`:''}`);}
  };
@@ -3073,6 +3129,7 @@ async function buildPptx(raw,notify=()=>{}){
   const facts=[`${part.photos.length} photo${part.photos.length===1?'':'s'}`];
   if(clean(part.partNo))facts.unshift(partNoLabel(part));
   if(part.disposition)facts.unshift(`Action: ${dispLabel(part.disposition)}`);
+  if(testLine(part))facts.unshift(testLine(part));
   if(part.subParts?.length)facts.push(`${part.subParts.length} sub-part${part.subParts.length===1?'':'s'}`);
   if(ms.length)facts.push(`${ms.length} measurement${ms.length===1?'':'s'}${msOut?` · ${msOut} out of spec`:''}`);
   const desc=tj?findingText(part):(capSentences(part.description)||'No description recorded.');
@@ -3220,7 +3277,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
   zip.file(path,m.blob,{binary:true});d.path=path;
   notify(`Backing up tool history ${k+1} of ${exported.toolDocs.length}`,k+1,exported.toolDocs.length);await tick();
  }}
- zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates},null,2));
+ zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates,spellWords:[...myWords].slice(0,5000)},null,2));
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
  for(const e of photoEntries(exported.parts)){
@@ -3285,7 +3342,7 @@ async function finishJob(){
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
  const durable=await requestDurable(false);
  await checkStorage(false);
- toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the slides, the backup and the full-size photos${current.toolDocs?.length?', plus the tool history PDFs':''}. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}`);
+ toast(`Job finished: ${name} (${(blob.size/1048576).toFixed(0)} MB) has the PDF report, the slides, the backup and the full-size photos${current.toolDocs?.length?', plus the tool history PDFs':''}. Copy it off the phone today.${durable?'':' This phone has not protected StripNote storage, so that copy matters.'}${spellTip()}`);
 }
 async function deliver(blob,name){
  const file=new File([blob],name,{type:blob.type});
@@ -3310,7 +3367,7 @@ async function exportReport(kind){
   await deliver(blob,`${name}.${kind==='word'?'docx':kind==='pdf'?'pdf':kind==='pptx'?'pptx':'zip'}`);
   if(kind==='backup'){current.backedUpAt=new Date().toISOString();await persistReport();updateHeading();}
   if(kind==='backup'&&blob.size>80*1048576)toast(`Backup is ${(blob.size/1048576).toFixed(1)} MB because it includes full-size originals. Keep it somewhere with enough space.`);
-  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':kind==='pptx'?'Presentation ready. It opens in PowerPoint or Google Slides and can be edited there.':'Report ready. Keep a backup ZIP if you need the originals.');
+  else toast(kind==='backup'?'Backup ready. It includes full-size originals and the company logo if one is set.':kind==='pptx'?'Presentation ready. It opens in PowerPoint or Google Slides and can be edited there.':'Report ready. Keep a backup ZIP if you need the originals.'+spellTip());
  }finally{$('progressDialog').close();setBusy(false);busy=false;}
 }
 async function importBackup(file){
@@ -3407,7 +3464,8 @@ async function importBackup(file){
   }catch(e){console.warn('Logo in backup could not be restored',e);}
   let styleNote='';
   try{const sf=z.file('styles.json');if(sf){const list=JSON.parse(await sf.async('string'));let k=0;for(const m of Array.isArray(list)?list:[]){const id=String(m?.id||'');if(!id.startsWith(STYLE_PREFIX)||await get('settings',id))continue;let logo=null;if(m.logo?.path){const f=z.file(String(m.logo.path));if(f){const b=await f.async('uint8array');const mime=String(m.logo.mime||'image/png');if(b.length<=8*1048576&&mime.startsWith('image/'))logo={blob:new Blob([b],{type:mime}),mime,width:m.logo.width,height:m.logo.height,name:String(m.logo.name||'')};}}const st=shapeStyle({...m,logo});st.updated=String(m.updated||new Date().toISOString());await put('settings',st);k++;}if(k){styleNote=` ${k} report style${k===1?' was':'s were'} restored too.`;await renderStyleList();}}}catch(e){console.warn('Styles in backup could not be restored',e);}
-  toast('Backup restored as a separate report.'+thNote+logoNote+tplNote+styleNote);
+  const nw=await mergeMyWords(data.spellWords).catch(()=>0);
+  toast('Backup restored as a separate report.'+thNote+logoNote+tplNote+styleNote+(nw?` ${nw} spelling word${nw===1?'':'s'} added to your words.`:''));
  }catch(e){
   for(const id of importedIds)await remove('media',id).catch(()=>{});
   throw e;
@@ -3671,6 +3729,7 @@ $('subList').addEventListener('change',e=>{const sd=e.target.closest('[data-sdis
 $('subList').addEventListener('pointerdown',e=>{if(e.target.closest('input')&&session)stopRecording().catch(fail);});
 on('subList','click',async e=>{
 const x=subOf(e.target);
+{const tb=e.target.closest('[data-stest]');if(tb&&x){x.testResult=x.testResult===tb.dataset.stest?'':testOf(tb.dataset.stest);const y=window.scrollY;renderSubParts();renderEntries();window.scrollTo(0,y);await persistReport();return;}}
 let b=e.target.closest('[data-scond]');if(b&&x){x.condition=x.condition===b.dataset.scond?'':b.dataset.scond;const y=window.scrollY;renderSubParts();renderEntries();window.scrollTo(0,y);await persistReport();return;}
 b=e.target.closest('[data-sub-cam]');if(b&&x)return openCamera(async()=>{if(session)await stopRecording();},false,x.id);
 b=e.target.closest('[data-sub-gal]');if(b&&x)return openGallery(x.id);
@@ -3822,7 +3881,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&session)st
 window.addEventListener('beforeunload',e=>{if(session||busy||startingMic||hasSaveError){e.preventDefault();e.returnValue='';}});
 
 // ---------- v7: templates and step-by-step jobs ----------
-function newPartObject(extra={}){return Object.assign({id:uid(),name:'',partNo:'',subParts:[],condition:'Not rated',disposition:'',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
+function newPartObject(extra={}){return Object.assign({id:uid(),name:'',partNo:'',subParts:[],condition:'Not rated',disposition:'',testResult:'',testText:'',description:'',photos:[],audio:[],measurements:[],severityManual:false,severityAuto:false,prompts:[],drawingId:'',fromTemplate:false,skipped:false,skipReason:'',section:'',partNos:[],drawingRef:'',drawingCaption:'',hint:'',warnings:[],checks:[]},extra);}
 function isTemplateJob(r){return !!(r&&(r.templateName||(Array.isArray(r.parts)&&r.parts.some(p=>p&&p.fromTemplate))));}
 function isStepMode(){return !!(current&&editing&&isTemplateJob(current));}
 function promptList(p){return p&&Array.isArray(p.prompts)&&p.prompts.length?p.prompts:[''];}
@@ -4623,7 +4682,196 @@ on('thvClose','click',()=>$('thViewer').close());
 on('thvDone','click',()=>$('thViewer').close());
 $('thViewer').addEventListener('close',endToolView);
 on('thvShare','click',async()=>{const id=thView?.id;const d=current?.toolDocs.find(x=>x.id===id);if(!d)return;const m=await get('media',id);if(!m?.blob)throw Error('This PDF is missing from this device.');await deliver(new Blob([m.blob],{type:'application/pdf'}),/\.pdf$/i.test(d.name)?d.name:`${safeFileName(toolDocLabel(d,0),'document')}.pdf`);});
+function paintTest(){if(!editing)return;const t=testOf(editing.testResult);document.querySelectorAll('#testRow [data-test]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.test===t)));if(document.activeElement!==$('testText'))$('testText').value=editing.testText||'';$('testRow').classList.toggle('has-val',!!(t||clean(editing.testText)));}
+on('testRow','click',async e=>{const b=e.target.closest('[data-test]');if(!b||!editing)return;editing.testResult=editing.testResult===b.dataset.test?'':testOf(b.dataset.test);paintTest();renderEntries();await persistReport();});
+on('testText','input',()=>{if(!editing)return;editing.testText=$('testText').value.slice(0,300);$('testRow').classList.toggle('has-val',!!(editing.testResult||clean(editing.testText)));return persistReport();});
+on('testText','change',()=>{if(editing)renderEntries();});
 on('disposition','change',async()=>{if(!editing)return;editing.disposition=dispOf($('disposition').value);$('disposition').classList.toggle('set',!!editing.disposition);$('dispRow').classList.toggle('has-val',!!editing.disposition);renderEntries();await persistReport();});
+
+// ---- v15c: spell check. On-device en-GB Hunspell dictionary (SCOWL / wooorm dictionary-en-gb) + nspell, lazy-loaded, cached by the service worker. ----
+const SPELL_LIB='./lib/spell/nspell.min.js',SPELL_AFF='./lib/spell/en_GB.aff',SPELL_DIC='./lib/spell/en_GB.dic',SPELL_WORDS_ID='spell:words';
+// Built-in oilfield / workshop words (accepted and offered as suggestions). Codes in capitals (PIN, BOX, BHA, NDT…) are skipped anyway.
+const TRADE_WORDS=`mandrel mandrels sub subs crossover crossovers O-ring O-rings o-ring o-rings oring orings redress redressed redressing elastomer elastomers elastomeric
+make-up makeup break-out breakout torque torqued torquing retorque retorqued re-torque re-torqued shear sheared shearing shears collet collets packer packers ball seat seats
+stator stators rotor rotors drillpipe drillstring workstring washpipe wireline slickline coiled tubing casing liner liners centraliser centralisers centralizer centralizers
+stabiliser stabilisers stabilizer stabilizers reamer reamers jar jars jarring downhole uphole wellbore wellhead wellheads flowline flowbore whipstock overpull
+bellows gasket gaskets circlip circlips grub grubscrew grubscrews Loctite threadlock threadlocker dope swarf galling galled gall pitting pitted scuffing scuffed fretting fretted
+spline splines splined keyway keyways shim shims shimmed bushing bushings bush bushes bore bores chamfer chamfered burr burrs deburr deburred dowel dowels
+Viton nitrile HNBR FKM Kalrez PEEK PTFE polyurethane frac swab swabbing washout washouts nozzle nozzles jetting sleeve sleeves dart darts ratchet latch latched lug lugs
+piston pistons Belleville wiper wipers backup backups anti-extrusion T-seal T-seals chevron chevrons Molyslip Copaslip pin-end box-end shoulder shoulders
+strip-down stripdown stripdowns reassembly re-assembly reassembled re-assembled serviceable unserviceable rethread rethreaded recut recut re-cut threadform
+thread compound pressure-tested pressure-test hydrotest hydrotested hydrostatic flushed flushing degreased degrease mud muds BOP BOPs MWD LWD BHA NDT MPI DPI UT
+OD ID mm cm psi kpsi ksi Nm kN lbf lbs lb ft ft-lb ft-lbs rpm kg degC hrs hr approx qty pcs ea ok
+pre-job post-job as-found as-received ultrasonic magnetic penetrant borescope boroscope radial axial circumferential longitudinal
+API NPT BSP UNF UNC IF REG FH tooljoint tool-joint tooljoints pup pups sour H2S cutback cutbacks hardbanding hardbanded
+`.split(/\s+/).filter(Boolean);
+const TRADE_SET=new Set(TRADE_WORDS.map(w=>w.toLowerCase()));
+let spellP=null,speller=null,myWords=new Set(),spellCounted=new Map(),spellTipShown=new Set();
+const spellIgnores=new Map();// report id -> Set("field|word") for this session
+const SPELL_FAIL='The spelling dictionary could not load. Open StripNote once with internet so it is saved for offline use.';
+function loadSpellScript(){return new Promise((resolve,reject)=>{if(window.NSpell)return resolve(window.NSpell);const sc=document.createElement('script');sc.src=SPELL_LIB;sc.onload=()=>window.NSpell?resolve(window.NSpell):reject(Error(SPELL_FAIL));sc.onerror=()=>reject(Error(SPELL_FAIL));document.head.append(sc);});}
+function getSpeller(){
+ if(!spellP)spellP=(async()=>{
+  const NS=await loadSpellScript();
+  const [aff,dic]=await Promise.all([SPELL_AFF,SPELL_DIC].map(async u=>{const r=await fetch(u);if(!r.ok)throw Error(SPELL_FAIL);return r.text();}));
+  const sp=NS(aff,dic);for(const w of TRADE_WORDS)sp.add(w);for(const w of myWords)sp.add(w);
+  speller=sp;return sp;
+ })().catch(e=>{spellP=null;throw e;});
+ return spellP;
+}
+async function loadMyWords(){try{const r=await get('settings',SPELL_WORDS_ID);myWords=new Set((Array.isArray(r?.words)?r.words:[]).filter(w=>typeof w==='string'&&w.trim()).map(w=>w.trim().slice(0,60)).slice(0,5000));}catch(e){console.warn(e);}renderMyWords();}
+async function saveMyWords(){await put('settings',{id:SPELL_WORDS_ID,kind:'spellwords',words:[...myWords].sort((a,b)=>a.localeCompare(b)).slice(0,5000)});renderMyWords();}
+function renderMyWords(){const t=[...myWords].sort((a,b)=>a.localeCompare(b)).join('\n');for(const id of ['myWordsBox','spWordsBox']){const b=$(id);if(b&&document.activeElement!==b)b.value=t;}const c=$('myWordsCount');if(c)c.textContent=myWords.size?`${myWords.size} word${myWords.size===1?'':'s'}`:'';}
+async function setMyWordsFromText(text){
+ const words=[...new Set(String(text||'').split(/[\n,;]+/).map(w=>w.trim().replace(/\s+/g,' ')).filter(w=>w&&w.length<=60))].slice(0,5000);
+ if(speller)for(const w of myWords)if(!words.includes(w)&&!TRADE_SET.has(w.toLowerCase()))try{speller.remove(w);}catch{}
+ myWords=new Set(words);if(speller)for(const w of myWords)speller.add(w);await saveMyWords();
+}
+async function addMyWord(w){w=String(w||'').trim().slice(0,60);if(!w)return;myWords.add(w);if(speller)speller.add(w);await saveMyWords();}
+async function mergeMyWords(list){if(!Array.isArray(list))return 0;let n=0;for(const w of list){if(typeof w!=='string')continue;const v=w.trim().slice(0,60);if(v&&!myWords.has(v)&&myWords.size<5000){myWords.add(v);if(speller)speller.add(v);n++;}}if(n)await saveMyWords();return n;}
+// Text the check covers. Part numbers, serials, references, dates, measurements and people's names are left alone.
+function spellFields(r){
+ const F=[];const add=(path,label,text)=>{if(typeof text==='string'&&text.trim())F.push({path,label,text});};
+ const tj=isTemplateJob(r);
+ add(['title'],'Report title',r.title);add(['equipment'],'Equipment',r.equipment);add(['client'],'Client',r.client);add(['site'],'Site / location',r.site);add(['contact'],'Contact',r.contact);add(['rigWell'],'Rig / well',r.rigWell);
+ (r.customFields||[]).forEach((f,i)=>add(['customFields',i,'value'],clean(f.label)||'Custom field',f.value));
+ add(['scope'],'Scope',r.scope);add(['summary'],'Summary',r.summary);add(['conclusions'],'Conclusions',r.conclusions);add(['recommendations'],'Recommendations',r.recommendations);
+ (r.parts||[]).forEach((p,i)=>{
+  const P=`${tj?'Step':'Part'} ${i+1}`,nm=clean(p.name)?` · ${clean(p.name)}`:'';
+  add(['parts',i,'name'],`${P} – name`,p.name);add(['parts',i,'description'],`${P}${nm} – ${tj?'finding':'description'}`,p.description);add(['parts',i,'skipReason'],`${P}${nm} – reason not inspected`,p.skipReason);add(['parts',i,'testText'],`${P}${nm} – test`,p.testText);
+  (p.photos||[]).forEach((ph,j)=>add(['parts',i,'photos',j,'caption'],`${P}${nm} – photo ${i+1}.${j+1} caption`,ph.caption));
+  (p.checks||[]).forEach((c,j)=>add(['parts',i,'checks',j,'notes'],`${P}${nm} – check ${j+1} notes`,c.notes));
+  (p.measurements||[]).forEach((m,j)=>add(['parts',i,'measurements',j,'item'],`${P}${nm} – measurement ${j+1}`,m.item));
+  (p.subParts||[]).forEach((x,k)=>{const L=subLabel(i,k);add(['parts',i,'subParts',k,'name'],`Sub-part ${L} – name`,x.name);add(['parts',i,'subParts',k,'note'],`Sub-part ${L} – note`,x.note);add(['parts',i,'subParts',k,'testText'],`Sub-part ${L} – test`,x.testText);
+   (x.photos||[]).forEach((ph,j)=>add(['parts',i,'subParts',k,'photos',j,'caption'],`Sub-part ${L} – photo ${j+1} caption`,ph.caption));});
+ });
+ (r.toolDocs||[]).forEach((d,i)=>add(['toolDocs',i,'title'],`Tool history ${i+1} – title`,d.title));
+ return F;
+}
+const pathKey=p=>p.join('.');
+function getPath(o,p){return p.reduce((a,k)=>a==null?a:a[k],o);}
+function setPath(o,p,v){const last=p[p.length-1];const parent=getPath(o,p.slice(0,-1));if(parent&&typeof parent[last]==='string')parent[last]=v;}
+const CHUNK_RE=/[^\s.,;:!?()[\]{}"“”<>\/\\|=+*&#~^`]+/g;
+const L_RE=/[A-Za-z\u00C0-\u024F]/;
+// Returns [{start,word}] for words worth checking in a text: no digits, no ALL-CAPS codes, no mixedCase, no web/email.
+function spellTokens(text){
+ const out=[];let m;CHUNK_RE.lastIndex=0;
+ while((m=CHUNK_RE.exec(text))){
+  let w=m[0],s=m.index;
+  const lead=w.match(/^['‘’\-_]+/);if(lead){s+=lead[0].length;w=w.slice(lead[0].length);}
+  w=w.replace(/['‘’\-_]+$/,'');
+  if(w.length<2||!L_RE.test(w)||/[\d@_%$£€°]/.test(w)||/^www|:\/\//i.test(w))continue;
+  if(w===w.toUpperCase())continue;// codes: PIN, BOX, XS, BHA
+  if(/[a-z\u00DF-\u024F][A-Z]/.test(w))continue;// mixedCase: McAllister, iPhone
+  out.push({start:s,word:w});
+ }
+ return out;
+}
+function knownWord(w){
+ const sp=speller;if(!sp)return true;
+ const n=w.replace(/[’‘]/g,"'");const low=n.toLowerCase();
+ if(myWords.has(n)||myWords.has(low)||[...myWords].some(x=>x.toLowerCase()===low))return true;
+ if(TRADE_SET.has(low))return true;
+ if(sp.correct(n))return true;
+ const base=n.replace(/'s$/i,'').replace(/s'$/i,'s');if(base!==n&&base.length>1&&knownWord(base))return true;
+ // -ize / -yze spellings are fine in British technical writing too
+ const ise=n.replace(/iz(e|es|ed|ing|ation|ations|er|ers)$/i,'is$1').replace(/yz(e|es|ed|ing|er|ers)$/i,'ys$1');if(ise!==n&&sp.correct(ise))return true;
+ if(n.includes('-'))return n.split('-').every(x=>!x||/^[A-Z]+$/.test(x)||knownWord(x));
+ return false;
+}
+function matchCase(src,s){if(!s)return s;if(src.length>1&&src===src.toUpperCase())return s.toUpperCase();if(src[0]===src[0].toUpperCase()&&src[0]!==src[0].toLowerCase())return s[0].toUpperCase()+s.slice(1);return s;}
+const sugCache=new Map();
+function spellSuggest(w){const k=w.toLowerCase();if(!sugCache.has(k)){let s=[];try{s=speller.suggest(k);if(!s.length&&k!==w)s=speller.suggest(w);s=s.slice(0,5);}catch{}sugCache.set(k,s);}return [...new Set(sugCache.get(k).map(x=>matchCase(w,x)))].slice(0,4);}
+function spellScan(r){
+ const ign=spellIgnores.get(r.id)||new Set();const out=[];
+ for(const f of spellFields(r))for(const t of spellTokens(f.text)){if(knownWord(t.word))continue;if(ign.has(pathKey(f.path)+'|'+t.word.toLowerCase())||ign.has('*|'+t.word.toLowerCase()))continue;out.push({path:f.path,label:f.label,text:f.text,start:t.start,word:t.word});}
+ return out;
+}
+function replaceWordAt(text,start,word,rep){
+ if(text.substr(start,word.length)===word)return text.slice(0,start)+rep+text.slice(start+word.length);
+ const re=new RegExp(`(^|[^A-Za-z\\u00C0-\\u024F'])${word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?![A-Za-z\\u00C0-\\u024F])`);
+ return text.replace(re,(m,a)=>a+rep);
+}
+function fixAt(r,iss,rep){const cur=getPath(r,iss.path);if(typeof cur!=='string')return false;const nt=replaceWordAt(cur,iss.start,iss.word,rep);if(nt===cur)return false;setPath(r,iss.path,nt);return true;}
+// Fix every occurrence of the same word (same spelling, any field), keeping capitals per spot.
+function fixAll(r,word,rep){
+ const low=word.toLowerCase();let n=0;
+ for(const f of spellFields(r)){const toks=spellTokens(f.text).filter(t=>t.word.toLowerCase()===low).reverse();if(!toks.length)continue;let t=f.text;for(const k of toks){t=t.slice(0,k.start)+matchCase(k.word,rep)+t.slice(k.start+k.word.length);n++;}setPath(r,f.path,t);}
+ return n;
+}
+let spellIssues=[],spellBusy=false;
+async function openSpellCheck(){
+ if(!current||busy)return;
+ await stopRecording();await saveQueue;
+ if(editing)await finishEntry();
+ const d=$('spellDialog');if(!d.open)d.showModal();
+ $('spList').innerHTML='';$('spStatus').textContent='Loading the dictionary…';
+ try{await getSpeller();}catch(e){$('spStatus').textContent=e.message||SPELL_FAIL;return;}
+ renderSpell();
+}
+function ctxHTML(iss){
+ const a=Math.max(0,iss.start-38),b=Math.min(iss.text.length,iss.start+iss.word.length+38);
+ return `${a>0?'…':''}${esc(iss.text.slice(a,iss.start))}<mark>${esc(iss.text.substr(iss.start,iss.word.length))}</mark>${esc(iss.text.slice(iss.start+iss.word.length,b))}${b<iss.text.length?'…':''}`;
+}
+function renderSpell(){
+ if(!current)return;
+ spellIssues=spellScan(current);spellCounted.set(current.id,spellIssues.length);updateSpellLine();
+ const counts=new Map();for(const s of spellIssues){const k=s.word.toLowerCase();counts.set(k,(counts.get(k)||0)+1);}
+ const shown=spellIssues.slice(0,150);
+ $('spStatus').textContent=spellIssues.length?`${spellIssues.length} possible spelling mistake${spellIssues.length===1?'':'s'}. Tap a suggestion to fix it in the job – the next export uses the fixed text.${spellIssues.length>shown.length?` Showing the first ${shown.length}.`:''}`:'No spelling mistakes found. 👍';
+ $('spList').innerHTML=shown.map((s,k)=>{const sug=spellSuggest(s.word);const c=counts.get(s.word.toLowerCase());const first=sug[0]||'';
+  return `<div class="sp-item" data-sp="${k}"><div class="sp-where">${esc(s.label)}</div><div class="sp-ctx">${ctxHTML(s)}</div>
+  <div class="sp-sugs">${sug.length?sug.map(x=>`<button type="button" class="sp-sug" data-sp-fix="${esc(x)}">${esc(x)}</button>`).join(''):'<span class="muted">No suggestions – type the right spelling below, or add it to your words.</span>'}</div>
+  <div class="sp-own"><input class="compact" data-sp-own placeholder="Or type the correct spelling" aria-label="Correct spelling of ${esc(s.word)}" autocomplete="off" spellcheck="true" lang="en-GB"><button type="button" data-sp-own-go>Replace</button></div>
+  <div class="sp-tools">${c>1?`<button type="button" data-sp-all ${first?'':'disabled'}>Fix all ${c}${first?` → ${esc(first)}`:''}</button>`:''}<button type="button" data-sp-ign>Ignore</button><button type="button" data-sp-add>+ My words</button></div></div>`;}).join('');
+}
+async function spellApply(fn){if(spellBusy)return;spellBusy=true;try{const changed=fn();if(changed){await persistReport();refreshAfterSpell();}renderSpell();}finally{spellBusy=false;}}
+function refreshAfterSpell(){
+ if(!current)return;
+ document.querySelectorAll('[data-job]').forEach(el=>{if(document.activeElement!==el)el.value=current[el.dataset.job]||'';});
+ try{syncTitlePreset();renderDetails();renderToolDocs();renderEntries();updateHeading();}catch(e){console.warn(e);}
+}
+function updateSpellLine(){const el=$('spellCount');if(!el||!current)return;const n=spellCounted.get(current.id);el.textContent=n==null?'':n?`${n} possible spelling mistake${n===1?'':'s'}`:'No spelling mistakes found';el.classList.toggle('warn',!!n);}
+// A gentle, never-blocking hint added to the export message, once per job per session.
+function spellTip(){
+ if(!current||!speller||spellTipShown.has(current.id))return '';
+ const n=spellScan(current).length;spellCounted.set(current.id,n);updateSpellLine();if(!n)return '';
+ spellTipShown.add(current.id);return ` Tip: ${n} possible spelling mistake${n===1?'':'s'} – tap “Check spelling” to fix them in the job.`;
+}
+// Count quietly when a job opens, but only once the dictionary has loaded (or is already cached for offline use).
+function spellIdleCount(){
+ if(!current)return;const id=current.id;
+ const run=async()=>{try{await getSpeller();if(current?.id===id){spellCounted.set(id,spellScan(current).length);updateSpellLine();}}catch{}};
+ (window.requestIdleCallback||((f)=>setTimeout(f,1500)))(()=>run(),{timeout:4000});
+}
+on('spList','click',e=>{
+ const item=e.target.closest('[data-sp]');if(!item||!current)return;const iss=spellIssues[+item.dataset.sp];if(!iss)return;
+ let b=e.target.closest('[data-sp-fix]');if(b)return spellApply(()=>fixAt(current,iss,b.dataset.spFix));
+ if(e.target.closest('[data-sp-own-go]')){const v=clean(item.querySelector('[data-sp-own]').value);if(!v){toast('Type the correct spelling first.');return;}return spellApply(()=>fixAt(current,iss,v));}
+ if(e.target.closest('[data-sp-all]')){const typed=clean(item.querySelector('[data-sp-own]').value);const rep=typed||spellSuggest(iss.word)[0];if(!rep)return;return spellApply(()=>fixAll(current,iss.word,rep)>0);}
+ if(e.target.closest('[data-sp-ign]')){let s=spellIgnores.get(current.id);if(!s)spellIgnores.set(current.id,s=new Set());s.add(pathKey(iss.path)+'|'+iss.word.toLowerCase());return spellApply(()=>false);}
+ if(e.target.closest('[data-sp-add]')){return (async()=>{await addMyWord(iss.word);toast(`“${iss.word}” added to your words.`);renderSpell();})();}
+});
+$('spList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-sp-own]')){e.preventDefault();e.target.closest('[data-sp]').querySelector('[data-sp-own-go]').click();}});
+on('spellCheck','click',()=>openSpellCheck());
+on('erSpell','click',()=>openSpellCheck());
+on('spClose','click',()=>$('spellDialog').close());
+on('spDone','click',()=>$('spellDialog').close());
+$('spellDialog').addEventListener('close',()=>{refreshAfterSpell();updateSpellLine();});
+$('spWordsBox').addEventListener('change',async e=>{await setMyWordsFromText(e.target.value);if($('spellDialog').open&&speller)renderSpell();});
+$('myWordsBox').addEventListener('change',async e=>{await setMyWordsFromText(e.target.value);toast('Your words are saved on this device.');});
+// Spell check hints in the keyboard (Gboard / Chrome red underlines): every prose box says so explicitly; code boxes (part no., serial…) opt out.
+const SPELL_OFF_IDS=new Set(['partNo','serial','reference','workOrder','poNumber','docNumber','revision','styleAccentHex','styleHeadingHex','styleHL1','styleHL2','styleHL3']);
+function stampSpell(root){
+ const els=root.querySelectorAll?root.querySelectorAll('textarea,input:not([type]),input[type=text],input[type=search]'):[];
+ for(const el of [...(root.matches?.('textarea,input')?[root]:[]),...els]){
+  if(el.type&&!['text','search','textarea'].includes(el.type))continue;
+  if(SPELL_OFF_IDS.has(el.id)||el.dataset.sfield==='partNo'||el.getAttribute('spellcheck')==='false'||/measured|min|max|unit/.test(el.dataset.mfield||'')){el.spellcheck=false;continue;}
+  el.spellcheck=true;if(!el.lang)el.lang='en-GB';
+ }
+}
+stampSpell(document);
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)stampSpell(n);}).observe(document.body,{childList:true,subtree:true});
 
 window.StripNoteTest={
  get current(){return current;},set current(v){current=v;},
@@ -4635,7 +4883,7 @@ window.StripNoteTest={
  redoDictation,dictationKey,isDesk,deskLayout,handleDrop,speechLang,loadBig,useWebcam,openWebcam,probeCam,removeLastInsertion,attachSpoken,getFieldText,
  openEditReport,closeEditReport,rotatePhoto,asRot,viewKey,rotShapes,reportTitle,reportIdLine,reportHeading,coverRows,syncTitlePreset,movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
- addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,hasPartNo,dispCountText,get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
+ addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,hasPartNo,dispCountText,testOf,testLabel,testLine,hasTest,testCountText,getSpeller,spellScan,spellTokens,knownWord,spellFields,fixAt,fixAll,openSpellCheck,renderSpell,addMyWord,setMyWordsFromText,mergeMyWords,loadMyWords,spellTip,stampSpell,get myWords(){return myWords;},get spellIssues(){return spellIssues;},get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
