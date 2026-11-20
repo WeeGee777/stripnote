@@ -2223,6 +2223,14 @@ function RNR(){return hexRgb(RN());}
 function RAR(){return hexRgb(RA());}
 function RC(){return exportStyle.builtIn?'C6B15A':'FFFFFF';}
 function ruleColor(){return exportStyle.builtIn?'C6B15A':RA();}
+// v15d: Banner cover with a user style = accent fill, white title/subtitle, heading-colour bar. A logo replaces the company-name text.
+function userBanner(){return !exportStyle.builtIn;}
+function bannerFill(){return userBanner()?RA():RN();}
+function bannerRule(){return userBanner()?RN():ruleColor();}
+function bannerInk(){return !userBanner()||contrastRatio(bannerFill(),'FFFFFF')>=3?'FFFFFF':'1F2A30';}
+function bannerSub(){return userBanner()?hexMix(bannerInk(),bannerFill(),.15):coverSubColor();}
+function bannerKicker(){return userBanner()?bannerInk():RC();}
+function showCompany(hasLogo){return !!companyName&&!(userBanner()&&hasLogo);}
 function relLum(h){return hexRgb(normHex(h,'000000')).map(v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4;}).reduce((a,v,i)=>a+v*[0.2126,0.7152,0.0722][i],0);}
 function contrastRatio(a,b){const x=relLum(a),y=relLum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);}
 // v11b: photo pairing shared by Word, PDF and Slides – a photo is "portrait" when clearly taller than wide.
@@ -2291,14 +2299,14 @@ async function buildDocx(raw,notify=()=>{}){
  }
  let body='';
  const idLine=reportIdLine(r);
- const headInner=(companyName?docxPara(docxRun(companyName.toUpperCase(),{size:17,color:RC(),bold:true}),'<w:spacing w:before="60" w:after="60"/>'):'')+docxPara(docxRun(reportTitle(r),{size:44,bold:true,color:'FFFFFF'}),'<w:spacing w:before="40" w:after="60"/>')+(idLine?docxPara(docxRun(idLine,{size:30,bold:true,color:coverSubColor()}),'<w:spacing w:before="0" w:after="80"/>'):'');
+ const headInner=(showCompany(!!logo)?docxPara(docxRun(companyName.toUpperCase(),{size:17,color:bannerKicker(),bold:true}),'<w:spacing w:before="60" w:after="60"/>'):'')+docxPara(docxRun(reportTitle(r),{size:44,bold:true,color:bannerInk()}),'<w:spacing w:before="40" w:after="60"/>')+(idLine?docxPara(docxRun(idLine,{size:30,bold:true,color:bannerSub()}),'<w:spacing w:before="0" w:after="80"/>'):'');
  let titleHead=headInner;
  if(logo){
   const {cx,cy}=fitEmu(logo.width,logo.height,1512000,864000);
   const logoTwips=Math.max(1400,Math.round(cx/635)+200);
   const textTwips=Math.max(4000,TW-logoTwips);
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
-  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'FFFFFF',valign:'center'})}${docxCell(headInner,textTwips,{fill:RN(),valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
+  titleHead=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RN(),0,['none'])}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="40" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${textTwips}"/></w:tblGrid><w:tr>${docxCell(logoPara,logoTwips,{fill:'FFFFFF',valign:'center'})}${docxCell(headInner,textTwips,{fill:bannerFill(),valign:'center'})}</w:tr></w:tbl>`+'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="20" w:lineRule="exact"/></w:pPr></w:p>';// a table cell must end with a paragraph
  }
  if(isClean()){
   // v13 Clean cover: serif title in the heading colour over a thin rule, equipment · serial, bordered 4-column label/value grid.
@@ -2311,8 +2319,8 @@ async function buildDocx(raw,notify=()=>{}){
   for(let i=0;i<g.pairs.length;i+=2){const a=g.pairs[i],b=g.pairs[i+1];gr+=docxRow({html:b?lab(a[0])+val(a[1],VW)+lab(b[0])+val(b[1],VW):lab(a[0])+val(a[1],TW-LW,3)});}
   body+=`<w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet('8A9599',4)}<w:tblCellMar><w:top w:w="40" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="40" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${LW}"/><w:gridCol w:w="${VW}"/><w:gridCol w:w="${LW}"/><w:gridCol w:w="${VW}"/></w:tblGrid>${gr}</w:tbl>`;
  }else{
- let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:RN(),span:2})});
- titleRows+=docxRow({html:docxCell(docxPara('','<w:spacing w:before="0" w:after="0" w:line="80" w:lineRule="exact"/>'),TW,{fill:ruleColor(),span:2})});
+ let titleRows=docxRow({html:docxCell(titleHead,TW,{fill:bannerFill(),span:2})});
+ titleRows+=docxRow({html:docxCell(docxPara('','<w:spacing w:before="0" w:after="0" w:line="80" w:lineRule="exact"/>'),TW,{fill:bannerRule(),span:2})});
  const tint=hexMix(RN(),'FFFFFF',.92);
  coverRows(r).forEach(([k,v],i)=>{
   titleRows+=docxRow({html:docxCell(docxPara(docxRun(k.toUpperCase(),{size:16,color:RN(),bold:true}),'<w:spacing w:before="40" w:after="40"/>'),labelW,{fill:tint})+docxCell(docxPara(docxRun(v,{size:21,color:'1F2A30'}),'<w:spacing w:before="40" w:after="40"/>'),valueW,{fill:i%2?'FFFFFF':hexMix(RN(),'FFFFFF',.97)})});
@@ -2491,7 +2499,7 @@ async function buildDocx(raw,notify=()=>{}){
   const logoTwips=Math.max(1100,Math.round(cx/635)+160);
   const mid=Math.max(2000,TW-logoTwips-2266);
   const logoPara=logoDrawingXml(cx,cy,'rIdLogo','Company logo');
-  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${hdrNs}><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${mid}"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="${logoTwips}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${logoPara}</w:tc><w:tc><w:tcPr><w:tcW w:w="${mid}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:RN()}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
+  header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${hdrNs}><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="${logoTwips}"/><w:gridCol w:w="${mid}"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="${logoTwips}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${logoPara}</w:tc><w:tc><w:tcPr><w:tcW w:w="${mid}" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:RN()}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/><w:vAlign w:val="center"/></w:tcPr>${docxPara(docxRun(showCompany(true)?clipText(companyName,40):'',{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
   zip.file('word/_rels/header1.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${logoRel}</Relationships>`);
  }else{
   header=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:tbl><w:tblPr><w:tblW w:w="${TW}" w:type="dxa"/><w:tblLayout w:type="fixed"/>${borderSet(RA(),12,['bottom'])}</w:tblPr><w:tblGrid><w:gridCol w:w="7600"/><w:gridCol w:w="2266"/></w:tblGrid><w:tr><w:tc><w:tcPr><w:tcW w:w="7600" w:type="dxa"/></w:tcPr>${docxPara(docxRun(headerTitle,{size:16,color:RN()}),'<w:spacing w:before="0" w:after="60"/>')}</w:tc><w:tc><w:tcPr><w:tcW w:w="2266" w:type="dxa"/></w:tcPr>${docxPara(docxRun(clipText(companyName,40),{size:16,color:'5C6B70'}),'<w:jc w:val="right"/><w:spacing w:before="0" w:after="60"/>')}</w:tc></w:tr></w:tbl></w:hdr>`;
@@ -2586,7 +2594,7 @@ async function buildPDF(raw,notify=()=>{}){
  const textW=Math.max(40,CW-10-(logoData?40:0));
  const titleLines=textLines(reportTitle(r),21,textW).slice(0,2);
  const idLines=idLine?textLines(idLine,14,textW).slice(0,2):[];
- const kick=companyName?6:0;
+ const kick=showCompany(!!logoData)?6:0;
  let bandH=8+kick+titleLines.length*8.6+(idLines.length?1.5+idLines.length*6.4:0)+5;
  let logoBox=null;
  if(logoData){
@@ -2601,7 +2609,7 @@ async function buildPDF(raw,notify=()=>{}){
  const blockH=bandH+STRIPE+rows.length*rowH;
  need(blockH+6);
  const top=y;
- doc.setFillColor(...RNR());doc.rect(ML,top,CW,bandH,'F');
+ doc.setFillColor(...hexRgb(bannerFill()));doc.rect(ML,top,CW,bandH,'F');
  let textX=ML+4;
  if(logoBox){
   const lx=ML+4.5,ly=top+(bandH-logoBox.h)/2;
@@ -2610,10 +2618,10 @@ async function buildPDF(raw,notify=()=>{}){
   textX=lx+logoBox.w+5;
  }
  let ty=top+8;
- if(companyName){drawText(clipText(companyName,60).toUpperCase(),textX,ty,{size:8.5,color:hexRgb(RC()),bold:true});ty+=kick;}
- titleLines.forEach(line=>{ty+=6.6;drawText(line,textX,ty,{size:21,color:[255,255,255],bold:true});ty+=2;});
- if(idLines.length){ty+=1.5;idLines.forEach(line=>{ty+=5.2;drawText(line,textX,ty,{size:14,color:hexRgb(coverSubColor()),bold:true});ty+=1.2;});}
- doc.setFillColor(...hexRgb(ruleColor()));doc.rect(ML,top+bandH,CW,STRIPE,'F');
+ if(showCompany(!!logoData)){drawText(clipText(companyName,60).toUpperCase(),textX,ty,{size:8.5,color:hexRgb(bannerKicker()),bold:true});ty+=kick;}
+ titleLines.forEach(line=>{ty+=6.6;drawText(line,textX,ty,{size:21,color:hexRgb(bannerInk()),bold:true});ty+=2;});
+ if(idLines.length){ty+=1.5;idLines.forEach(line=>{ty+=5.2;drawText(line,textX,ty,{size:14,color:hexRgb(bannerSub()),bold:true});ty+=1.2;});}
+ doc.setFillColor(...hexRgb(bannerRule()));doc.rect(ML,top+bandH,CW,STRIPE,'F');
  const tintA=hexRgb(hexMix(RN(),'FFFFFF',.94));
  rows.forEach((row,i)=>{
   const ry=top+bandH+STRIPE+i*rowH;
@@ -2887,11 +2895,11 @@ async function buildPDF(raw,notify=()=>{}){
    doc.addImage(logoData.bytes,logoData.format,ML,5+(8-logoH)/2,logoW,logoH,'company-logo','FAST');
    headX=ML+logoW+3;
   }
-  const maxW=CW-(companyName?Math.min(70,doc.getTextWidth(clipText(companyName,40))+6):4)-(headX-ML);
+  const coR=showCompany(!!logoData);const maxW=CW-(coR?Math.min(70,doc.getTextWidth(clipText(companyName,40))+6):4)-(headX-ML);
   let head=title;
   if(doc.getTextWidth(head)>maxW){while(head.length>1&&doc.getTextWidth(head+'…')>maxW)head=head.slice(0,-1);head=head.trim()+'…';}
   drawText(head,headX,11,{size:8,color:RNR()});
-  if(companyName)drawText(clipText(companyName,40),PW-MR,11,{size:8,color:[90,100,104],align:'right'});
+  if(coR)drawText(clipText(companyName,40),PW-MR,11,{size:8,color:[90,100,104],align:'right'});
   doc.setDrawColor(...RAR());doc.setLineWidth(0.3);
   doc.line(ML,13.5,PW-MR,13.5);
   doc.line(ML,PH-13,PW-MR,PH-13);
@@ -2998,19 +3006,19 @@ async function buildPptx(raw,notify=()=>{}){
   rowsP.forEach((row,ri)=>{const cy=ty+ri*rowH;if(cy+rowH>PPH-0.25)return;const full=row.length===1;let x=0.5;row.forEach(([k,v])=>{const w=full?PPW-1.0-LW:VW;ppShape(sl.shapes,sl.next++,x,cy,LW,rowH,ppPara(k+':',{size:12,bold:true,color:'1F2A30'}),{fill:tintP,line:'8A9599',lineW:0.75,anchor:'ctr',name:k+' label',inset:0.06,fit:false});ppShape(sl.shapes,sl.next++,x+LW,cy,w,rowH,ppPara(clipText(v,full?110:48),{size:13,color:'1F2A30'}),{fill:'FFFFFF',line:'8A9599',lineW:0.75,anchor:'ctr',name:k,inset:0.06,fit:false});x+=LW+w;});});
   sl.title=true;
  }else{
-  const sl=newSlide(RN());
-  ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:ruleColor(),name:'Accent rule'});
+  const sl=newSlide(bannerFill());
+  ppShape(sl.shapes,sl.next++,0,PPH-0.12,PPW,0.12,null,{fill:bannerRule(),name:'Accent rule'});
   if(logo)await addLogo(sl,0.6,0.5,3.0,1.2,true);
   let ty=logo?2.0:1.2;
-  if(companyName){ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.5,ppPara(clipText(companyName,70).toUpperCase(),{size:16,bold:true,color:RC()}),{name:'Company'});ty+=0.5;}
-  ppShape(sl.shapes,sl.next++,0.6,ty+0.1,0.1,reportIdLine(r)?1.95:1.2,null,{fill:ruleColor(),name:'Title accent'});
-  ppShape(sl.shapes,sl.next++,0.85,ty,11.85,1.25,ppPara(clipText(reportTitle(r),90),{size:40,bold:true,color:'FFFFFF'}),{name:'Report title',anchor:'t'});ty+=1.3;
-  if(reportIdLine(r)){ppShape(sl.shapes,sl.next++,0.85,ty,11.85,0.75,ppPara(clipText(reportIdLine(r),80),{size:26,bold:true,color:coverSubColor()}),{name:'Equipment and serial',anchor:'t'});ty+=0.95;}
+  if(showCompany(!!logo)){ppShape(sl.shapes,sl.next++,0.6,ty,12.1,0.5,ppPara(clipText(companyName,70).toUpperCase(),{size:16,bold:true,color:bannerKicker()}),{name:'Company'});ty+=0.5;}
+  ppShape(sl.shapes,sl.next++,0.6,ty+0.1,0.1,reportIdLine(r)?1.95:1.2,null,{fill:bannerRule(),name:'Title accent'});
+  ppShape(sl.shapes,sl.next++,0.85,ty,11.85,1.25,ppPara(clipText(reportTitle(r),90),{size:40,bold:true,color:bannerInk()}),{name:'Report title',anchor:'t'});ty+=1.3;
+  if(reportIdLine(r)){ppShape(sl.shapes,sl.next++,0.85,ty,11.85,0.75,ppPara(clipText(reportIdLine(r),80),{size:26,bold:true,color:bannerSub()}),{name:'Equipment and serial',anchor:'t'});ty+=0.95;}
   ty+=0.2;
   const want=['Client','Site','Equipment','Serial no.','Inspection date','Document no.','Revision','Work order'];
   const rows=coverRows(r).map(([k,v])=>[k==='Inspection date'?'Date':k,v]);
   const colW=6.0,rowH=0.62;
-  rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:hexMix(RN(),'FFFFFF',.62)})+ppPara(clipText(v,60),{size:16,color:'FFFFFF'}),{name:k,inset:0.04,fit:false});});
+  rows.forEach(([k,v],i)=>{const cx=0.6+(i%2)*colW,cy=ty+Math.floor(i/2)*rowH;if(cy+rowH>PPH-0.3)return;ppShape(sl.shapes,sl.next++,cx,cy,colW-0.2,rowH,ppPara(k.toUpperCase(),{size:10,bold:true,color:userBanner()?hexMix(bannerInk(),bannerFill(),.25):hexMix(RN(),'FFFFFF',.62)})+ppPara(clipText(v,60),{size:16,color:bannerInk()}),{name:k,inset:0.04,fit:false});});
   sl.title=true;
  }
  // 2. Summary slide
@@ -3178,7 +3186,7 @@ async function buildPptx(raw,notify=()=>{}){
  slides.forEach((sl,k)=>{
   if(!sl.title){
    ppShape(sl.shapes,sl.next++,0.35,PPH-0.42,8.5,0.34,ppPara(foot,{size:10,color:'5C6B70'}),{name:'Footer',fit:false,inset:0.02});
-   ppShape(sl.shapes,sl.next++,PPW-3.35,PPH-0.42,3.0,0.34,ppPara(`${companyName?clipText(companyName,30)+'  ·  ':''}${k+1} / ${N}`,{size:10,color:'5C6B70',align:'r'}),{name:'Slide number',fit:false,inset:0.02});
+   ppShape(sl.shapes,sl.next++,PPW-3.35,PPH-0.42,3.0,0.34,ppPara(`${showCompany(!!logo)?clipText(companyName,30)+'  ·  ':''}${k+1} / ${N}`,{size:10,color:'5C6B70',align:'r'}),{name:'Slide number',fit:false,inset:0.02});
   }
   const n=k+1;
   zip.file(`ppt/slides/slide${n}.xml`,`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><p:sld ${PP_NS}><p:cSld><p:bg><p:bgPr>${ppFill(sl.bg)}<a:effectLst/></p:bgPr></p:bg><p:spTree>${PP_TREE_HEAD}${sl.shapes.join('')}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`);
@@ -3803,11 +3811,11 @@ function onHexText(k){const t=$(k+'Hex');const v=t.value.trim();const h=normHex(
 function badHex(){return HEX_PAIRS.filter(([k,t])=>!normHex($(t).value,''));}
 function paintStylePreview(){
  const a=normHex($('styleAccent').value,'1F3A44'),h=normHex($('styleHeading').value,'1F3A44');
- const pv=$('stylePreview');pv.classList.toggle('clean',$('styleLayout').value==='clean');pv.querySelector('.sp-stripe').style.background='#'+a;
+ const pv=$('stylePreview');pv.classList.toggle('clean',$('styleLayout').value==='clean');pv.querySelector('.sp-stripe').style.background='#'+(styleEdit?.builtIn?a:h);
  pv.querySelector('.sp-chead').style.borderColor='#'+h;pv.querySelector('.sp-ctitle').style.color='#'+h;pv.querySelector('.sp-ctitle').style.borderColor='#'+h;pv.querySelector('.sp-grid').style.borderColor='#'+h;
  const tint='#'+hexMix(h,'FFFFFF',.94);pv.querySelectorAll('.sp-grid .l').forEach(e=>e.style.background=tint);
  const hl=[1,2,3].map(i=>clean($('styleHL'+i).value)).filter(Boolean);$('spHL').innerHTML=(hl.length?hl:['Header line 1','Header line 2']).map((t,i)=>i?esc(t):`<b>${esc(t)}</b>`).join('<br>');
- pv.querySelector('.sp-band').style.background='#'+h;pv.querySelector('.sp-th').style.background='#'+h;pv.querySelector('.sp-h').style.color='#'+h;pv.querySelector('.sp-rule').style.background='#'+a;
+ const ub=!styleEdit?.builtIn;pv.querySelector('.sp-band').style.background='#'+(ub?a:h);pv.querySelector('.sp-band').style.color=ub&&contrastRatio(a,'FFFFFF')<3?'#1F2A30':'#fff';pv.querySelector('.sp-th').style.background='#'+h;pv.querySelector('.sp-h').style.color='#'+h;pv.querySelector('.sp-rule').style.background='#'+a;
  const c=contrastRatio(h,'FFFFFF'),c2=contrastRatio(a,'FFFFFF');
  $('styleContrast').textContent=c<4.5?`⚠ White text on the heading colour is hard to read (${c.toFixed(1)}:1; aim for 4.5:1 or more). Pick a darker colour.`:`White text on headings: ${c.toFixed(1)}:1 ✓${c2<3?` · The accent is pale on white paper (${c2.toFixed(1)}:1), so rule lines may look faint.`:''}`;
  $('styleContrast').classList.toggle('bad',c<4.5);
