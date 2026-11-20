@@ -239,9 +239,17 @@ body.stepmode #checkCard{order:2}
 .howto[open]{flex:1 1 100%}
 .howto[open]>summary{margin-bottom:6px}
 .howto p{margin:0;font-size:14px;color:var(--muted);line-height:1.4}
-.name-row{display:flex;gap:10px;align-items:flex-end}
-.name-col{flex:1.7 1 0;min-width:0}.pn-col{flex:1 1 0;min-width:0}
-.name-row .field-head{margin:10px 0 6px;min-height:40px}
+.field-head .dx{margin-left:auto}.field-head .dx+.dx,.field-head [data-job-mic]+.dx{margin-left:0}
+.job-defaults{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.sec-remove{margin-top:10px}
+[data-rsec][hidden],#signoff[hidden]{display:none!important}
+.name-row{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px;align-items:end;margin-bottom:6px}
+.name-col,.pn-col{min-width:0}
+.name-row .field-head{margin:6px 0 6px;min-height:40px;flex-wrap:nowrap;gap:6px}
+.name-row .field-head label{white-space:nowrap;margin:0}
+.name-row #redoPart{white-space:nowrap;padding:6px 10px;font-size:16px;flex:0 0 auto;min-width:56px;min-height:56px}
+@media (max-width:600px){.name-row .redo-t{display:none}}
+@media (min-width:900px){.name-row{grid-template-columns:minmax(0,1fr) 220px}}
 .photo{padding:6px}
 .photo .fig{margin-bottom:4px}
 .photo-row{display:flex;gap:6px;margin-top:6px;align-items:stretch}
@@ -469,7 +477,30 @@ dialog#markup[open]{display:flex;flex-direction:column}
 .spell-line button{min-height:56px}
 #spellCount.warn{color:var(--mark);font-weight:600}
 #myWordsBox,#spWordsBox{min-height:110px;font-family:inherit}
-@media (max-width:600px){.spell-dialog[open]{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;border-radius:0;margin:0;padding:14px}.spell-dialog .sp-list{max-height:none;flex:1}.spell-dialog[open]{display:flex;flex-direction:column}}
+@media (max-width:600px){.spell-dialog[open]{width:100%;max-width:100%;height:var(--vvh,100dvh);max-height:var(--vvh,100dvh);border-radius:0;margin:0;padding:12px;display:flex;flex-direction:column;overflow:hidden}.spell-dialog .sp-list{max-height:none;flex:1 1 auto;min-height:0}}
+.sp-list{overflow-x:hidden;overscroll-behavior:contain}
+.sp-item,.sp-own,.sp-own input{min-width:0}
+.sp-help{margin:2px 0 4px}
+.spell-dialog .status{margin:4px 0}
+.sp-one .sp-item{margin-top:4px}
+.sp-one .sp-own{grid-template-columns:minmax(0,1fr)}
+.sp-one .sp-own button{width:100%;min-height:52px;font-weight:700}
+.sp-nav{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}
+.sp-nav button{min-height:52px}
+.sp-pos{font-weight:700;color:var(--muted);font-size:14px}
+.sp-edit textarea{min-height:min(40vh,300px);font-size:16px;line-height:1.4}
+.sp-edit-tools{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:6px;margin-top:8px}
+.sp-edit-tools button{min-height:52px;padding:6px}
+body.kbany .sp-edit textarea{min-height:96px}
+/* Keyboard up (any text box): compact sheet headers so the box being typed in stays visible. */
+body.kbany .spell-dialog h2{font-size:17px}
+body.kbany .spell-dialog #spClose{min-height:40px;padding:4px 10px}
+body.kbany #spHelp,body.kbany #spMine,body.kbany .spell-dialog .dialog-actions,body.kbany .spell-dialog .sp-where{display:none!important}
+body.kbany .spell-dialog .sp-ctx{font-size:15px;line-height:1.35}
+body.kbany .spell-dialog .sp-sugs{margin:6px 0}
+body.kbany dialog[open]:not(.spell-dialog){max-height:calc(var(--vvh,100dvh) - 8px);overflow:auto}
+body.kbany dialog[open] h2{font-size:17px;margin-bottom:6px}
+body.kbany dialog[open] .hint,body.kbany dialog[open] p.note{display:none}
 /* Optional extras can be hidden in Settings; anything already filled in stays visible. */
 body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val),body.no-extras .sub-disp:not(.has-val),body.no-extras #testRow:not(.has-val),body.no-extras .sub-test:not(.has-val){display:none!important}
 /* v15c: optional test result per part / sub-part */
@@ -506,7 +537,7 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <div id="storageWarn" class="warnbox" role="alert" hidden></div><div class="card"><h2 id="savedHead">On this phone</h2><div id="reports"><p class="muted">Opening reports saved on this phone…</p></div><button id="restoreBtn" type="button">Import backup ZIP</button><input id="restoreFile" type="file" accept=".zip,application/zip" hidden><p class="note">Reports, photos and the company logo stay in this browser. There is no account and nothing is uploaded. Full-size originals use more storage — 150 photos can be several hundred MB. Back up important jobs: clearing browser data, or losing this phone, deletes them. Speech-to-text may use the browser provider’s online service.</p><div class="status" id="storage"></div><button class="small" id="persist" type="button">Request durable storage</button></div>
 <div class="card" id="templatesCard"><h2>Templates: step-by-step strip-down</h2><p class="muted">A template is the part list for one tool, in strip-down order, with photo prompts and optional part drawings. Start a job from it and StripNote walks you through every part, so none get missed. Templates and drawings stay on this phone; they are never uploaded.</p><div id="templateList"><p class="muted">Loading templates…</p></div><div class="toolbar"><button id="tplImport" type="button">Import template (.txt or pack .zip)</button><button id="tplNew" type="button">New template</button><button id="tplBackup" type="button">Back up templates</button></div><input id="tplFile" type="file" accept=".txt,.zip,text/plain,application/zip,application/x-zip-compressed" hidden><details class="more"><summary>Template file format</summary><p class="note">A plain .txt file. Line 1: <b># Equipment name</b>. Then one line per part or step: <b>Part name | before, after, removed</b>. The photo prompts after | are optional; with none, the step asks for 1 photo. Item numbers in brackets are fine, e.g. <b>Floater (44) | before, removed</b>.</p><p class="note">Or a <b>template pack .zip</b> (stripnote-template/1): template.json with sections, steps, checks, job header fields, tools and end checklists, plus a drawings folder. Hints, warnings and safety notes in a pack show on the phone only and never print in the report.</p></details></div><div class="card" id="companyCard"><h2>Company name</h2><p class="muted">Printed on the cover and page headers of your reports instead of “StripNote”. Stored only on this phone.</p><input id="companyName" placeholder="e.g. Smith Pump Services Ltd" autocomplete="organization"></div><div class="card" id="myWordsCard"><details><summary><b>My spelling words</b> <span class="muted" id="myWordsCount"></span></summary><p class="muted">Words that Check spelling should accept – names, makes, local terms. One per line. Stored on this device and included in job backups. Trade words (mandrel, collet, elastomer, make-up…) are built in.</p><textarea id="myWordsBox" spellcheck="false" autocapitalize="off" aria-label="My spelling words, one per line"></textarea></details></div><div class="card" id="stylesCard"><h2>Report styles</h2><p class="muted">Colours and logo for Word, PDF and Slides. <b>Standard</b> is built in and uses the Company logo below. Add your own (e.g. one per client); they stay on this phone and go into job backups.</p><div id="styleList"></div><div class="toolbar"><button id="styleNew" type="button">+ New report style</button></div></div><div class="card" id="logoCard"><h2>Company logo</h2><p class="muted">Used by the <b>Standard</b> report style on Word, PDF and Slides headers. Stored only on this phone — it is never uploaded and is not part of the app files.</p><div id="logoPreviewWrap" class="logo-preview" hidden><img id="logoPreview" alt="Company logo preview"><button id="logoRemove" class="small danger" type="button">Remove logo</button></div><div class="toolbar"><button id="logoPick" type="button">Choose logo</button></div><input id="logoFile" type="file" accept="image/*" hidden></div>
 <details class="card"><summary>Phone setup and limits</summary><p>Serve these files over HTTPS for the microphone and for installation. Localhost works for testing. An opened HTML file is not an installable offline app.</p><p>On Android, use Chrome. On iPhone, use Safari and Share → Add to Home Screen. Dictation support varies; typing and the keyboard microphone remain available. Do not record in a hazardous area unless the phone is approved for it.</p><p>New recordings are turned into text only — they are not kept as audio. Leftover voice notes from an earlier version stay on this phone until you delete them, and are not added to new backups or reports. Review dictated text before sharing. Templates and part drawings are kept only on this phone; job backups carry the job’s own template so it can be restored. If a take is wrong, use Re-record on that field; it replaces only the last dictation and leaves anything you typed.</p></details>
-<p class="ver">StripNote v15</p>
+<p class="ver">StripNote v16</p>
 </section>
 <section id="report" hidden>
 <div class="row between"><button id="back" class="small" type="button">← Reports</button><span class="status" id="saveStatus" role="status">Saved</span></div>
@@ -514,10 +545,10 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <details class="card er-keep" id="details" open><summary>Report details</summary><div class="title-field"><label for="title">Report title</label><select id="titlePreset" aria-label="Report title suggestions"><option value="">Choose a title…</option><option value="Workshop Strip-down Report">Workshop Strip-down Report</option><option value="Field Strip-down Report">Field Strip-down Report</option><option value="Inspection Report">Inspection Report</option><option value="Failure Investigation Report">Failure Investigation Report</option><option value="__custom">Custom…</option></select><input id="title" data-job="title" placeholder="e.g. Workshop Strip-down Report" autocomplete="off"><p class="hint" id="titleHint">The cover shows this title large, then Equipment · Serial no.</p></div><div class="style-row"><label for="reportStyle">Report style</label><select id="reportStyle" aria-label="Report style: colours and logo used in Word, PDF and Slides"></select></div>
 <div id="packHeader" class="grid" hidden></div>
 <div class="grid" id="detailGrid">
-<div data-dfield="equipment"><label for="equipment">Equipment</label><input id="equipment" data-job="equipment" placeholder="Tool, make, model"></div>
-<div data-dfield="serial"><label for="serial">Serial no.</label><input id="serial" data-job="serial" placeholder="Equipment serial no."></div>
-<div data-dfield="client"><label for="client">Client</label><input id="client" data-job="client" placeholder="Company"></div>
-<div data-dfield="date"><label for="date">Date</label><input id="date" data-job="date" type="date"></div>
+<div data-dfield="equipment"><div class="field-head dhead"><label for="equipment">Equipment</label><button type="button" class="redo dx" data-dremove="equipment" aria-label="Remove Equipment">✕</button></div><input id="equipment" data-job="equipment" placeholder="Tool, make, model"></div>
+<div data-dfield="serial"><div class="field-head dhead"><label for="serial">Serial no.</label><button type="button" class="redo dx" data-dremove="serial" aria-label="Remove Serial no.">✕</button></div><input id="serial" data-job="serial" placeholder="Equipment serial no."></div>
+<div data-dfield="client"><div class="field-head dhead"><label for="client">Client</label><button type="button" class="redo dx" data-dremove="client" aria-label="Remove Client">✕</button></div><input id="client" data-job="client" placeholder="Company"></div>
+<div data-dfield="date"><div class="field-head dhead"><label for="date">Date</label><button type="button" class="redo dx" data-dremove="date" aria-label="Remove Date">✕</button></div><input id="date" data-job="date" type="date"></div>
 <div data-dfield="workOrder" data-dopt hidden><div class="field-head dhead"><label for="workOrder">Work order</label><button type="button" class="redo dx" data-dremove="workOrder" aria-label="Remove Work order">✕</button></div><input id="workOrder" data-job="workOrder" placeholder="e.g. WO-55821"></div>
 <div data-dfield="reference" data-dopt hidden><div class="field-head dhead"><label for="reference">Job ref</label><button type="button" class="redo dx" data-dremove="reference" aria-label="Remove Job ref">✕</button></div><input id="reference" data-job="reference" placeholder="e.g. JN-2026-1044"></div>
 <div data-dfield="site" data-dopt hidden><div class="field-head dhead"><label for="site">Location</label><button type="button" class="redo dx" data-dremove="site" aria-label="Remove Location">✕</button></div><input id="site" data-job="site" placeholder="Yard, plant or base"></div>
@@ -531,19 +562,21 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 </div>
 <div class="grid" id="customFields"></div>
 <div class="add-field"><label for="addField" class="sr-only">Add a field</label><select id="addField" class="compact" aria-label="Add a field to the report details"><option value="">+ Add field…</option></select></div>
+<div class="job-defaults"><button type="button" class="compact" id="makeDefaults">☆ Make these my default for new jobs</button><span class="note" id="jobDefaultsNote" hidden>New jobs start with your saved fields and sections.</span><button type="button" class="compact" id="resetDefaults" hidden>Reset to standard</button></div>
 </details>
 <details class="card er-keep" id="reportText"><summary>Report text: scope, summary, conclusions</summary>
-<div class="field-head"><label for="scope">Scope</label><button type="button" class="redo" data-job-mic="scope" aria-label="Speak the scope">🎙 Speak</button></div><textarea id="scope" data-job="scope" placeholder="Why the equipment was stripped, what was inspected, and any limits on the inspection."></textarea>
-<div class="field-head"><label for="summary">Summary / introduction</label><button type="button" class="redo" data-job-mic="summary" aria-label="Speak the summary / introduction">🎙 Speak</button></div><textarea id="summary" data-job="summary" placeholder="The main findings in two or three sentences."></textarea>
-<div class="field-head"><label for="conclusions">Conclusions</label><button type="button" class="redo" data-job-mic="conclusions" aria-label="Speak the conclusions">🎙 Speak</button></div><textarea id="conclusions" data-job="conclusions" placeholder="Likely cause of the failure or wear."></textarea>
-<div class="field-head"><label for="recommendations">Recommendations</label><button type="button" class="redo" data-job-mic="recommendations" aria-label="Speak the recommendations">🎙 Speak</button></div><textarea id="recommendations" data-job="recommendations" placeholder="Repairs, replacement parts, and follow-up actions."></textarea>
+<div class="rt-sec" data-rsec="scope"><div class="field-head"><label for="scope">Scope</label><button type="button" class="redo" data-job-mic="scope" aria-label="Speak the scope">🎙 Speak</button><button type="button" class="redo dx" data-rsremove="scope" aria-label="Remove Scope">✕</button></div><textarea id="scope" data-job="scope" placeholder="Why the equipment was stripped, what was inspected, and any limits on the inspection."></textarea></div>
+<div class="rt-sec" data-rsec="summary"><div class="field-head"><label for="summary">Summary / introduction</label><button type="button" class="redo" data-job-mic="summary" aria-label="Speak the summary / introduction">🎙 Speak</button><button type="button" class="redo dx" data-rsremove="summary" aria-label="Remove Summary / introduction">✕</button></div><textarea id="summary" data-job="summary" placeholder="The main findings in two or three sentences."></textarea></div>
+<div class="rt-sec" data-rsec="conclusions"><div class="field-head"><label for="conclusions">Conclusions</label><button type="button" class="redo" data-job-mic="conclusions" aria-label="Speak the conclusions">🎙 Speak</button><button type="button" class="redo dx" data-rsremove="conclusions" aria-label="Remove Conclusions">✕</button></div><textarea id="conclusions" data-job="conclusions" placeholder="Likely cause of the failure or wear."></textarea></div>
+<div class="rt-sec" data-rsec="recommendations"><div class="field-head"><label for="recommendations">Recommendations</label><button type="button" class="redo" data-job-mic="recommendations" aria-label="Speak the recommendations">🎙 Speak</button><button type="button" class="redo dx" data-rsremove="recommendations" aria-label="Remove Recommendations">✕</button></div><textarea id="recommendations" data-job="recommendations" placeholder="Repairs, replacement parts, and follow-up actions."></textarea></div>
+<p class="note" id="rtEmpty" hidden>No report text sections in this job.</p><div class="add-field" id="addSectionRow" hidden><select id="addSection" class="compact" aria-label="Add a section back to this job"><option value="">+ Add section…</option></select></div>
 </details>
 <details class="card er-keep" id="signoff"><summary>Sign-off</summary>
 <div class="grid">
 <div><label for="signName">Prepared by</label><input id="signName" data-job="signName" autocomplete="name" placeholder="Name"></div>
 <div><label for="signDate">Date signed</label><input id="signDate" data-job="signDate" type="date"></div>
 <div class="wide"><label for="checkedBy">Checked by (optional)</label><input id="checkedBy" data-job="checkedBy" placeholder="Name"></div>
-</div></details>
+</div><button type="button" class="compact sec-remove" data-rsremove="signoff">✕ Remove Sign-off from this job</button></details>
 <details class="card er-keep" id="toolHistory"><summary>Tool history / build paperwork <span class="th-count" id="thCount"></span></summary>
 <p class="note" style="margin:8px 0">PDFs that came with the tool: build sheet, previous run history. Kept on this device with the job. The report lists them, and the PDF and Word reports add their pages at the end (Appendix). Backups and Finish job include the original files.</p>
 <div id="thList"></div><p class="status" id="thStatus" role="status"></p>
@@ -554,12 +587,12 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 <div class="pane pane-main" id="paneMain"><section id="editor" class="card" hidden>
 <div id="stepHead" hidden><div class="row between"><span class="tag" id="stepCount">Step 1 of 1</span><button id="stepListBtn" class="small" type="button">☰ Steps</button></div><div class="tag sec-tag" id="stepSection" hidden></div><h2 id="stepTitle"></h2><div class="status ok" id="stepPartNos" hidden></div><progress id="stepProgress" value="0" max="100" aria-label="Steps done"></progress><div class="status" id="stepProgressText"></div><div id="stepDrawingWrap" hidden><img id="stepDrawing" alt="Part drawing for this step"><div class="status" id="stepDrawCap" hidden></div></div><div id="stepWarn" class="warnbox step-warn" role="alert" hidden></div><details id="stepHintBox" class="hintbox" hidden><summary>💡 Hint (phone only)</summary><p id="stepHintText"></p></details><details id="safetyBox" class="safetybox" hidden><summary>⚠ Safety notes (phone only)</summary><ul id="safetyList"></ul></details><div id="skipBanner" class="warnbox" hidden><span id="skipText"></span><button id="unskip" class="small" type="button">Undo skip</button></div><div id="promptChips" class="prompt-chips" role="group" aria-label="Photos for this step"></div><p class="status ok" id="stepHint"></p><div class="toolbar"><button id="stepDrawAttach" class="small" type="button">Attach drawing</button><button id="insertPart" class="small" type="button">+ Add part here</button></div></div>
 <div class="row between" id="editorHeadRow"><h2 id="editorTitle">Part</h2><span id="conditionBadge" class="badge OK">OK</span></div>
+<div class="name-row" id="nameRow"><div class="name-col"><div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button" aria-label="Re-record part name" title="Re-record part name">↻<span class="redo-t"> Re-record</span></button></div><input id="part" placeholder="e.g. Drive-end bearing"></div><div class="pn-col"><div class="field-head"><label for="partNo">Part no.</label></div><input id="partNo" placeholder="e.g. 1234-56" autocomplete="off" autocapitalize="characters" spellcheck="false"></div></div>
 <input id="cameraFile" type="file" accept="image/*" capture="environment" hidden><input id="galleryFile" type="file" accept="image/*" multiple hidden>
 <div id="editorPhotos" class="photos"></div>
 <p id="noPhotos" class="muted">No photos yet.</p>
 <div class="toolbar" id="editorTools"><button id="camera" type="button">📷 Take photo</button><button id="gallery" type="button">🖼 Gallery / files</button><details id="howTo" class="howto"><summary aria-label="How to use this screen">? How to</summary><p>Tap 🎙 Speak at the bottom and say the part name, pause, then the damage — e.g. “Bearing housing … heavy scoring on the inner race”. Or say “Part … Damage …”. Tap ■ when done; the boxes fill in. If it misheard, tap ↻ Re-record next to that field — only the last take is replaced. For another view of this part, use 📷 Same part and say a short caption. Photos already on the phone: 🖼 Gallery / files. Use ⋯ on a photo to move or copy it to another part.</p></details></div>
 <div id="micStatus" class="status" role="status"></div>
-<div class="name-row" id="nameRow"><div class="name-col"><div class="field-head" id="partHead"><label for="part">Part name</label><button id="redoPart" class="redo" type="button">↻ Re-record</button></div><input id="part" placeholder="e.g. Drive-end bearing"></div><div class="pn-col"><div class="field-head"><label for="partNo">Part no.</label></div><input id="partNo" placeholder="e.g. 1234-56" autocomplete="off" autocapitalize="characters" spellcheck="false"></div></div>
 <div id="checkCard" class="check-card" hidden></div>
 <label id="condLabel">Condition — tap one</label><div class="cond-row" id="condButtons" role="group" aria-labelledby="condLabel"><button type="button" data-cond="Not rated">Not rated</button><button type="button" data-cond="OK">OK</button><button type="button" data-cond="Wear">Wear</button><button type="button" data-cond="Damaged">Damaged</button><button type="button" data-cond="Replace">Replace</button></div><select id="condition" hidden aria-hidden="true"><option>Not rated</option><option>OK</option><option>Wear</option><option>Damaged</option><option>Replace</option></select><p class="status" id="condHint"></p><div class="disp-row" id="dispRow"><label for="disposition">Action</label><select id="disposition" aria-label="Action for this part: what happens to it next (optional)"><option value="">— Not set —</option><option value="reuse">Reuse</option><option value="nif">No issues found – reuse</option><option value="inspect">Inspect</option><option value="redress">Redress</option><option value="replace">Replace</option><option value="scrap">Scrap</option><option value="quarantine">Quarantine</option></select></div><div class="test-row" id="testRow"><label id="testLabel">Test result <span class="muted" style="font-weight:400">(optional)</span></label><div class="test-btns" role="group" aria-labelledby="testLabel"><button type="button" data-test="pass" aria-pressed="false">✓ Pass</button><button type="button" data-test="fail" aria-pressed="false">✕ Fail</button><button type="button" data-test="na" aria-pressed="false">Not tested</button></div><input id="testText" maxlength="300" placeholder="Test, e.g. Pressure test 5000 psi 15 min" aria-label="Test done (optional)"></div>
 <div class="field-head" id="descHead"><label for="description">Description</label><button id="descMic" class="redo" type="button" aria-label="Speak the description">🎙 Speak</button><button id="redoDescription" class="redo" type="button">↻ Re-record</button></div><textarea id="description" placeholder="What you see and the damage."></textarea>
@@ -587,7 +620,7 @@ body.no-extras #toolHistory:not(.has-docs),body.no-extras #dispRow:not(.has-val)
 </section>
 </main>
 <div id="toast" role="status" hidden></div>
-<dialog id="spellDialog" class="spell-dialog" aria-label="Check spelling"><div class="row between"><h2 style="margin:0">Check spelling</h2><button id="spClose" type="button" class="small">✕ Close</button></div><p class="status" id="spStatus" role="status"></p><div id="spList" class="sp-list"></div><details id="spMine" style="margin-top:8px"><summary>My words (accepted everywhere)</summary><textarea id="spWordsBox" spellcheck="false" autocapitalize="off" aria-label="My spelling words, one per line"></textarea></details><div class="dialog-actions"><button id="spDone" class="primary" type="button">Done</button></div></dialog><dialog id="thViewer" class="th-viewer" aria-label="View PDF"><div class="row between"><h2 id="thvTitle" style="margin:0;font-size:18px;overflow-wrap:anywhere">PDF</h2><button id="thvClose" type="button" class="small">✕ Close</button></div><p class="status" id="thvStatus" role="status"></p><div id="thvPages" class="thv-pages"></div><div class="dialog-actions"><button id="thvShare" type="button">⇪ Open / save the original PDF</button><button id="thvDone" class="primary" type="button">Close</button></div></dialog>
+<dialog id="spellDialog" class="spell-dialog" aria-label="Check spelling"><div class="row between"><h2 style="margin:0">Check spelling</h2><button id="spClose" type="button" class="small">✕ Close</button></div><p class="status" id="spStatus" role="status"></p><p class="note sp-help" id="spHelp" hidden></p><div id="spList" class="sp-list"></div><details id="spMine" style="margin-top:8px"><summary>My words (accepted everywhere)</summary><textarea id="spWordsBox" spellcheck="false" autocapitalize="off" aria-label="My spelling words, one per line"></textarea></details><div class="dialog-actions"><button id="spDone" class="primary" type="button">Done</button></div></dialog><dialog id="thViewer" class="th-viewer" aria-label="View PDF"><div class="row between"><h2 id="thvTitle" style="margin:0;font-size:18px;overflow-wrap:anywhere">PDF</h2><button id="thvClose" type="button" class="small">✕ Close</button></div><p class="status" id="thvStatus" role="status"></p><div id="thvPages" class="thv-pages"></div><div class="dialog-actions"><button id="thvShare" type="button">⇪ Open / save the original PDF</button><button id="thvDone" class="primary" type="button">Close</button></div></dialog>
 <dialog id="progressDialog"><h2 id="progressTitle">Preparing export</h2><p id="progressText" role="status">Please keep this screen open.</p><progress id="progressBar" value="0" max="100"></progress><p class="muted">Large reports take a moment. Keep the app in the foreground.</p></dialog>
 <dialog id="newJobDialog"><h2>New report</h2><label for="newJobStyle" style="margin-top:0">Report style</label><select id="newJobStyle" aria-label="Report style for the new report"></select><p class="muted">Pick a template to go step by step, or start a free-form report.</p><div id="newJobList"></div><button id="newJobBlank" type="button" style="width:100%;margin-top:8px">Free-form report (no template)</button><button id="newJobCancel" class="small" type="button" style="width:100%;margin-top:8px">Cancel</button></dialog>
 <dialog id="stepsDialog" class="steps-dialog"><div class="row between"><h2 style="margin:0">Steps</h2><button id="stepsClose" class="small" type="button">Close</button></div><p class="status" id="stepsSummary"></p><div id="stepsList"></div><button id="stepsToReport" type="button" style="width:100%">Go to report</button></dialog>
@@ -1177,6 +1210,13 @@ function partNoLabel(p){const v=clean(p?.partNo);return v?`Part no. ${v}`:'';}
 // Every photo of a job in report order: part photos, then each sub-part's photos.
 function photoEntries(parts){const out=[];(parts||[]).forEach((p,pi)=>{(p.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:p.name,prompt:ph.prompt,sub:-1}));(p.subParts||[]).forEach((x,k)=>(x.photos||[]).forEach((ph,j)=>out.push({ph,pi,j,name:x.name||'Sub-part',prompt:'',sub:k})));});return out;}
 const DEFAULT_FIELDS=['equipment','serial','client','date'];
+// v16: nothing is fixed. Default rows and whole sections can be removed per job (r.removed) and put back.
+const DEFAULT_LABELS={equipment:'Equipment',serial:'Serial no.',client:'Client',date:'Date'};
+const SECTIONS={scope:'Scope',summary:'Summary / introduction',conclusions:'Conclusions',recommendations:'Recommendations',signoff:'Sign-off'};
+const REMOVABLE=[...DEFAULT_FIELDS,...Object.keys(SECTIONS)];
+const JOB_DEFAULTS_ID='job:defaults';let jobDefaults=null;
+function isRemoved(r,k){return Array.isArray(r?.removed)&&r.removed.includes(k);}
+function fieldLabel(k){return DEFAULT_LABELS[k]||OPT_FIELD_LABELS[k]||SECTIONS[k]||k;}
 const OPT_FIELD_LABELS={workOrder:'Work order',reference:'Job ref',site:'Location',investigator:'Technician',contact:'Customer contact',rigWell:'Rig / Well',poNumber:'PO number',docNumber:'Document no.',revision:'Revision'};
 const OPT_FIELDS=Object.keys(OPT_FIELD_LABELS);
 function shapeCustom(a){return (Array.isArray(a)?a:[]).slice(0,40).map(x=>x&&typeof x==='object'?{id:typeof x.id==='string'&&x.id?x.id.slice(0,80):uid(),label:String(x.label??'').slice(0,80),value:String(x.value??'').slice(0,500)}:null).filter(x=>x&&clean(x.label));}
@@ -1188,13 +1228,13 @@ function migrateReport(r){
  else if(Array.isArray(src.entries))parts=src.entries.map(migratePart);
  else if(Array.isArray(src.parts))parts=src.parts.map(migratePart);
  else parts=[];
- return {id:String(src.id||uid()),schema:7,styleId:typeof src.styleId==='string'?src.styleId.slice(0,80):'',templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),toolDocs:shapeToolDocs(src.toolDocs),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[]};
+ return {id:String(src.id||uid()),schema:7,styleId:typeof src.styleId==='string'?src.styleId.slice(0,80):'',templateId:String(src.templateId??''),templateName:String(src.templateName??''),stepIndex:Number.isInteger(src.stepIndex)&&src.stepIndex>=0?src.stepIndex:0,title:String(src.title||''),equipment:String(src.equipment||''),reference:String(src.reference||''),client:String(src.client||''),site:String(src.site||''),date:String(src.date||''),investigator,engineer:investigator,parts,docNumber:String(src.docNumber??''),revision:String(src.revision??''),workOrder:String(src.workOrder??''),serial:String(src.serial??''),scope:String(src.scope??''),summary:String(src.summary??''),conclusions:String(src.conclusions??''),recommendations:String(src.recommendations??''),signName:String(src.signName??''),signDate:String(src.signDate??''),checkedBy:String(src.checkedBy??''),backedUpAt:typeof src.backedUpAt==='string'?src.backedUpAt:'',updated:src.updated||new Date().toISOString(),header:shapeHeader(src.header),pack:shapePack(src.pack),contact:String(src.contact??''),rigWell:String(src.rigWell??''),poNumber:String(src.poNumber??''),customFields:shapeCustom(src.customFields),toolDocs:shapeToolDocs(src.toolDocs),shownFields:Array.isArray(src.shownFields)?[...new Set(src.shownFields.filter(k=>OPT_FIELDS.includes(k)))]:[],removed:Array.isArray(src.removed)?[...new Set(src.removed.filter(k=>REMOVABLE.includes(k)))]:[]};
 }
 function isCurrentReport(r){
  if(!r||r.schema!==7||!Array.isArray(r.parts)||Array.isArray(r.entries))return false;
  if(typeof r.styleId!=='string')return false;
  if(r.parts.some(p=>[...(p?.photos||[]),...(p?.subParts||[]).flatMap(x=>x?.photos||[])].some(ph=>ph&&(STORED_NO_RE.test(String(ph.caption||''))||!Array.isArray(ph.markup)||(ph.rot!==undefined&&!asRot(ph.rot))||Object.keys(ph).some(k=>!['id','caption','prompt','markup','rot'].includes(k))))))return false;
- if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields))return false;
+ if(!['contact','rigWell','poNumber'].every(k=>typeof r[k]==='string')||!Array.isArray(r.customFields)||!Array.isArray(r.shownFields)||!Array.isArray(r.removed))return false;
  if(!r.parts.every(p=>typeof p?.partNo==='string'&&Array.isArray(p.subParts)&&p.subParts.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.photos)&&typeof x.condition==='string')))return false;
  if(typeof r.templateId!=='string'||typeof r.templateName!=='string'||!Number.isInteger(r.stepIndex))return false;
  if(!r.parts.every(p=>Array.isArray(p?.prompts)&&typeof p.drawingId==='string'&&typeof p.fromTemplate==='boolean'&&typeof p.skipped==='boolean'&&typeof p.skipReason==='string'&&Array.isArray(p.photos)&&p.photos.every(ph=>typeof ph?.prompt==='string')))return false;
@@ -1218,13 +1258,19 @@ async function migrateStoredReports(){
  }
 }
 function photoCount(parts){return (parts||[]).reduce((n,p)=>n+(p.photos?.length||0)+(Array.isArray(p.subParts)?p.subParts.reduce((m,x)=>m+(x?.photos?.length||0),0):0),0);}
-function blankReport(){return migrateReport({id:uid(),styleId:lastStyleId(),title:'',equipment:'',reference:'',client:'',site:'',date:day(),investigator:'',revision:'',parts:[],updated:new Date().toISOString()});}
+function blankReport(){const d=jobDefaults||{};const removed=Array.isArray(d.removed)?d.removed.filter(k=>REMOVABLE.includes(k)):[];
+ return migrateReport({id:uid(),styleId:lastStyleId(),title:'',equipment:'',reference:'',client:'',site:'',date:removed.includes('date')?'':day(),investigator:'',revision:'',parts:[],updated:new Date().toISOString(),removed,shownFields:Array.isArray(d.shown)?d.shown:[],customFields:(Array.isArray(d.custom)?d.custom:[]).map(l=>({id:uid(),label:String(l),value:''}))});}
+async function loadJobDefaults(){try{const r=await get('settings',JOB_DEFAULTS_ID);jobDefaults=r&&typeof r==='object'?{removed:Array.isArray(r.removed)?r.removed.filter(k=>REMOVABLE.includes(k)):[],shown:Array.isArray(r.shown)?r.shown.filter(k=>OPT_FIELDS.includes(k)):[],custom:Array.isArray(r.custom)?r.custom.map(String).filter(Boolean).slice(0,40):[]}:null;}catch(e){jobDefaults=null;}paintJobDefaults();}
+async function saveJobDefaults(d){if(d){jobDefaults={removed:[...d.removed],shown:[...d.shown],custom:[...d.custom]};await put('settings',{id:JOB_DEFAULTS_ID,kind:'jobdefaults',...jobDefaults});}else{jobDefaults=null;await remove('settings',JOB_DEFAULTS_ID);}paintJobDefaults();}
+function jobLayoutOf(r){return {removed:[...(r.removed||[])],shown:OPT_FIELDS.filter(k=>(r.shownFields||[]).includes(k)||clean(r[k])),custom:(r.customFields||[]).map(f=>clean(f.label)).filter(Boolean)};}
+function paintJobDefaults(){const n=$('jobDefaultsNote');if(!n)return;n.hidden=!jobDefaults;$('resetDefaults').hidden=!jobDefaults;}
 
 async function init(){
  db=await new Promise((resolve,reject)=>{const r=indexedDB.open('stripnote-v1',2);r.onupgradeneeded=()=>{const base=r.result;if(!base.objectStoreNames.contains('reports'))base.createObjectStore('reports',{keyPath:'id'});if(!base.objectStoreNames.contains('media'))base.createObjectStore('media',{keyPath:'id'});if(!base.objectStoreNames.contains('settings'))base.createObjectStore('settings',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
  await migrateStoredReports();
  await loadCompany();
  await loadMyWords();
+ await loadJobDefaults();
  await showLogoPreview();
  await listReports();
  await renderTemplateList().catch(console.warn);
@@ -1304,7 +1350,7 @@ async function newReport(){
  if(list.length){$('newJobList').innerHTML=list.map(t=>`<button type="button" class="report-button" data-newjob="${esc(t.id)}"><span><strong>▶ ${esc(t.name)}</strong><small>${t.steps.length} step${t.steps.length===1?'':'s'}, in order</small></span><span>→</span></button>`).join('');$('newJobDialog').showModal();return;}
  await startBlank();
 }
-async function startBlank(){await stopRecording();current=blankReport();await persistReport();showReport();$('equipment').focus();}
+async function startBlank(){await stopRecording();current=blankReport();await persistReport();showReport();(isRemoved(current,'equipment')?$('title'):$('equipment')).focus();}
 async function openReport(id){await stopRecording();const raw=await get('reports',id);if(!raw)throw Error('Report not found');current=migrateReport(raw);if(!isCurrentReport(raw))await persistReport();showReport();}
 function setDock(editingOpen){
  $('dockIdle').hidden=!!editingOpen;$('dockEdit').hidden=!editingOpen;
@@ -1321,7 +1367,7 @@ function showReport(){
  window.scrollTo(0,0);
  if(isDesk()){$('paneRight').scrollTop=0;$('paneSide').scrollTop=0;requestAnimationFrame(deskLayout);}
 }
-function syncTitlePreset(){const v=clean($('title').value);$('titlePreset').value=!v?'':TITLE_PRESETS.includes(v)?v:'__custom';const id=current?reportIdLine(current):'';$('titleHint').textContent=`Cover: “${reportTitle({title:v})}”${id?` · ${id}`:' · (add Equipment and Serial no.)'}`;}
+function syncTitlePreset(){const v=clean($('title').value);$('titlePreset').value=!v?'':TITLE_PRESETS.includes(v)?v:'__custom';const id=current?reportIdLine(current):'';$('titleHint').textContent=`Cover: “${reportTitle({title:v})}”${id?` · ${id}`:current&&isRemoved(current,'equipment')&&isRemoved(current,'serial')?'':' · (add Equipment and Serial no.)'}`;}
 function updateHeading(){
  $('reportTitle').textContent=current.title||current.equipment||'Untitled report';if($('titlePreset'))syncTitlePreset();
  const n=current.parts.length, p=photoCount(current.parts);
@@ -1406,17 +1452,28 @@ async function movePartTo(id,n){
  $('entries').querySelector(`[data-part="${CSS.escape(id)}"]`)?.scrollIntoView({block:'nearest'});
  toast(`“${p.name||'Untitled part'}” is now no. ${j+1}. Parts and photos renumbered.`);
 }
-function detailVisible(k){return DEFAULT_FIELDS.includes(k)||(current.shownFields||[]).includes(k)||!!clean(current[k]);}
+function detailVisible(k){return (DEFAULT_FIELDS.includes(k)&&!isRemoved(current,k))||(current.shownFields||[]).includes(k)||!!clean(current[k]);}
 function renderDetails(){
  if(!current)return;
  syncStylePickers();
  const packKeys=new Set(isPackJob(current)?current.pack.headerFields.map(headerKey).filter(Boolean):[]);
  document.querySelectorAll('#detailGrid [data-dfield]').forEach(el=>{const k=el.dataset.dfield;el.hidden=packKeys.has(k)||!detailVisible(k);});
  $('customFields').innerHTML=(current.customFields||[]).map(f=>`<div data-custom="${esc(f.id)}"><div class="field-head dhead"><label for="cf-${esc(f.id)}">${esc(f.label)}</label><button type="button" class="redo dx" data-cremove="${esc(f.id)}" aria-label="Remove ${esc(f.label)}">✕</button></div><input id="cf-${esc(f.id)}" data-custom-input="${esc(f.id)}" value="${esc(f.value)}"></div>`).join('');
- const avail=OPT_FIELDS.filter(k=>!packKeys.has(k)&&!detailVisible(k));
- $('addField').innerHTML=`<option value="">+ Add field…</option>${avail.map(k=>`<option value="${k}">${esc(OPT_FIELD_LABELS[k])}</option>`).join('')}<option value="__custom">Custom label…</option>`;
+ const avail=[...DEFAULT_FIELDS,...OPT_FIELDS].filter(k=>!packKeys.has(k)&&!detailVisible(k));
+ $('addField').innerHTML=`<option value="">+ Add field…</option>${avail.map(k=>`<option value="${k}">${esc(fieldLabel(k))}</option>`).join('')}<option value="__custom">Custom label…</option>`;
  $('addField').value='';
+ renderSections();
 }
+function renderSections(){if(!current)return;
+ document.querySelectorAll('[data-rsec]').forEach(el=>{el.hidden=isRemoved(current,el.dataset.rsec);});
+ $('signoff').hidden=isRemoved(current,'signoff');
+ const avail=Object.keys(SECTIONS).filter(k=>isRemoved(current,k));
+ $('addSection').innerHTML=`<option value="">+ Add section…</option>${avail.map(k=>`<option value="${k}">${esc(SECTIONS[k])}</option>`).join('')}`;$('addSection').value='';$('addSectionRow').hidden=!avail.length;
+ const allText=['scope','summary','conclusions','recommendations'].every(k=>isRemoved(current,k));$('rtEmpty').hidden=!allText;}
+async function removeSection(k){if(!current||!SECTIONS[k])return;const keys=k==='signoff'?['signName','signDate','checkedBy']:[k];const had=keys.map(x=>clean(current[x])).filter(Boolean).join(', ');
+ if(had&&!confirm(`Remove ${SECTIONS[k]} (“${clipText(had,60)}”) from this report?`))return;jobMicStop();keys.forEach(x=>{current[x]='';const el=$(x);if(el)el.value='';});
+ if(!current.removed.includes(k))current.removed.push(k);renderSections();await persistReport();toast(`${SECTIONS[k]} removed from this job. Put it back with + Add section.`);}
+async function addSection(k){if(!current||!SECTIONS[k])return;current.removed=current.removed.filter(x=>x!==k);renderSections();await persistReport();if(k==='signoff'){$('signoff').open=true;$('signName').focus();}else $(k)?.focus();}
 function updateEditorChrome(){
  if(!editing)return;
  const n=current.parts.indexOf(editing);
@@ -2108,6 +2165,11 @@ function kbUpdate(){
  document.body.classList.toggle('kb',open);
  if(open&&!kbOpen)setTimeout(()=>{const a=document.activeElement;if(!a||!document.body.classList.contains('kb'))return;const dockTop=$('dockEdit').closest('.dock')?.getBoundingClientRect().top??vv.height;const r=a.getBoundingClientRect();if(r.bottom>dockTop-8||r.top<vv.offsetTop+60)window.scrollBy(0,r.bottom-(dockTop-16));},80);
  kbOpen=open;
+ const anyT=!!ae&&ae.matches('textarea,input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=button]):not([type=color]):not([type=range])');
+ document.documentElement.style.setProperty('--vvh',Math.round(vv.height)+'px');
+ const kbA=anyT&&(kbBase-vv.height>120||vv.height<560);
+ if(kbA&&!document.body.classList.contains('kbany')){const dlg=ae.closest('dialog[open]');if(dlg&&!dlg.classList.contains('spell-dialog'))setTimeout(()=>ae.isConnected&&ae.scrollIntoView({block:'nearest'}),300);}
+ document.body.classList.toggle('kbany',kbA);
 }
 if(window.visualViewport){visualViewport.addEventListener('resize',kbUpdate);visualViewport.addEventListener('scroll',kbUpdate);}
 document.addEventListener('focusin',()=>setTimeout(kbUpdate,50));document.addEventListener('focusout',()=>setTimeout(kbUpdate,120));$('speakBtn').addEventListener('contextmenu',e=>e.preventDefault());
@@ -2166,7 +2228,7 @@ const DETAIL_ROWS=[['client','Client'],['site','Location'],['rigWell','Rig / Wel
 function jobRows(r){
  const val=k=>k==='date'?prettyDate(r.date):k==='investigator'?String(r.investigator||r.engineer||''):String(r[k]||'');
  const custom=(r.customFields||[]).filter(f=>clean(f.label)&&clean(f.value)).map(f=>[clean(f.label),f.value]);
- if(!isPackJob(r)||!r.pack.headerFields.length)return DETAIL_ROWS.filter(([k])=>DEFAULT_FIELDS.includes(k)||clean(val(k))).map(([k,l])=>[l,val(k)]).concat(custom);
+ if(!isPackJob(r)||!r.pack.headerFields.length)return DETAIL_ROWS.filter(([k])=>(DEFAULT_FIELDS.includes(k)&&!isRemoved(r,k))||clean(val(k))).map(([k,l])=>[l,val(k)]).concat(custom);
  const rows=[],used=new Set();
  for(const l of r.pack.headerFields){const k=headerKey(l);if(k==='signName')continue;if(k)used.add(k);rows.push([l,k==='date'?prettyDate(r.date):headerValue(r,l)]);}
  for(const [k,l] of DETAIL_ROWS){if(used.has(k))continue;const v=val(k);if(clean(v))rows.push([l,v]);}
@@ -2454,11 +2516,11 @@ async function buildDocx(raw,notify=()=>{}){
  }
  if(clean(r.conclusions))body+=H1(`${++sec}. Conclusions`)+PARAS(r.conclusions);
  if(clean(r.recommendations))body+=H1(`${++sec}. Recommendations`)+PARAS(r.recommendations);
- body+=H1(`${++sec}. Sign-off`);
+ if(!isRemoved(r,'signoff')){body+=H1(`${++sec}. Sign-off`);
  const signRows=[['Prepared by',r.signName||r.investigator||'','',prettyDate(r.signDate)]];
  if(clean(r.checkedBy))signRows.push(['Checked by',r.checkedBy,'','']);
- body+=simpleTable([2000,3066,2900,1900],['Role','Name','Signature','Date'],signRows);
- body+=docxPara(docxRun(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,{size:17,color:'5C6B70'}),'<w:spacing w:before="120" w:after="0"/>');
+ body+=simpleTable([2000,3066,2900,1900],['Role','Name','Signature','Date'],signRows);}
+ if(!isRemoved(r,'signoff')||clean(r.docNumber)||clean(r.revision))body+=docxPara(docxRun(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,{size:17,color:'5C6B70'}),'<w:spacing w:before="120" w:after="0"/>');
  body+=docxPara(docxRun(photoNote(),{size:16,italic:true,color:'8AA0A6'}),'<w:spacing w:before="200" w:after="0"/>');
  if(isPackJob(r)&&r.pack.appendix.length){let first=true;for(const a of r.pack.appendix){const d=await exportDrawing(a.id);if(!d)continue;dn++;zip.file(`word/media/drawing${dn}.jpg`,await d.blob.arrayBuffer());rels+=`<Relationship Id="rIdD${dn}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/drawing${dn}.jpg"/>`;const {cx,cy}=fitEmu(d.width,d.height,6264000,first?7900000:8500000);body+='<w:p><w:r><w:br w:type="page"/></w:r></w:p>';if(first){body+=H1('Appendix – parts list');first=false;}body+=drawingXml(100000+dn,cx,cy,`Appendix: ${a.name}`,`rIdD${dn}`);}}
  // v15 appendix: each received page as an image (pdf.js, one page at a time), labelled "n. Title · date · Page x of y".
@@ -2837,11 +2899,11 @@ async function buildPDF(raw,notify=()=>{}){
  }
  if(clean(r.conclusions)){H1(`${++sec}. Conclusions`);PARAS(r.conclusions);}
  if(clean(r.recommendations)){H1(`${++sec}. Recommendations`);PARAS(r.recommendations);}
- H1(`${++sec}. Sign-off`);
+ if(!isRemoved(r,'signoff')){H1(`${++sec}. Sign-off`);
  const signRows=[['Prepared by',r.signName||r.investigator||'','',prettyDate(r.signDate)]];
  if(clean(r.checkedBy))signRows.push(['Checked by',r.checkedBy,'','']);
- table([32,60,50,CW-142],['Role','Name','Signature','Date'],signRows,{minRow:14});
- y+=5;need(6);drawText(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,ML,y,{size:8.5,color:[90,100,104]});y+=7;
+ table([32,60,50,CW-142],['Role','Name','Signature','Date'],signRows,{minRow:14});}
+ if(!isRemoved(r,'signoff')||clean(r.docNumber)||clean(r.revision)){y+=5;need(6);drawText(`Document ${r.docNumber||'—'} · Revision ${r.revision||'—'}`,ML,y,{size:8.5,color:[90,100,104]});y+=7;}
  if(y+8>bottom)newPage();
  const note=textLines(photoNote(),8,CW);
  note.forEach(line=>{if(y+4>bottom)newPage();drawText(line,ML,y,{size:8,color:[120,128,132]});y+=3.6;});
@@ -3172,13 +3234,14 @@ async function buildPptx(raw,notify=()=>{}){
   for(let s=0;s<e.finalChecks.length;s+=6){const chunk=e.finalChecks.slice(s,s+6);const sl=await frame(`Final checks and sign-off${e.finalChecks.length>6?` (${Math.floor(s/6)+1})`:''}`);ppTable(sl.shapes,sl.next++,0.4,1.1,[10.5,2.03],[['Check','Done']].concat(chunk.map(x=>[x.text,x.done?'Yes':'NOT ticked'])),{rowH:0.72,size:13,clip:220,cellStyle:tickSt(1)});ppShape(sl.shapes,sl.next++,0.4,1.1+0.72*(chunk.length+1)+0.35,12.5,0.5,ppPara(`Final checks by: ${r.signName||'—'}   ·   ${prettyDate(r.signDate||r.date)||'—'}`,{size:16,bold:true,color:RN()}),{name:'Sign-off',fit:false});}
  }
  // 5. Conclusions and recommendations
- {
-  const sl=await frame('Conclusions and recommendations');
+ const crCols=[['conclusions','Conclusions'],['recommendations','Recommendations']].filter(([k])=>!isRemoved(r,k)),signOn=!isRemoved(r,'signoff');
+ if(crCols.length||signOn){
+  const sl=await frame(crCols.length===2?'Conclusions and recommendations':crCols.length?(signOn?`${crCols[0][1]} and sign-off`:crCols[0][1]):'Sign-off');
   const con=paragraphsOf(r.conclusions).join('\n'),rec=paragraphsOf(r.recommendations).join('\n');
   const col=(x,w,label,text)=>{ppShape(sl.shapes,sl.next++,x,1.1,w,0.45,ppPara(label,{size:16,bold:true,color:RN()}),{name:label+' label',fit:false});ppShape(sl.shapes,sl.next++,x,1.6,w,4.4,ppParas(clipText(text||'None recorded.',900),{size:16,after:6,color:text?'1F2A30':'8AA0A6'}),{name:label,line:'DCE3E6',fill:'F8FAFB'});};
-  col(0.4,6.15,'Conclusions',con);col(6.8,6.15,'Recommendations',rec);
+  if(crCols.length===2){col(0.4,6.15,'Conclusions',con);col(6.8,6.15,'Recommendations',rec);}else if(crCols.length)col(0.4,12.55,crCols[0][1],crCols[0][0]==='conclusions'?con:rec);
   const who=[r.signName||r.investigator||'',prettyDate(r.signDate)].filter(Boolean).join(' · ');
-  ppShape(sl.shapes,sl.next++,0.4,6.15,12.55,0.4,ppPara(`Prepared by: ${who||'—'}${clean(r.checkedBy)?`   ·   Checked by: ${r.checkedBy}`:''}   ·   Document ${r.docNumber||'—'} rev ${r.revision||'—'}`,{size:13,color:'1F2A30'}),{name:'Sign-off',fit:false});
+  const soY=crCols.length?6.15:1.1;if(signOn)ppShape(sl.shapes,sl.next++,0.4,soY,12.55,0.4,ppPara(`Prepared by: ${who||'—'}${clean(r.checkedBy)?`   ·   Checked by: ${r.checkedBy}`:''}   ·   Document ${r.docNumber||'—'} rev ${r.revision||'—'}`,{size:13,color:'1F2A30'}),{name:'Sign-off',fit:false});
   ppShape(sl.shapes,sl.next++,0.4,6.55,12.55,0.35,ppPara(photoNote(),{size:10,italic:true,color:'8AA0A6'}),{name:'Photo note',fit:false});
  }
  if(isPackJob(r)){const ap=r.pack.appendix;for(let k=0;k<ap.length;k++){const d=await exportDrawing(ap[k].id);if(!d)continue;const sl=await frame(`Appendix – parts list${ap.length>1?` (${k+1} of ${ap.length})`:''}`);const rel=await addMedia(sl,d.blob,'jpg');const f=ppFitBox(d.width,d.height,0.4,0.98,12.53,6.05);ppPic(sl.shapes,sl.next++,rel,f.x,f.y,f.w,f.h,`Appendix ${ap[k].name}`);}}
@@ -3288,7 +3351,7 @@ async function buildBackup(raw,notify=()=>{},opts={}){
   zip.file(path,m.blob,{binary:true});d.path=path;
   notify(`Backing up tool history ${k+1} of ${exported.toolDocs.length}`,k+1,exported.toolDocs.length);await tick();
  }}
- zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates,spellWords:[...myWords].slice(0,5000)},null,2));
+ zip.file('report.json',JSON.stringify({format:'stripnote',version:9,company:companyName,report:exported,templates,spellWords:[...myWords].slice(0,5000),...(jobDefaults?{jobDefaults}:{})},null,2));
  const total=photoCount(exported.parts);
  const used=new Set();let done=0;
  for(const e of photoEntries(exported.parts)){
@@ -3476,6 +3539,7 @@ async function importBackup(file){
   let styleNote='';
   try{const sf=z.file('styles.json');if(sf){const list=JSON.parse(await sf.async('string'));let k=0;for(const m of Array.isArray(list)?list:[]){const id=String(m?.id||'');if(!id.startsWith(STYLE_PREFIX)||await get('settings',id))continue;let logo=null;if(m.logo?.path){const f=z.file(String(m.logo.path));if(f){const b=await f.async('uint8array');const mime=String(m.logo.mime||'image/png');if(b.length<=8*1048576&&mime.startsWith('image/'))logo={blob:new Blob([b],{type:mime}),mime,width:m.logo.width,height:m.logo.height,name:String(m.logo.name||'')};}}const st=shapeStyle({...m,logo});st.updated=String(m.updated||new Date().toISOString());await put('settings',st);k++;}if(k){styleNote=` ${k} report style${k===1?' was':'s were'} restored too.`;await renderStyleList();}}}catch(e){console.warn('Styles in backup could not be restored',e);}
   const nw=await mergeMyWords(data.spellWords).catch(()=>0);
+  if(!jobDefaults&&data.jobDefaults&&typeof data.jobDefaults==='object'){const d=data.jobDefaults;await saveJobDefaults({removed:(Array.isArray(d.removed)?d.removed:[]).filter(k=>REMOVABLE.includes(k)),shown:(Array.isArray(d.shown)?d.shown:[]).filter(k=>OPT_FIELDS.includes(k)),custom:(Array.isArray(d.custom)?d.custom:[]).map(String).filter(Boolean).slice(0,40)}).catch(()=>{});}
   toast('Backup restored as a separate report.'+thNote+logoNote+tplNote+styleNote+(nw?` ${nw} spelling word${nw===1?'':'s'} added to your words.`:''));
  }catch(e){
   for(const id of importedIds)await remove('media',id).catch(()=>{});
@@ -3757,12 +3821,18 @@ on('subQuick','click',async e=>{const b=e.target.closest('[data-subadd]');if(!b|
 // ---- v11 report details: 4 fields shown, more from + Add field ----
 on('addField','change',async()=>{const v=$('addField').value;$('addField').value='';if(!v||!current)return;let focusId;
 if(v==='__custom'){const label=clean(prompt('Name of the new field (e.g. Pressure test no.):','')||'').slice(0,80);if(!label){renderDetails();return;}const f={id:uid(),label,value:''};current.customFields.push(f);focusId='cf-'+f.id;}
+else if(DEFAULT_FIELDS.includes(v)){current.removed=current.removed.filter(o=>o!==v);if(v==='date'&&!current.date){current.date=day();$('date').value=current.date;}focusId=v;}
 else{if(!current.shownFields.includes(v))current.shownFields.push(v);focusId=v;}
 renderDetails();await persistReport();$(focusId)?.focus();});
+on('reportText','click',e=>{const b=e.target.closest('[data-rsremove]');if(!b)return;e.preventDefault();removeSection(b.dataset.rsremove).catch(fail);});
+on('signoff','click',e=>{const b=e.target.closest('[data-rsremove]');if(!b)return;e.preventDefault();removeSection(b.dataset.rsremove).catch(fail);});
+on('addSection','change',()=>{const v=$('addSection').value;$('addSection').value='';if(v)addSection(v).catch(fail);});
+on('makeDefaults','click',async()=>{if(!current)return;const d=jobLayoutOf(current);await saveJobDefaults(d);const off=d.removed.map(fieldLabel),on_=[...d.shown.map(fieldLabel),...d.custom];toast(`Saved for new jobs.${off.length?` Left out: ${off.join(', ')}.`:''}${on_.length?` Added: ${on_.join(', ')}.`:''}`);});
+on('resetDefaults','click',async()=>{await saveJobDefaults(null);toast('New jobs start with the standard fields again.');});
 on('details','click',async e=>{const b=e.target.closest('[data-dremove],[data-cremove]');if(!b||!current)return;e.preventDefault();
-if(b.dataset.dremove){const k=b.dataset.dremove;if(clean(current[k])&&!confirm(`Remove ${OPT_FIELD_LABELS[k]} (“${clean(current[k])}”) from this report?`))return;current[k]='';if(k==='investigator')current.engineer='';current.shownFields=current.shownFields.filter(o=>o!==k);const inp=$(k);if(inp)inp.value='';}
+if(b.dataset.dremove){const k=b.dataset.dremove;const v=k==='date'?prettyDate(current.date):clean(current[k]);if(v&&!confirm(`Remove ${fieldLabel(k)} (“${v}”) from this report?`))return;current[k]='';if(DEFAULT_FIELDS.includes(k)&&!current.removed.includes(k))current.removed.push(k);if(k==='investigator')current.engineer='';current.shownFields=current.shownFields.filter(o=>o!==k);const inp=$(k);if(inp)inp.value='';}
 else{const f=current.customFields.find(o=>o.id===b.dataset.cremove);if(!f)return;if(clean(f.value)&&!confirm(`Remove ${f.label} (“${clean(f.value)}”) from this report?`))return;current.customFields=current.customFields.filter(o=>o!==f);}
-renderDetails();updateHeading();await persistReport();});
+renderDetails();updateHeading();syncTitlePreset();await persistReport();});
 $('customFields').addEventListener('input',e=>{const inp=e.target.closest('[data-custom-input]');if(!inp||!current)return;const f=current.customFields.find(o=>o.id===inp.dataset.customInput);if(!f)return;f.value=inp.value.slice(0,500);persistReport().catch(()=>{});});
 on('sortToggle','click',()=>{localStorage.setItem('stripnote-order',listNewestFirst()?'oldest':'newest');renderEntries();});
 on('audioList','click',async e=>{
@@ -4716,6 +4786,8 @@ OD ID mm cm psi kpsi ksi Nm kN lbf lbs lb ft ft-lb ft-lbs rpm kg degC hrs hr app
 pre-job post-job as-found as-received ultrasonic magnetic penetrant borescope boroscope radial axial circumferential longitudinal
 API NPT BSP UNF UNC IF REG FH tooljoint tool-joint tooljoints pup pups sour H2S cutback cutbacks hardbanding hardbanded
 `.split(/\s+/).filter(Boolean);
+// v16: prefixes that are written with a hyphen (pre-inspection, re-torque, non-return…).
+const SPELL_PREFIXES=['pre','post','re','non','sub','anti','semi','co','de','over','under'];
 const TRADE_SET=new Set(TRADE_WORDS.map(w=>w.toLowerCase()));
 let spellP=null,speller=null,myWords=new Set(),spellCounted=new Map(),spellTipShown=new Set();
 const spellIgnores=new Map();// report id -> Set("field|word") for this session
@@ -4787,12 +4859,15 @@ function knownWord(w){
  const base=n.replace(/'s$/i,'').replace(/s'$/i,'s');if(base!==n&&base.length>1&&knownWord(base))return true;
  // -ize / -yze spellings are fine in British technical writing too
  const ise=n.replace(/iz(e|es|ed|ing|ation|ations|er|ers)$/i,'is$1').replace(/yz(e|es|ed|ing|er|ers)$/i,'ys$1');if(ise!==n&&sp.correct(ise))return true;
- if(n.includes('-'))return n.split('-').every(x=>!x||/^[A-Z]+$/.test(x)||knownWord(x));
+ if(n.includes('-'))return n.split('-').every((x,i,a)=>!x||/^[A-Z]+$/.test(x)||(i<a.length-1&&SPELL_PREFIXES.includes(x.toLowerCase()))||knownWord(x));
  return false;
 }
 function matchCase(src,s){if(!s)return s;if(src.length>1&&src===src.toUpperCase())return s.toUpperCase();if(src[0]===src[0].toUpperCase()&&src[0]!==src[0].toLowerCase())return s[0].toUpperCase()+s.slice(1);return s;}
 const sugCache=new Map();
-function spellSuggest(w){const k=w.toLowerCase();if(!sugCache.has(k)){let s=[];try{s=speller.suggest(k);if(!s.length&&k!==w)s=speller.suggest(w);s=s.slice(0,5);}catch{}sugCache.set(k,s);}return [...new Set(sugCache.get(k).map(x=>matchCase(w,x)))].slice(0,4);}
+// 'pre' + next word → 'pre-<word>'; 'preinspection' → 'pre-inspection'.
+function prefixJoin(iss){const low=iss.word.toLowerCase();if(!SPELL_PREFIXES.includes(low))return '';const m=/^(\s+)([A-Za-z][A-Za-z']*)/.exec(iss.text.slice(iss.start+iss.word.length));if(!m||m[1].includes('\n')||!knownWord(m[2]))return '';return iss.word+'-'+m[2];}
+function prefixSplit(w){const low=w.toLowerCase();for(const p of SPELL_PREFIXES){if(low.startsWith(p)&&w.length-p.length>=3&&knownWord(w.slice(p.length)))return w.slice(0,p.length)+'-'+w.slice(p.length);}return '';}
+function spellSuggest(w){const k=w.toLowerCase();if(!sugCache.has(k)){let s=[];try{s=speller.suggest(k);if(!s.length&&k!==w)s=speller.suggest(w);s=s.slice(0,5);}catch{}sugCache.set(k,s);}const ps=prefixSplit(w);return [...new Set([...(ps?[ps]:[]),...sugCache.get(k).map(x=>matchCase(w,x))])].slice(0,4);}
 function spellScan(r){
  const ign=spellIgnores.get(r.id)||new Set();const out=[];
  for(const f of spellFields(r))for(const t of spellTokens(f.text)){if(knownWord(t.word))continue;if(ign.has(pathKey(f.path)+'|'+t.word.toLowerCase())||ign.has('*|'+t.word.toLowerCase()))continue;out.push({path:f.path,label:f.label,text:f.text,start:t.start,word:t.word});}
@@ -4803,6 +4878,7 @@ function replaceWordAt(text,start,word,rep){
  const re=new RegExp(`(^|[^A-Za-z\\u00C0-\\u024F'])${word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?![A-Za-z\\u00C0-\\u024F])`);
  return text.replace(re,(m,a)=>a+rep);
 }
+function fixJoin(r,iss,rep){const cur=getPath(r,iss.path);if(typeof cur!=='string'||cur.substr(iss.start,iss.word.length)!==iss.word)return false;const m=/^(\s+)([A-Za-z][A-Za-z']*)/.exec(cur.slice(iss.start+iss.word.length));if(!m)return false;setPath(r,iss.path,cur.slice(0,iss.start)+rep+cur.slice(iss.start+iss.word.length+m[0].length));return true;}
 function fixAt(r,iss,rep){const cur=getPath(r,iss.path);if(typeof cur!=='string')return false;const nt=replaceWordAt(cur,iss.start,iss.word,rep);if(nt===cur)return false;setPath(r,iss.path,nt);return true;}
 // Fix every occurrence of the same word (same spelling, any field), keeping capitals per spot.
 function fixAll(r,word,rep){
@@ -4824,18 +4900,40 @@ function ctxHTML(iss){
  const a=Math.max(0,iss.start-38),b=Math.min(iss.text.length,iss.start+iss.word.length+38);
  return `${a>0?'…':''}${esc(iss.text.slice(a,iss.start))}<mark>${esc(iss.text.substr(iss.start,iss.word.length))}</mark>${esc(iss.text.slice(iss.start+iss.word.length,b))}${b<iss.text.length?'…':''}`;
 }
+// v16: on phones the sheet shows one mistake at a time (context, suggestions, typed fix, Prev/Next); desktop keeps the list.
+let spIdx=0,spEdit=null;
+function spellOne(){return !window.__spellListForTests&&matchMedia('(max-width:600px)').matches;}
+function spellCard(s,k,counts,one){
+ const sug=spellSuggest(s.word);const jn=prefixJoin(s);const c=counts.get(s.word.toLowerCase());const first=sug[0]||'';const N=spellIssues.length;
+ return `<div class="sp-item${one?' sp-card':''}" data-sp="${k}"><div class="sp-where">${esc(s.label)}</div><div class="sp-ctx">${ctxHTML(s)}</div>
+  <div class="sp-sugs">${jn?`<button type="button" class="sp-sug" data-sp-join="${esc(jn)}">${esc(jn)}</button>`:''}${sug.length?sug.map(x=>`<button type="button" class="sp-sug" data-sp-fix="${esc(x)}">${esc(x)}</button>`).join(''):jn?'':'<span class="muted">No suggestions – type the right spelling below, or add it to your words.</span>'}</div>
+  <div class="sp-own"><input class="compact" data-sp-own placeholder="Or type the correct spelling" aria-label="Correct spelling of ${esc(s.word)}" autocomplete="off" spellcheck="true" lang="en-GB" enterkeyhint="done"><button type="button" data-sp-own-go>Replace</button></div>
+  <div class="sp-tools">${c>1&&!jn?`<button type="button" data-sp-all ${first?'':'disabled'}>Fix all ${c}${first?` → ${esc(first)}`:''}</button>`:''}<button type="button" data-sp-ign>Ignore</button><button type="button" data-sp-add>+ My words</button><button type="button" data-sp-edit>✎ Edit sentence</button></div>
+  ${one?`<div class="sp-nav"><button type="button" data-sp-prev ${k===0?'disabled':''} aria-label="Previous mistake">‹ Prev</button><span class="sp-pos">${k+1} of ${N}</span><button type="button" data-sp-next ${k>=N-1?'disabled':''} aria-label="Next mistake">Next ›</button></div>`:''}</div>`;
+}
 function renderSpell(){
  if(!current)return;
  spellIssues=spellScan(current);spellCounted.set(current.id,spellIssues.length);updateSpellLine();
  const counts=new Map();for(const s of spellIssues){const k=s.word.toLowerCase();counts.set(k,(counts.get(k)||0)+1);}
- const shown=spellIssues.slice(0,150);
- $('spStatus').textContent=spellIssues.length?`${spellIssues.length} possible spelling mistake${spellIssues.length===1?'':'s'}. Tap a suggestion to fix it in the job – the next export uses the fixed text.${spellIssues.length>shown.length?` Showing the first ${shown.length}.`:''}`:'No spelling mistakes found. 👍';
- $('spList').innerHTML=shown.map((s,k)=>{const sug=spellSuggest(s.word);const c=counts.get(s.word.toLowerCase());const first=sug[0]||'';
-  return `<div class="sp-item" data-sp="${k}"><div class="sp-where">${esc(s.label)}</div><div class="sp-ctx">${ctxHTML(s)}</div>
-  <div class="sp-sugs">${sug.length?sug.map(x=>`<button type="button" class="sp-sug" data-sp-fix="${esc(x)}">${esc(x)}</button>`).join(''):'<span class="muted">No suggestions – type the right spelling below, or add it to your words.</span>'}</div>
-  <div class="sp-own"><input class="compact" data-sp-own placeholder="Or type the correct spelling" aria-label="Correct spelling of ${esc(s.word)}" autocomplete="off" spellcheck="true" lang="en-GB"><button type="button" data-sp-own-go>Replace</button></div>
-  <div class="sp-tools">${c>1?`<button type="button" data-sp-all ${first?'':'disabled'}>Fix all ${c}${first?` → ${esc(first)}`:''}</button>`:''}<button type="button" data-sp-ign>Ignore</button><button type="button" data-sp-add>+ My words</button></div></div>`;}).join('');
+ const N=spellIssues.length,one=spellOne();
+ $('spList').classList.toggle('sp-one',one);
+ if(spEdit){const txt=getPath(current,spEdit.path);if(typeof txt!=='string'){spEdit=null;}else{$('spStatus').textContent='Edit the whole text';$('spHelp').hidden=false;$('spHelp').textContent='Rewrite it, or tap 🎙 Speak to add to it. Save puts it straight into the job.';
+  $('spList').innerHTML=`<div class="sp-item sp-edit" data-sp-editing><div class="sp-where">${esc(spEdit.label)}</div><textarea id="spEditText" rows="6" spellcheck="true" lang="en-GB" aria-label="${esc(spEdit.label)}">${esc(txt)}</textarea><div class="sp-edit-tools"><button type="button" data-sp-edmic data-job-mic="spEditText">🎙 Speak</button><button type="button" data-sp-edcancel>Cancel</button><button type="button" class="primary" data-sp-edsave>✓ Save</button></div></div>`;return;}}
+ if(!N){$('spStatus').textContent='No spelling mistakes found. 👍';$('spHelp').hidden=true;$('spList').innerHTML='';return;}
+ $('spHelp').hidden=false;
+ if(one){
+  spIdx=Math.max(0,Math.min(spIdx,N-1));
+  $('spStatus').textContent=`Mistake ${spIdx+1} of ${N}`;
+  $('spHelp').textContent='Tap a suggestion or type the fix – it changes the job, so every export uses it.';
+  $('spList').innerHTML=spellCard(spellIssues[spIdx],spIdx,counts,true);
+ }else{
+  const shown=spellIssues.slice(0,150);
+  $('spStatus').textContent=`${N} possible spelling mistake${N===1?'':'s'}${N>shown.length?` (showing the first ${shown.length})`:''}`;
+  $('spHelp').textContent='Tap a suggestion to fix it in the job – the next export uses the fixed text.';
+  $('spList').innerHTML=shown.map((s,k)=>spellCard(s,k,counts,false)).join('');
+ }
 }
+function spellGo(d){spIdx+=d;renderSpell();$('spList').scrollTop=0;}
 async function spellApply(fn){if(spellBusy)return;spellBusy=true;try{const changed=fn();if(changed){await persistReport();refreshAfterSpell();}renderSpell();}finally{spellBusy=false;}}
 function refreshAfterSpell(){
  if(!current)return;
@@ -4856,19 +4954,28 @@ function spellIdleCount(){
  (window.requestIdleCallback||((f)=>setTimeout(f,1500)))(()=>run(),{timeout:4000});
 }
 on('spList','click',e=>{
+ if(e.target.closest('[data-sp-edmic]'))return jobMic('spEditText',e.target.closest('[data-sp-edmic]')).catch(fail);
+ if(e.target.closest('[data-sp-edcancel]')){jobMicStop();spEdit=null;renderSpell();return;}
+ if(e.target.closest('[data-sp-edsave]')){jobMicStop();const v=$('spEditText').value;const path=spEdit?.path;spEdit=null;return spellApply(()=>{if(!path)return false;const cur=getPath(current,path);if(typeof cur!=='string'||cur===v)return false;setPath(current,path,v);return true;});}
  const item=e.target.closest('[data-sp]');if(!item||!current)return;const iss=spellIssues[+item.dataset.sp];if(!iss)return;
+ if(e.target.closest('[data-sp-edit]')){spEdit={path:iss.path,label:iss.label};renderSpell();setTimeout(()=>{const t=$('spEditText');if(t){t.focus();const i=t.value.indexOf(iss.word,Math.max(0,iss.start-2));if(i>=0)t.setSelectionRange(i,i+iss.word.length);}},30);return;}
+ {const jb=e.target.closest('[data-sp-join]');if(jb)return spellApply(()=>fixJoin(current,iss,jb.dataset.spJoin));}
+ if(e.target.closest('[data-sp-prev]'))return spellGo(-1);
+ if(e.target.closest('[data-sp-next]'))return spellGo(1);
  let b=e.target.closest('[data-sp-fix]');if(b)return spellApply(()=>fixAt(current,iss,b.dataset.spFix));
  if(e.target.closest('[data-sp-own-go]')){const v=clean(item.querySelector('[data-sp-own]').value);if(!v){toast('Type the correct spelling first.');return;}return spellApply(()=>fixAt(current,iss,v));}
  if(e.target.closest('[data-sp-all]')){const typed=clean(item.querySelector('[data-sp-own]').value);const rep=typed||spellSuggest(iss.word)[0];if(!rep)return;return spellApply(()=>fixAll(current,iss.word,rep)>0);}
  if(e.target.closest('[data-sp-ign]')){let s=spellIgnores.get(current.id);if(!s)spellIgnores.set(current.id,s=new Set());s.add(pathKey(iss.path)+'|'+iss.word.toLowerCase());return spellApply(()=>false);}
  if(e.target.closest('[data-sp-add]')){return (async()=>{await addMyWord(iss.word);toast(`“${iss.word}” added to your words.`);renderSpell();})();}
 });
+// Keyboard up: keep the card's context, suggestions, typed fix and Replace in view above it.
+$('spList').addEventListener('focusin',e=>{if(!e.target.matches('[data-sp-own]'))return;const item=e.target.closest('[data-sp]');const fit=()=>{if(!item.isConnected)return;const list=$('spList');list.scrollTop=Math.max(0,item.offsetTop-list.offsetTop-2);item.querySelector('[data-sp-own-go]').scrollIntoView({block:'nearest'});};setTimeout(fit,60);setTimeout(fit,350);});
 $('spList').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('[data-sp-own]')){e.preventDefault();e.target.closest('[data-sp]').querySelector('[data-sp-own-go]').click();}});
 on('spellCheck','click',()=>openSpellCheck());
 on('erSpell','click',()=>openSpellCheck());
 on('spClose','click',()=>$('spellDialog').close());
 on('spDone','click',()=>$('spellDialog').close());
-$('spellDialog').addEventListener('close',()=>{refreshAfterSpell();updateSpellLine();});
+$('spellDialog').addEventListener('close',()=>{spEdit=null;jobMicStop();refreshAfterSpell();updateSpellLine();});
 $('spWordsBox').addEventListener('change',async e=>{await setMyWordsFromText(e.target.value);if($('spellDialog').open&&speller)renderSpell();});
 $('myWordsBox').addEventListener('change',async e=>{await setMyWordsFromText(e.target.value);toast('Your words are saved on this device.');});
 // Spell check hints in the keyboard (Gboard / Chrome red underlines): every prose box says so explicitly; code boxes (part no., serial…) opt out.
@@ -4894,7 +5001,7 @@ window.StripNoteTest={
  redoDictation,dictationKey,isDesk,deskLayout,handleDrop,speechLang,loadBig,useWebcam,openWebcam,probeCam,removeLastInsertion,attachSpoken,getFieldText,
  openEditReport,closeEditReport,rotatePhoto,asRot,viewKey,rotShapes,reportTitle,reportIdLine,reportHeading,coverRows,syncTitlePreset,movePartTo,placePhoto,openPhotoPicker,reorderPhoto,openMarkup,removeMarkup,sanitizeMarkup,markKey,markedMedia,renderMarked,drawMarkup,exportPhoto,get MK(){return MK;},partRef,partTitle,stripStoredNo,currentMode,setMode,getStyles,styleById,useStyle,contrastRatio,openStyleEditor,isPortraitImg,lastStyleId,findPhoto,renderDetails,photoEntries,subLabel,asSub,summaryRows,renderSubParts,listNewestFirst,
   parseTemplateText,getTemplates,shapeTemplate,startFromTemplate,goStep,stepState,stepProblems,missingPrompts,isTemplateJob,buildTemplateBackup,importTemplateFile,saveJobAsTemplate,figureCaption,findingText,parseMeasureSpeech,specToMinMax,measureResult,asMeasure,photoStem,kbUpdate,sayMeasurement,
- addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,hasPartNo,dispCountText,testOf,testLabel,testLine,hasTest,testCountText,getSpeller,spellScan,spellTokens,knownWord,spellFields,fixAt,fixAll,openSpellCheck,renderSpell,addMyWord,setMyWordsFromText,mergeMyWords,loadMyWords,spellTip,stampSpell,get myWords(){return myWords;},get spellIssues(){return spellIssues;},get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
+ addToolDocs,renderToolDocs,viewToolDoc,endToolView,toolDocsForExport,stampToolPages,loadPdfJs,loadPdfLib,openPdfJs,renderPdfPage,dispOf,dispLabel,hasDisp,hasPartNo,dispCountText,testOf,testLabel,testLine,hasTest,testCountText,getSpeller,spellSuggest,isRemoved,removeSection,addSection,saveJobDefaults,jobLayoutOf,blankReport,get jobDefaults(){return jobDefaults;},prefixJoin,prefixSplit,spellScan,spellTokens,knownWord,spellFields,fixAt,fixAll,openSpellCheck,renderSpell,addMyWord,setMyWordsFromText,spellGo,get spIdx(){return spIdx;},set spIdx(v){spIdx=v;},mergeMyWords,loadMyWords,spellTip,stampSpell,get myWords(){return myWords;},get spellIssues(){return spellIssues;},get DISPOSITIONS(){return DISPOSITIONS;},shapeToolDocs,
  importTemplatePack,checkSpec,checkAuto,checkSpecText,checksLeft,recordRows,packEndProblems,headerKey,headerValue,setHeaderValue,isPackJob,jobRows,shapePack,stepExtras,renderPackHeader,renderEndChecks
 };
 init().catch(e=>{fail(e);$('reports').textContent='Local storage could not be opened. Try a regular (not private) browser window. Do not capture evidence until storage is working.';});
